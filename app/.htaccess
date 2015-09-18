@@ -1,0 +1,2 @@
+#files in app-folder should never be called directly by a web request
+deny from all

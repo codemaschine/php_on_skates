@@ -1,0 +1,2 @@
+
+<h2><img align="absmiddle" src="/img/prayericons_alert.png"> <strong>Houston, wir haben ein Problem!</strong> Das Gebet konnte nicht gespeichert werden. Bitte bete, dass es bald wieder funktioniert...</h2>

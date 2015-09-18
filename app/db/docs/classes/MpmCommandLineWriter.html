@@ -1,0 +1,266 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>phpDocumentor » \MpmCommandLineWriter</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">phpDocumentor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/mysql.html"><i class="icon-folder-open"></i> mysql</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">16</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#addText" title="addText :: Adds text to the collection to be displayed to the terminal."><span class="description">Adds text to the collection to be displayed to the terminal.</span><pre>addText()</pre></a></li>
+<li class="method public "><a href="#getInstance" title="getInstance :: Returns a single static instance of this object."><span class="description">Returns a single static instance of this object.</span><pre>getInstance()</pre></a></li>
+<li class="method public "><a href="#write" title="write :: Writes the header, text, and footer."><span class="description">Writes the header, text, and footer.</span><pre>write()</pre></a></li>
+<li class="method public "><a href="#writeFooter" title="writeFooter :: Writes the footer to the console."><span class="description">Writes the footer to the console.</span><pre>writeFooter()</pre></a></li>
+<li class="method public "><a href="#writeHeader" title="writeHeader :: Writes the header to the console."><span class="description">Writes the header to the console.</span><pre>writeHeader()</pre></a></li>
+<li class="method public "><a href="#writeLine" title="writeLine :: Writes a single line to the console."><span class="description">Writes a single line to the console.</span><pre>writeLine()</pre></a></li>
+<li class="nav-header private">» Private</li>
+<li class="method private "><a href="#__construct" title="__construct :: Object constructor."><span class="description">Object constructor.</span><pre>__construct()</pre></a></li>
+<li class="method private "><a href="#addFooter" title="addFooter :: Adds the footer to the $text property."><span class="description">Adds the footer to the $text property.</span><pre>addFooter()</pre></a></li>
+<li class="method private "><a href="#addHeader" title="addHeader :: Adds the header to the $text property."><span class="description">Adds the header to the $text property.</span><pre>addHeader()</pre></a></li>
+<li class="method private "><a href="#writeText" title="writeText :: Generates and echos the text to the terminal."><span class="description">Generates and echos the text to the terminal.</span><pre>writeText()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="property public "><a href="#%24maxWidth" title="$maxWidth :: The maximum width to wrap the text displayed."><span class="description">The maximum width to wrap the text displayed.</span><pre>$maxWidth</pre></a></li>
+<li class="nav-header private">» Private</li>
+<li class="property private "><a href="#%24instance" title="$instance :: A single, static instance of this class."><span class="description">A single, static instance of this class.</span><pre>$instance</pre></a></li>
+<li class="property private "><a href="#%24text" title="$text :: A collection of text items to write to the terminal."><span class="description">A collection of text items to write to the terminal.</span><pre>$text</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CMpmCommandLineWriter" id="\MpmCommandLineWriter"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/MpmCommandLineWriter.html">MpmCommandLineWriter</a>
+</li>
+</ul>
+<div href="../classes/MpmCommandLineWriter.html" class="element class">
+<p class="short_description">The MpmCommandLineWriter is a Singleton class used to display output to the terminal.</p>
+<div class="details">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/mysql.php.migrations.Classes.html">mysql_php_migrations</a></td>
+</tr>
+<tr>
+<th>subpackage</th>
+<td>Classes</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="addText" id="addText"></a><div class="element clickable method public addText" data-toggle="collapse" data-target=".addText .collapse">
+<h2>Adds text to the collection to be displayed to the terminal.</h2>
+<pre>addText(string $text, int $indent) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$text</h4>
+<code>string</code><p>the text to add to the collection</p></div>
+<div class="subelement argument">
+<h4>$indent</h4>
+<code>int</code><p>the number of spaces to indent each line of this text</p></div>
+</div></div>
+</div>
+<a name="getInstance" id="getInstance"></a><div class="element clickable method public getInstance" data-toggle="collapse" data-target=".getInstance .collapse">
+<h2>Returns a single static instance of this object.</h2>
+<pre>getInstance() : <a href="../classes/MpmCommandLineWriter.html">\MpmCommandLineWriter</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/MpmCommandLineWriter.html">\MpmCommandLineWriter</a></code></div>
+</div></div>
+</div>
+<a name="write" id="write"></a><div class="element clickable method public write" data-toggle="collapse" data-target=".write .collapse">
+<h2>Writes the header, text, and footer.</h2>
+<pre>write() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::writeHeader()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::writeText()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::writeFooter()</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a name="writeFooter" id="writeFooter"></a><div class="element clickable method public writeFooter" data-toggle="collapse" data-target=".writeFooter .collapse">
+<h2>Writes the footer to the console.</h2>
+<pre>writeFooter() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::addFooter()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::writeText()</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a name="writeHeader" id="writeHeader"></a><div class="element clickable method public writeHeader" data-toggle="collapse" data-target=".writeHeader .collapse">
+<h2>Writes the header to the console.</h2>
+<pre>writeHeader() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::addHeader()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::writeText()</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a name="writeLine" id="writeLine"></a><div class="element clickable method public writeLine" data-toggle="collapse" data-target=".writeLine .collapse">
+<h2>Writes a single line to the console.</h2>
+<pre>writeLine($txt, $ind) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument"><h4>$txt</h4></div>
+<div class="subelement argument"><h4>$ind</h4></div>
+</div></div>
+</div>
+<a name="__construct" id="__construct"></a><div class="element clickable method private __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Object constructor.</h2>
+<pre>__construct() : <a href="../classes/MpmCommandLineWriter.html">\MpmCommandLineWriter</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/MpmCommandLineWriter.html">\MpmCommandLineWriter</a></code></div>
+</div></div>
+</div>
+<a name="addFooter" id="addFooter"></a><div class="element clickable method private addFooter" data-toggle="collapse" data-target=".addFooter .collapse">
+<h2>Adds the footer to the $text property.</h2>
+<pre>addFooter() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>\global\MpmCommandLineWriter::addText()</td>
+</tr></table>
+</div></div>
+</div>
+<a name="addHeader" id="addHeader"></a><div class="element clickable method private addHeader" data-toggle="collapse" data-target=".addHeader .collapse">
+<h2>Adds the header to the $text property.</h2>
+<pre>addHeader() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="writeText" id="writeText"></a><div class="element clickable method private writeText" data-toggle="collapse" data-target=".writeText .collapse">
+<h2>Generates and echos the text to the terminal.</h2>
+<pre>writeText() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24maxWidth" id="$maxWidth"> </a><div class="element clickable property public $maxWidth" data-toggle="collapse" data-target=".$maxWidth .collapse">
+<h2>The maximum width to wrap the text displayed.</h2>
+<pre>$maxWidth : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24instance" id="$instance"> </a><div class="element clickable property private $instance" data-toggle="collapse" data-target=".$instance .collapse">
+<h2>A single, static instance of this class.</h2>
+<pre>$instance : <a href="../classes/MpmCommandLineWriter.html">\MpmCommandLineWriter</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>Singleton pattern.</p></p></div></div>
+</div>
+<a name="%24text" id="$text"> </a><div class="element clickable property private $text" data-toggle="collapse" data-target=".$text .collapse">
+<h2>A collection of text items to write to the terminal.</h2>
+<pre>$text : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-08-22T00:58:21+02:00.<br></footer></div>
+</div>
+</body>
+</html>

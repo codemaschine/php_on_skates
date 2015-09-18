@@ -1,0 +1,258 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>phpDocumentor » \MpmListHelper</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">phpDocumentor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/mysql.html"><i class="icon-folder-open"></i> mysql</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">16</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#getFiles" title="getFiles :: Returns an array of migration filenames."><span class="description">Returns an array of migration filenames.</span><pre>getFiles()</pre></a></li>
+<li class="method public "><a href="#getFullList" title="getFullList :: Returns a full list of all migrations."><span class="description">Returns a full list of all migrations.</span><pre>getFullList()</pre></a></li>
+<li class="method public "><a href="#getListFromDb" title="getListFromDb :: Fetches a list of migrations which have already been run."><span class="description">Fetches a list of migrations which have already been run.</span><pre>getListFromDb()</pre></a></li>
+<li class="method public "><a href="#getListOfFiles" title="getListOfFiles :: Returns an array of objects which hold data about a migration file (timestamp, file, etc.)."><span class="description">Returns an array of objects which hold data about a migration file (timestamp, file, etc.).</span><pre>getListOfFiles()</pre></a></li>
+<li class="method public "><a href="#getTimestampArray" title="getTimestampArray :: Given an array of objects (from the getFullList() or getListOfFiles() methods), returns an array of timestamps."><span class="description">Given an array of objects (from the getFullList() or getListOfFiles() methods), returns an array of timestamps.</span><pre>getTimestampArray()</pre></a></li>
+<li class="method public "><a href="#getTotalMigrations" title="getTotalMigrations :: Returns the total number of migrations available."><span class="description">Returns the total number of migrations available.</span><pre>getTotalMigrations()</pre></a></li>
+<li class="method public "><a href="#mergeFilesWithDb" title="mergeFilesWithDb :: Fetches a list of files and adds migrations to the database migrations table."><span class="description">Fetches a list of files and adds migrations to the database migrations table.</span><pre>mergeFilesWithDb()</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CMpmListHelper" id="\MpmListHelper"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/MpmListHelper.html">MpmListHelper</a>
+</li>
+</ul>
+<div href="../classes/MpmListHelper.html" class="element class">
+<p class="short_description">The MpmListHelper is used to obtain various lists related to migration files.</p>
+<div class="details">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/mysql.php.migrations.Controllers.html">mysql_php_migrations</a></td>
+</tr>
+<tr>
+<th>subpackage</th>
+<td>Controllers</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="getFiles" id="getFiles"></a><div class="element clickable method public getFiles" data-toggle="collapse" data-target=".getFiles .collapse">
+<h2>Returns an array of migration filenames.</h2>
+<pre>getFiles() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>\global\MpmListHelper::getListOfFiles()</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getFullList" id="getFullList"></a><div class="element clickable method public getFullList" data-toggle="collapse" data-target=".getFullList .collapse">
+<h2>Returns a full list of all migrations.</h2>
+<pre>getFullList(int $startIdx, int $total) : \arrays</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::doMultiRowSelect()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$startIdx</h4>
+<code>int</code><p>the start index number</p></div>
+<div class="subelement argument">
+<h4>$total</h4>
+<code>int</code><p>total number of records to return</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>\arrays</code></div>
+</div></div>
+</div>
+<a name="getListFromDb" id="getListFromDb"></a><div class="element clickable method public getListFromDb" data-toggle="collapse" data-target=".getListFromDb .collapse">
+<h2>Fetches a list of migrations which have already been run.</h2>
+<pre>getListFromDb(string $latestTimestamp, string $direction) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::doSingleRowSelect()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::doMultiRowSelect()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$latestTimestamp</h4>
+<code>string</code><p>the current timestamp of the migration run last</p></div>
+<div class="subelement argument">
+<h4>$direction</h4>
+<code>string</code><p>the way we are migrating; should either be up or down</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getListOfFiles" id="getListOfFiles"></a><div class="element clickable method public getListOfFiles" data-toggle="collapse" data-target=".getListOfFiles .collapse">
+<h2>Returns an array of objects which hold data about a migration file (timestamp, file, etc.).</h2>
+<pre>getListOfFiles(string $sort) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MPM_DB_PATH</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmStringHelper::getTimestampFromFilename()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$sort</h4>
+<code>string</code><p>should either be old or new; determines how the migrations are sorted in the array</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getTimestampArray" id="getTimestampArray"></a><div class="element clickable method public getTimestampArray" data-toggle="collapse" data-target=".getTimestampArray .collapse">
+<h2>Given an array of objects (from the getFullList() or getListOfFiles() methods), returns an array of timestamps.</h2>
+<pre>getTimestampArray($obj_array) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument"><h4>$obj_array</h4></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getTotalMigrations" id="getTotalMigrations"></a><div class="element clickable method public getTotalMigrations" data-toggle="collapse" data-target=".getTotalMigrations .collapse">
+<h2>Returns the total number of migrations available.</h2>
+<pre>getTotalMigrations() : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::doSingleRowSelect()</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a name="mergeFilesWithDb" id="mergeFilesWithDb"></a><div class="element clickable method public mergeFilesWithDb" data-toggle="collapse" data-target=".mergeFilesWithDb .collapse">
+<h2>Fetches a list of files and adds migrations to the database migrations table.</h2>
+<pre>mergeFilesWithDb() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\global\MpmListHelper::getListOfFiles()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmListHelper::getTotalMigrations()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmListHelper::getFullList()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmListHelper::getTimestampArray()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::getMethod()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::getPdoObj()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MpmDbHelper::getMysqliObj()</td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\global\MPM_METHOD_PDO</td>
+</tr>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a10</a> and<br>
+            generated on 2012-08-22T00:58:21+02:00.<br></footer></div>
+</div>
+</body>
+</html>

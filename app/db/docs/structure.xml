@@ -1,0 +1,2371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a10" title="">
+  <file path="config/db_config.php" hash="f34661f9e70157d3e6ba12231331b78d" package="Default">
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file config/db_config.php</error>
+    </parse_markers>
+  </file>
+  <file path="db/schema.php" hash="3ca358fa938e399c919437211b15afe0" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmInitialSchema class.]]></description>
+      <long-description><![CDATA[<p>This file may be deleted if you do not wish to use the build command or build on init features.</p>]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="19" package="mysql\php\migrations\Classes">
+      <extends>\MpmSchema</extends>
+      <name>MpmInitialSchema</name>
+      <full_name>\MpmInitialSchema</full_name>
+      <docblock line="13">
+        <description><![CDATA[The MpmInitialSchema class is used to build an initial database structure.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="13" name="package" description="mysql_php_migrations"/>
+        <tag line="13" name="subpackage" description="Classes"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="22" package="mysql\php\migrations\Classes">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="39" package="mysql\php\migrations\Classes">
+        <name>build</name>
+        <full_name>build</full_name>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="22" code="50010">No DocBlock was found for method __construct()</error>
+      <error line="39" code="50010">No DocBlock was found for method build()</error>
+    </parse_markers>
+  </file>
+  <file path="db/test_data.php" hash="28f0addcc64db44c95f3a5bc449071db" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmTestData class.]]></description>
+      <long-description><![CDATA[<p>This file may be deleted if you do not wish to add test data to your database after a build.</p>]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="19" package="mysql\php\migrations\Classes">
+      <extends>\MpmSchema</extends>
+      <name>MpmTestData</name>
+      <full_name>\MpmTestData</full_name>
+      <docblock line="13">
+        <description><![CDATA[The MpmTestData class is used to add test data after successfully building an initial database structure.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="13" name="package" description="mysql_php_migrations"/>
+        <tag line="13" name="subpackage" description="Classes"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="22" package="mysql\php\migrations\Classes">
+        <name>build</name>
+        <full_name>build</full_name>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="22" code="50010">No DocBlock was found for method build()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/classes/command_line_writer.php" hash="e0a48d5092ccd961f05789ceb8848eaf" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmCommandLineWriter class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Classes">
+      <extends/>
+      <name>MpmCommandLineWriter</name>
+      <full_name>\MpmCommandLineWriter</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmCommandLineWriter is a Singleton class used to display output to the terminal.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Classes"/>
+      </docblock>
+      <property final="false" static="true" visibility="private" line="24" namespace="global" package="Default">
+        <name>$instance</name>
+        <default><![CDATA[]]></default>
+        <docblock line="19">
+          <description><![CDATA[A single, static instance of this class.]]></description>
+          <long-description><![CDATA[<p>Singleton pattern.</p>]]></long-description>
+          <tag line="19" name="var" description="" type="\MpmCommandLineWriter">
+            <type by_reference="false">\MpmCommandLineWriter</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="31" namespace="global" package="Default">
+        <name>$text</name>
+        <default><![CDATA[]]></default>
+        <docblock line="26">
+          <description><![CDATA[A collection of text items to write to the terminal.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="26" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="38" namespace="global" package="Default">
+        <name>$maxWidth</name>
+        <default><![CDATA[]]></default>
+        <docblock line="33">
+          <description><![CDATA[The maximum width to wrap the text displayed.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="33" name="var" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="45" package="mysql\php\migrations\Classes">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="40">
+          <description><![CDATA[Object constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="40" name="return" description="" type="\MpmCommandLineWriter">
+            <type by_reference="false">\MpmCommandLineWriter</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="56" package="mysql\php\migrations\Classes">
+        <name>getInstance</name>
+        <full_name>getInstance</full_name>
+        <docblock line="51">
+          <description><![CDATA[Returns a single static instance of this object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="51" name="return" description="" type="\MpmCommandLineWriter">
+            <type by_reference="false">\MpmCommandLineWriter</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="73" package="mysql\php\migrations\Classes">
+        <name>addText</name>
+        <full_name>addText</full_name>
+        <docblock line="65">
+          <description><![CDATA[Adds text to the collection to be displayed to the terminal.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="65" name="param" description="the text to add to the collection" type="string" variable="$text">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="65" name="param" description="the number of spaces to indent each line of this text" type="int" variable="$indent">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="65" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="73">
+          <name>$text</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="73">
+          <name>$indent</name>
+          <default><![CDATA[0]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="87" package="mysql\php\migrations\Classes">
+        <name>addHeader</name>
+        <full_name>addHeader</full_name>
+        <docblock line="82">
+          <description><![CDATA[Adds the header to the $text property.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="82" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="129" package="mysql\php\migrations\Classes">
+        <name>addFooter</name>
+        <full_name>addFooter</full_name>
+        <docblock line="122">
+          <description><![CDATA[Adds the footer to the $text property.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="122" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="122" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="154" package="mysql\php\migrations\Classes">
+        <name>write</name>
+        <full_name>write</full_name>
+        <docblock line="145">
+          <description><![CDATA[Writes the header, text, and footer.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="145" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="145" name="uses" description="\global\MpmCommandLineWriter::writeText()" refers="\global\MpmCommandLineWriter::writeText()"/>
+          <tag line="145" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="145" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="167" package="mysql\php\migrations\Classes">
+        <name>writeText</name>
+        <full_name>writeText</full_name>
+        <docblock line="162">
+          <description><![CDATA[Generates and echos the text to the terminal.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="162" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="205" package="mysql\php\migrations\Classes">
+        <name>writeLine</name>
+        <full_name>writeLine</full_name>
+        <docblock line="200">
+          <description><![CDATA[Writes a single line to the console.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="200" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="205">
+          <name>$txt</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="205">
+          <name>$ind</name>
+          <default><![CDATA[0]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="246" package="mysql\php\migrations\Classes">
+        <name>writeHeader</name>
+        <full_name>writeHeader</full_name>
+        <docblock line="238">
+          <description><![CDATA[Writes the header to the console.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="238" name="uses" description="\global\MpmCommandLineWriter::addHeader()" refers="\global\MpmCommandLineWriter::addHeader()"/>
+          <tag line="238" name="uses" description="\global\MpmCommandLineWriter::writeText()" refers="\global\MpmCommandLineWriter::writeText()"/>
+          <tag line="238" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="264" package="mysql\php\migrations\Classes">
+        <name>writeFooter</name>
+        <full_name>writeFooter</full_name>
+        <docblock line="256">
+          <description><![CDATA[Writes the footer to the console.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="256" name="uses" description="\global\MpmCommandLineWriter::addFooter()" refers="\global\MpmCommandLineWriter::addFooter()"/>
+          <tag line="256" name="uses" description="\global\MpmCommandLineWriter::writeText()" refers="\global\MpmCommandLineWriter::writeText()"/>
+          <tag line="256" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="200" code="50015">Argument $txt is missing from the Docblock of writeLine()</error>
+      <error line="200" code="50015">Argument $ind is missing from the Docblock of writeLine()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/classes/controller_factory.php" hash="4227d1e2be67c359bbc745a61a8a653c" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmControllerFactory class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Classes">
+      <extends/>
+      <name>MpmControllerFactory</name>
+      <full_name>\MpmControllerFactory</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmControllerFactory reads the command line arguments, determines which controller is needed, and returns that controlller object.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Classes"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="27" package="mysql\php\migrations\Classes">
+        <name>getInstance</name>
+        <full_name>getInstance</full_name>
+        <docblock line="20">
+          <description><![CDATA[Given an array of command line arguments ($argv), determines the controller needed and returns that object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmStringHelper::strToCamel()" refers="\global\MpmStringHelper::strToCamel()"/>
+          <tag line="20" name="return" description="" type="\MpmController">
+            <type by_reference="false">\MpmController</type>
+          </tag>
+        </docblock>
+        <argument line="27">
+          <name>$argv</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="20" code="50015">Argument $argv is missing from the Docblock of getInstance()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/classes/exceptional_mysqli.php" hash="9703de150d2b79c6c2d49a474616a327" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the ExceptionalMysqli class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Classes">
+      <extends>\mysqli</extends>
+      <name>ExceptionalMysqli</name>
+      <full_name>\ExceptionalMysqli</full_name>
+      <docblock line="11">
+        <description><![CDATA[The ExceptionalMysqli class wraps the mysqli object and throws exceptions instead of triggering errors when problems occur.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Classes"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="31" package="mysql\php\migrations\Classes">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="20">
+          <description><![CDATA[Object constructor.]]></description>
+          <long-description><![CDATA[<p>You can pass all the same parameters to this constructor as you would when instantiating a mysqli object.</p>]]></long-description>
+          <tag line="20" name="throws" description="" type="\MpmDatabaseConnectionException">
+            <type by_reference="false">\MpmDatabaseConnectionException</type>
+          </tag>
+          <tag line="20" name="uses" description="\global\MpmStringHelper::addSingleQuotes()" refers="\global\MpmStringHelper::addSingleQuotes()"/>
+          <tag line="20" name="return" description="" type="\ExceptionalMysqli">
+            <type by_reference="false">\ExceptionalMysqli</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="51" package="mysql\php\migrations\Classes">
+        <name>query</name>
+        <full_name>query</full_name>
+        <docblock line="41">
+          <description><![CDATA[Wrapper for the mysqli::query method.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="throws" description="" type="\MpmMalformedQueryException">
+            <type by_reference="false">\MpmMalformedQueryException</type>
+          </tag>
+          <tag line="41" name="param" description="the SQL query to send to MySQL" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="41" name="param" description="Either the constant MYSQLI_USE_RESULT or MYSQLI_STORE_RESULT depending on the desired behavior" type="int" variable="$resultMode">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="41" name="return" description="" type="\mysqli_result">
+            <type by_reference="false">\mysqli_result</type>
+          </tag>
+        </docblock>
+        <argument line="51">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="51">
+          <name>$resultMode</name>
+          <default><![CDATA[MYSQLI_STORE_RESULT]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="66" package="mysql\php\migrations\Classes">
+        <name>beginTransaction</name>
+        <full_name>beginTransaction</full_name>
+        <docblock line="61">
+          <description><![CDATA[Turns off auto commit.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="61" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="79" package="mysql\php\migrations\Classes">
+        <name>exec</name>
+        <full_name>exec</full_name>
+        <docblock line="72">
+          <description><![CDATA[Same as mysqli::query]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="72" name="uses" description="\global\ExceptionalMysqli::query()" refers="\global\ExceptionalMysqli::query()"/>
+          <tag line="72" name="return" description="" type="\mysqli_result">
+            <type by_reference="false">\mysqli_result</type>
+          </tag>
+        </docblock>
+        <argument line="79">
+          <name>$sql</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="72" code="50015">Argument $sql is missing from the Docblock of exec()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/classes/migration.php" hash="091fe74f50dc466539edc619f6bb3b28" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmMigration class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends/>
+      <name>MpmMigration</name>
+      <full_name>\MpmMigration</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmMigration is an abstract template class used as the parent to all migration classes.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="26" package="mysql\php\migrations\Controllers">
+        <name>up</name>
+        <full_name>up</full_name>
+        <docblock line="19">
+          <description><![CDATA[Migrates the database up.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="19" name="param" description="a PDO object" type="\PDO" variable="$pdo">
+            <type by_reference="false">\PDO</type>
+          </tag>
+          <tag line="19" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$pdo</name>
+          <default><![CDATA[]]></default>
+          <type>\PDO</type>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="35" package="mysql\php\migrations\Controllers">
+        <name>down</name>
+        <full_name>down</full_name>
+        <docblock line="28">
+          <description><![CDATA[Migrates down (reverses changes made by the up method).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="param" description="a PDO object" type="\PDO" variable="$pdo">
+            <type by_reference="false">\PDO</type>
+          </tag>
+          <tag line="28" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="35">
+          <name>$pdo</name>
+          <default><![CDATA[]]></default>
+          <type>\PDO</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/classes/mysqli_migration.php" hash="c3bd1aa9fb655225a31c70f78ca313d0" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmMysqliMigration class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends/>
+      <name>MpmMysqliMigration</name>
+      <full_name>\MpmMysqliMigration</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmMysqliMigration is an abstract template class used as the parent to all migration classes which use mysqli.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="26" package="mysql\php\migrations\Controllers">
+        <name>up</name>
+        <full_name>up</full_name>
+        <docblock line="19">
+          <description><![CDATA[Migrates the database up.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="19" name="param" description="an ExceptionalMysqli object" type="\ExceptionalMysqli" variable="$mysqli">
+            <type by_reference="false">\ExceptionalMysqli</type>
+          </tag>
+          <tag line="19" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$mysqli</name>
+          <default><![CDATA[]]></default>
+          <type>\ExceptionalMysqli</type>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="35" package="mysql\php\migrations\Controllers">
+        <name>down</name>
+        <full_name>down</full_name>
+        <docblock line="28">
+          <description><![CDATA[Migrates down (reverses changes made by the up method).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="param" description="an ExceptionalMysqli object" type="\ExceptionalMysqli" variable="$mysqli">
+            <type by_reference="false">\ExceptionalMysqli</type>
+          </tag>
+          <tag line="28" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="35">
+          <name>$mysqli</name>
+          <default><![CDATA[]]></default>
+          <type>\ExceptionalMysqli</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/classes/schema.php" hash="17a0210efe1c420c48b77f0e4bd58ec1" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmSchema class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Classes">
+      <extends/>
+      <name>MpmSchema</name>
+      <full_name>\MpmSchema</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmSchema class is used to build an initial database structure.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Classes"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="25" namespace="global" package="Default">
+        <name>$dbObj</name>
+        <default><![CDATA[]]></default>
+        <docblock line="20">
+          <description><![CDATA[Either a PDO or an ExceptionalMysqli object used to talk to the MySQL database.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="var" description="" type="\PDO|\ExceptionalMysqli">
+            <type by_reference="false">\PDO</type>
+            <type by_reference="false">\ExceptionalMysqli</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="36" namespace="global" package="Default">
+        <name>$initialMigrationTimestamp</name>
+        <default><![CDATA[]]></default>
+        <docblock line="27">
+          <description><![CDATA[The timestamp of the migration which, when the schema is built, will be considered the current migration.]]></description>
+          <long-description><![CDATA[<p>All migrations prior to this timestamp will be ignored when building the database.</p>
+
+<p>Timestamp should be in CCYY-MM-DD HH:MM:SS format.</p>]]></long-description>
+          <tag line="27" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="45" package="mysql\php\migrations\Classes">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="38">
+          <description><![CDATA[Object constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="38" name="return" description="" type="\MpmSchema">
+            <type by_reference="false">\MpmSchema</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="58" package="mysql\php\migrations\Classes">
+        <name>destroy</name>
+        <full_name>destroy</full_name>
+        <docblock line="51">
+          <description><![CDATA[Removes all of the tables in the database.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="51" name="uses" description="\global\MpmDbHelper::getTables()" refers="\global\MpmDbHelper::getTables()"/>
+          <tag line="51" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="103" package="mysql\php\migrations\Classes">
+        <name>reloadMigrations</name>
+        <full_name>reloadMigrations</full_name>
+        <docblock line="95">
+          <description><![CDATA[Clears the migrations table and then rebuilds it.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="95" name="uses" description="\global\MpmListHelper::mergeFilesWithDb()" refers="\global\MpmListHelper::mergeFilesWithDb()"/>
+          <tag line="95" name="uses" description="\global\MpmDbHelper::doSingleRowSelect()" refers="\global\MpmDbHelper::doSingleRowSelect()"/>
+          <tag line="95" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="131" package="mysql\php\migrations\Classes">
+        <name>build</name>
+        <full_name>build</full_name>
+        <docblock line="126">
+          <description><![CDATA[Used to build the schema.]]></description>
+          <long-description><![CDATA[<p>All SQL statements needed to create the initial database structure should be run here.</p>]]></long-description>
+          <tag line="126" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/add_controller.php" hash="561b39b2cca253fb21cdece91ce9302c" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmAddController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmAddController</name>
+      <full_name>\MpmAddController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmAddController is used to create a new migration script.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="34" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MPM_DB_PATH" refers="\global\MPM_DB_PATH"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::test()" refers="\global\MpmDbHelper::test()"/>
+          <tag line="20" name="uses" description="\global\MpmListHelper::getFiles()" refers="\global\MpmListHelper::getFiles()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="20" name="uses" description="\global\MpmUpController::displayHelp()" refers="\global\MpmUpController::displayHelp()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="98" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="89">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="89" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/build_controller.php" hash="df09633f8f383b757a4035dc59350bd2" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmBuildController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="156" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <include line="185" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmBuildController</name>
+      <full_name>\MpmBuildController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmBuildController is used to build a database schema from the ground up.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="34" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::test()" refers="\global\MpmDbHelper::test()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="20" name="uses" description="\global\MpmBuildController::build()" refers="\global\MpmBuildController::build()"/>
+          <tag line="20" name="uses" description="\global\MPM_DB_PATH" refers="\global\MPM_DB_PATH"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="154" package="mysql\php\migrations\Controllers">
+        <name>build</name>
+        <full_name>build</full_name>
+        <docblock line="141">
+          <description><![CDATA[Does the actual task of destroying and rebuilding the database from the ground up.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="141" name="uses" description="\global\MpmSchema::destroy()" refers="\global\MpmSchema::destroy()"/>
+          <tag line="141" name="uses" description="\global\MpmSchema::reloadMigrations()" refers="\global\MpmSchema::reloadMigrations()"/>
+          <tag line="141" name="uses" description="\global\MpmSchema::build()" refers="\global\MpmSchema::build()"/>
+          <tag line="141" name="uses" description="\global\MpmLatestController::doAction()" refers="\global\MpmLatestController::doAction()"/>
+          <tag line="141" name="uses" description="\global\MPM_DB_PATH" refers="\global\MPM_DB_PATH"/>
+          <tag line="141" name="param" description="whether or not to run the test_data.php file after build" type="bool" variable="$with_data">
+            <type by_reference="false">bool</type>
+          </tag>
+          <tag line="141" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="154">
+          <name>$with_data</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="203" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="194">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="194" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="194" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="194" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="194" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/controller.php" hash="8a120e8e742d28ebe8d41da0b50127c8" package="mysql\php\migrations\Classes">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Classes"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Classes">
+      <extends/>
+      <name>MpmController</name>
+      <full_name>\MpmController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmController is the abstract parent class to all other controllers.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Classes"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="25" namespace="global" package="Default">
+        <name>$arguments</name>
+        <default><![CDATA[]]></default>
+        <docblock line="20">
+          <description><![CDATA[An array of command line arguments (minus the first two elements which should already be shifted off from the MpmControllerFactory).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="32" namespace="global" package="Default">
+        <name>$command</name>
+        <default><![CDATA[]]></default>
+        <docblock line="27">
+          <description><![CDATA[The current command being issued.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="27" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="44" package="mysql\php\migrations\Classes">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="34">
+          <description><![CDATA[Object constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="34" name="uses" description="\global\MpmDbHelper::test()" refers="\global\MpmDbHelper::test()"/>
+          <tag line="34" name="uses" description="\global\MpmListHelper::mergeFilesWithDb()" refers="\global\MpmListHelper::mergeFilesWithDb()"/>
+          <tag line="34" name="param" description="an array of command line arguments (minus the first two elements which should already be shifted off from the MpmControllerFactory)" type="array" variable="$arguments">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="34" name="return" description="" type="\MpmController">
+            <type by_reference="false">\MpmController</type>
+          </tag>
+        </docblock>
+        <argument line="44">
+          <name>$command</name>
+          <default><![CDATA['help']]></default>
+          <type/>
+        </argument>
+        <argument line="44">
+          <name>$arguments</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="60" package="mysql\php\migrations\Classes">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="55">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="55" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="global" line="67" package="mysql\php\migrations\Classes">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="62">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="62" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="34" code="50014">Name of argument $command does not match with the DocBlock's name $arguments in __construct()</error>
+      <error line="34" code="50015">Argument $arguments is missing from the Docblock of __construct()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/controllers/down_controller.php" hash="e440b589d7457e0af3b23c87c9dc156f" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmDownController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmDownController</name>
+      <full_name>\MpmDownController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmDownController is used to migrate down to an older version.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="34" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmDownController::displayHelp()" refers="\global\MpmDownController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getListOfMigrations()" refers="\global\MpmMigrationHelper::getListOfMigrations()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getCurrentMigrationNumber()" refers="\global\MpmMigrationHelper::getCurrentMigrationNumber()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getTimestampFromId()" refers="\global\MpmMigrationHelper::getTimestampFromId()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::runMigration()" refers="\global\MpmMigrationHelper::runMigration()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::setCurrentMigration()" refers="\global\MpmMigrationHelper::setCurrentMigration()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="98" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="89">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="89" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/help_controller.php" hash="6d8bac858d73a0717393f67dbf42636c" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmHelpController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmHelpController</name>
+      <full_name>\MpmHelpController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmHelpController is used to display help about the commands available as well as more specific help for individual commands.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="29" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmHelpController::displayHelp()" refers="\global\MpmHelpController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmStringHelper::strToCamel()" refers="\global\MpmStringHelper::strToCamel()"/>
+          <tag line="20" name="uses" description="\global\MpmAutoloadHelper::load()" refers="\global\MpmAutoloadHelper::load()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="61" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="52">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="52" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="52" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="52" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="52" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/init_controller.php" hash="bdd543c8f9a259a4a38dba53bc53b2ac" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmInitController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="65" type="Require" package="Default">
+      <name/>
+    </include>
+    <include line="283" type="Require" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmInitController</name>
+      <full_name>\MpmInitController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmInitController initializes the system so that migrations can start happening.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="37" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MPM_PATH" refers="\global\MPM_PATH"/>
+          <tag line="20" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="20" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::checkForDbTable()" refers="\global\MpmDbHelper::checkForDbTable()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="20" name="uses" description="\global\MpmInitController::displayHelp()" refers="\global\MpmInitController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="20" name="uses" description="\global\MpmBuildController::build()" refers="\global\MpmBuildController::build()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="369" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="360">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="360" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="360" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="360" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="360" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/latest_controller.php" hash="79939bc922f829eaef32f6bf5d1ac9e6" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmLatestController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmLatestController</name>
+      <full_name>\MpmLatestController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmLatestController is used to migrate up to the latest version.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="34" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmLatestController::displayHelp()" refers="\global\MpmLatestController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::test()" refers="\global\MpmDbHelper::test()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getMigrationCount()" refers="\global\MpmMigrationHelper::getMigrationCount()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getLatestMigration()" refers="\global\MpmMigrationHelper::getLatestMigration()"/>
+          <tag line="20" name="uses" description="\global\MpmUpController::doAction()" refers="\global\MpmUpController::doAction()"/>
+          <tag line="20" name="param" description="supresses certain text when true" type="bool" variable="$quiet">
+            <type by_reference="false">bool</type>
+          </tag>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="34">
+          <name>$quiet</name>
+          <default><![CDATA[false]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="78" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="69">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="69" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="69" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="69" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="69" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/list_controller.php" hash="a27306956fc76ceec86f48bf656e9283" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmListController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmListController</name>
+      <full_name>\MpmListController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmListController is used to display a list of the migrations.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="32" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmListController::displayHelp()" refers="\global\MpmListController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmListHelper::getFullList()" refers="\global\MpmListHelper::getFullList()"/>
+          <tag line="20" name="uses" description="\global\MpmListHelper::getTotalMigrations()" refers="\global\MpmListHelper::getTotalMigrations()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="98" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="89">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="89" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="89" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/run_controller.php" hash="508c786c6e5ee3c9be89f27ff9367571" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmRunController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmRunController</name>
+      <full_name>\MpmRunController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmRunController is used to run a single migration.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="35" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmRunController::displayHelp()" refers="\global\MpmRunController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::doesMigrationExist()" refers="\global\MpmMigrationHelper::doesMigrationExist()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getMigrationObject()" refers="\global\MpmMigrationHelper::getMigrationObject()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::runMigration()" refers="\global\MpmMigrationHelper::runMigration()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="100" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="91">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="91" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="91" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="91" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="91" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/status_controller.php" hash="3faee2d06204f6480190a56bc922360f" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmStatusController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmStatusController</name>
+      <full_name>\MpmStatusController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmStatusController is used to display the latest migration.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="33" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::test()" refers="\global\MpmDbHelper::test()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getCurrentMigrationTimestamp()" refers="\global\MpmMigrationHelper::getCurrentMigrationTimestamp()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getCurrentMigrationNumber()" refers="\global\MpmMigrationHelper::getCurrentMigrationNumber()"/>
+          <tag line="20" name="uses" description="\global\MpmListHelper::getFullList()" refers="\global\MpmListHelper::getFullList()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="72" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="63">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="63" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="63" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="63" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="63" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/controllers/up_controller.php" hash="de9c6301fd5bf02992626e07e478b913" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmUpController class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends>\MpmController</extends>
+      <name>MpmUpController</name>
+      <full_name>\MpmUpController</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmUpController is used to migrate up to a new version.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="36" package="mysql\php\migrations\Controllers">
+        <name>doAction</name>
+        <full_name>doAction</full_name>
+        <docblock line="20">
+          <description><![CDATA[Determines what action should be performed and takes that action.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmUpController::displayHelp()" refers="\global\MpmUpController::displayHelp()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeHeader()" refers="\global\MpmCommandLineWriter::writeHeader()"/>
+          <tag line="20" name="uses" description="\global\MpmCommandLineWriter::writeFooter()" refers="\global\MpmCommandLineWriter::writeFooter()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getListOfMigrations()" refers="\global\MpmMigrationHelper::getListOfMigrations()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::getTimestampFromId()" refers="\global\MpmMigrationHelper::getTimestampFromId()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::runMigration()" refers="\global\MpmMigrationHelper::runMigration()"/>
+          <tag line="20" name="uses" description="\global\MpmMigrationHelper::setCurrentMigration" refers="\global\MpmMigrationHelper::setCurrentMigration"/>
+          <tag line="20" name="param" description="supresses certain text when true" type="bool" variable="$quiet">
+            <type by_reference="false">bool</type>
+          </tag>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="36">
+          <name>$quiet</name>
+          <default><![CDATA[false]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="111" package="mysql\php\migrations\Controllers">
+        <name>displayHelp</name>
+        <full_name>displayHelp</full_name>
+        <docblock line="102">
+          <description><![CDATA[Displays the help page for this controller.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="102" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="102" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="102" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="102" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="lib/exceptions/class_undefined_exception.php" hash="81d0cf77b8aeb4eb2a52a7f00c45da12" package="mysql\php\migrations\Exceptions">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmClassUndefinedException class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Exceptions"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Exceptions">
+      <extends>\Exception</extends>
+      <name>MpmClassUndefinedException</name>
+      <full_name>\MpmClassUndefinedException</full_name>
+      <docblock line="11">
+        <description><![CDATA[MpmClassUndefinedException should be thrown when a class is being instantiated but it is not yet defined.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Exceptions"/>
+      </docblock>
+    </class>
+  </file>
+  <file path="lib/exceptions/database_connection_exception.php" hash="388069a0c1833c5c2ae453cdd536259e" package="mysql\php\migrations\Exceptions">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmDatabaseConnectionException class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Exceptions"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Exceptions">
+      <extends>\Exception</extends>
+      <name>MpmDatabaseConnectionException</name>
+      <full_name>\MpmDatabaseConnectionException</full_name>
+      <docblock line="11">
+        <description><![CDATA[MpmDatabaseConnectionException should be thrown if we can't connect to the database.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Exceptions"/>
+      </docblock>
+    </class>
+  </file>
+  <file path="lib/exceptions/malformed_query_exception.php" hash="fd6ef27a0e581009e70df023e85b2252" package="mysql\php\migrations\Exceptions">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmMalformedQueryException class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Exceptions"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Exceptions">
+      <extends>\Exception</extends>
+      <name>MpmMalformedQueryException</name>
+      <full_name>\MpmMalformedQueryException</full_name>
+      <docblock line="11">
+        <description><![CDATA[MpmMalformedQueryException should be thrown if MySQL rejects a query.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Exceptions"/>
+      </docblock>
+    </class>
+  </file>
+  <file path="lib/helpers/autoload_helper.php" hash="f18b463efbf2a6fafdccdb94bdd17754" package="mysql\php\migrations\Helpers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmAutoloadHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Helpers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="54" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <include line="59" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <include line="70" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Helpers">
+      <extends/>
+      <name>MpmAutoloadHelper</name>
+      <full_name>\MpmAutoloadHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmAutoloadHelper class contains a single static method which is added to the stack of class autoloaders.]]></description>
+        <long-description><![CDATA[<p>Whenever a class is instantiated which hasn't already been included, this method will be called to try to dynamically include the proper class.</p>]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Helpers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="32" package="mysql\php\migrations\Helpers">
+        <name>load</name>
+        <full_name>load</full_name>
+        <docblock line="20">
+          <description><![CDATA[When part of the class autoloader stack, this method will dynamically try to located the proper class file and include it if the class is instantiated without already existing.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="throws" description="" type="\MpmClassUndefinedException">
+            <type by_reference="false">\MpmClassUndefinedException</type>
+          </tag>
+          <tag line="20" name="uses" description="\global\MPM_PATH" refers="\global\MPM_PATH"/>
+          <tag line="20" name="uses" description="\global\MpmStringHelper::camelToLower()" refers="\global\MpmStringHelper::camelToLower()"/>
+          <tag line="20" name="param" description="the name of the class being instantiated" type="string" variable="$class_name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="32">
+          <name>$class_name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/helpers/db_helper.php" hash="f4c4af28a08915313c8d05c66f0de97d" package="mysql\php\migrations\Helpers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmDbHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Helpers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Helpers">
+      <extends/>
+      <name>MpmDbHelper</name>
+      <full_name>\MpmDbHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmDbHelper class is used to fetch database objects (PDO or Mysqli right now) and perform basic database actions.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Helpers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="33" package="mysql\php\migrations\Helpers">
+        <name>getDbObj</name>
+        <full_name>getDbObj</full_name>
+        <docblock line="20">
+          <description><![CDATA[Returns the correct database object based on the database configuration file.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="throws" description="if database configuration file is missing or method is incorrectly defined" type="\Exception">
+            <type by_reference="false">\Exception</type>
+          </tag>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="20" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="20" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="20" name="return" description="" type="object">
+            <type by_reference="false">object</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="53" package="mysql\php\migrations\Helpers">
+        <name>getPdoObj</name>
+        <full_name>getPdoObj</full_name>
+        <docblock line="46">
+          <description><![CDATA[Returns a PDO object with connection in place.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="46" name="throws" description="if unable to connect to the database" type="\MpmDatabaseConnectionException">
+            <type by_reference="false">\MpmDatabaseConnectionException</type>
+          </tag>
+          <tag line="46" name="return" description="" type="\PDO">
+            <type by_reference="false">\PDO</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="72" package="mysql\php\migrations\Helpers">
+        <name>getMysqliObj</name>
+        <full_name>getMysqliObj</full_name>
+        <docblock line="65">
+          <description><![CDATA[Returns an ExceptionalMysqli object with connection in place.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="65" name="throws" description="if unable to connect to the database" type="\MpmDatabaseConnectionException">
+            <type by_reference="false">\MpmDatabaseConnectionException</type>
+          </tag>
+          <tag line="65" name="return" description="" type="\ExceptionalMysqli">
+            <type by_reference="false">\ExceptionalMysqli</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="85" package="mysql\php\migrations\Helpers">
+        <name>getMethod</name>
+        <full_name>getMethod</full_name>
+        <docblock line="78">
+          <description><![CDATA[Returns the correct database connection method as set in the database configuration file.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="78" name="throws" description="if database configuration file is missing" type="\Exception">
+            <type by_reference="false">\Exception</type>
+          </tag>
+          <tag line="78" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="108" package="mysql\php\migrations\Helpers">
+        <name>doSingleRowSelect</name>
+        <full_name>doSingleRowSelect</full_name>
+        <docblock line="95">
+          <description><![CDATA[Performs a query; $sql should be a SELECT query that returns exactly 1 row of data; returns an object that contains the row]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="95" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="95" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="95" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="95" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="95" name="param" description="a SELECT query that returns exactly 1 row of data" type="string" variable="$sql">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="95" name="param" description="a PDO or ExceptionalMysqli object that can be used to run the query" type="object" variable="$db">
+            <type by_reference="false">object</type>
+          </tag>
+          <tag line="95" name="return" description="" type="\obj">
+            <type by_reference="false">\obj</type>
+          </tag>
+        </docblock>
+        <argument line="108">
+          <name>$sql</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="108">
+          <name>$db</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="149" package="mysql\php\migrations\Helpers">
+        <name>doMultiRowSelect</name>
+        <full_name>doMultiRowSelect</full_name>
+        <docblock line="137">
+          <description><![CDATA[Performs a SELECT query]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="137" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="137" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="137" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="137" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="137" name="param" description="a SELECT query" type="string" variable="$sql">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="137" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="149">
+          <name>$sql</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="198" package="mysql\php\migrations\Helpers">
+        <name>test</name>
+        <full_name>test</full_name>
+        <docblock line="182">
+          <description><![CDATA[Checks to make sure everything is in place to be able to use the migrations tool.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="182" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="182" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="182" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="182" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="182" name="uses" description="\global\MpmDbHelper::checkForDbTable()" refers="\global\MpmDbHelper::checkForDbTable()"/>
+          <tag line="182" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="182" name="uses" description="\global\MpmCommandLineWriter::addText()" refers="\global\MpmCommandLineWriter::addText()"/>
+          <tag line="182" name="uses" description="\global\MpmCommandLineWriter::write()" refers="\global\MpmCommandLineWriter::write()"/>
+          <tag line="182" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="182" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="182" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="279" package="mysql\php\migrations\Helpers">
+        <name>checkForDbTable</name>
+        <full_name>checkForDbTable</full_name>
+        <docblock line="269">
+          <description><![CDATA[Checks whether or not the migrations database table exists.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="269" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="269" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="269" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="269" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="269" name="return" description="" type="bool">
+            <type by_reference="false">bool</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="303" package="mysql\php\migrations\Helpers">
+        <name>getTables</name>
+        <full_name>getTables</full_name>
+        <docblock line="295">
+          <description><![CDATA[Returns an array of all the tables in the database.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="295" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="295" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="295" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="303">
+          <name>$dbObj</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="295" code="50015">Argument $dbObj is missing from the Docblock of getTables()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/helpers/list_helper.php" hash="0d98d46045791eadb7e720d8370c0baa" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmListHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends/>
+      <name>MpmListHelper</name>
+      <full_name>\MpmListHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmListHelper is used to obtain various lists related to migration files.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="27" package="mysql\php\migrations\Controllers">
+        <name>getTotalMigrations</name>
+        <full_name>getTotalMigrations</full_name>
+        <docblock line="20">
+          <description><![CDATA[Returns the total number of migrations available.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::doSingleRowSelect()" refers="\global\MpmDbHelper::doSingleRowSelect()"/>
+          <tag line="20" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="46" package="mysql\php\migrations\Controllers">
+        <name>getFullList</name>
+        <full_name>getFullList</full_name>
+        <docblock line="36">
+          <description><![CDATA[Returns a full list of all migrations.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="36" name="uses" description="\global\MpmDbHelper::doMultiRowSelect()" refers="\global\MpmDbHelper::doMultiRowSelect()"/>
+          <tag line="36" name="param" description="the start index number" type="int" variable="$startIdx">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="36" name="param" description="total number of records to return" type="int" variable="$total">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="36" name="return" description="" type="\arrays">
+            <type by_reference="false">\arrays</type>
+          </tag>
+        </docblock>
+        <argument line="46">
+          <name>$startIdx</name>
+          <default><![CDATA[0]]></default>
+          <type/>
+        </argument>
+        <argument line="46">
+          <name>$total</name>
+          <default><![CDATA[30]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="74" package="mysql\php\migrations\Controllers">
+        <name>mergeFilesWithDb</name>
+        <full_name>mergeFilesWithDb</full_name>
+        <docblock line="60">
+          <description><![CDATA[Fetches a list of files and adds migrations to the database migrations table.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="60" name="uses" description="\global\MpmListHelper::getListOfFiles()" refers="\global\MpmListHelper::getListOfFiles()"/>
+          <tag line="60" name="uses" description="\global\MpmListHelper::getTotalMigrations()" refers="\global\MpmListHelper::getTotalMigrations()"/>
+          <tag line="60" name="uses" description="\global\MpmListHelper::getFullList()" refers="\global\MpmListHelper::getFullList()"/>
+          <tag line="60" name="uses" description="\global\MpmListHelper::getTimestampArray()" refers="\global\MpmListHelper::getTimestampArray()"/>
+          <tag line="60" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="60" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="60" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="60" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="60" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="195" package="mysql\php\migrations\Controllers">
+        <name>getTimestampArray</name>
+        <full_name>getTimestampArray</full_name>
+        <docblock line="190">
+          <description><![CDATA[Given an array of objects (from the getFullList() or getListOfFiles() methods), returns an array of timestamps.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="190" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="195">
+          <name>$obj_array</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="215" package="mysql\php\migrations\Controllers">
+        <name>getListOfFiles</name>
+        <full_name>getListOfFiles</full_name>
+        <docblock line="205">
+          <description><![CDATA[Returns an array of objects which hold data about a migration file (timestamp, file, etc.).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="205" name="uses" description="\global\MPM_DB_PATH" refers="\global\MPM_DB_PATH"/>
+          <tag line="205" name="uses" description="\global\MpmStringHelper::getTimestampFromFilename()" refers="\global\MpmStringHelper::getTimestampFromFilename()"/>
+          <tag line="205" name="param" description="should either be old or new; determines how the migrations are sorted in the array" type="string" variable="$sort">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="205" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="215">
+          <name>$sort</name>
+          <default><![CDATA['old']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="253" package="mysql\php\migrations\Controllers">
+        <name>getFiles</name>
+        <full_name>getFiles</full_name>
+        <docblock line="246">
+          <description><![CDATA[Returns an array of migration filenames.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="246" name="uses" description="\global\MpmListHelper::getListOfFiles()" refers="\global\MpmListHelper::getListOfFiles()"/>
+          <tag line="246" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="275" package="mysql\php\migrations\Controllers">
+        <name>getListFromDb</name>
+        <full_name>getListFromDb</full_name>
+        <docblock line="264">
+          <description><![CDATA[Fetches a list of migrations which have already been run.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="264" name="uses" description="\global\MpmDbHelper::doSingleRowSelect()" refers="\global\MpmDbHelper::doSingleRowSelect()"/>
+          <tag line="264" name="uses" description="\global\MpmDbHelper::doMultiRowSelect()" refers="\global\MpmDbHelper::doMultiRowSelect()"/>
+          <tag line="264" name="param" description="the current timestamp of the migration run last" type="string" variable="$latestTimestamp">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="264" name="param" description="the way we are migrating; should either be up or down" type="string" variable="$direction">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="264" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="275">
+          <name>$latestTimestamp</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="275">
+          <name>$direction</name>
+          <default><![CDATA['up']]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="190" code="50015">Argument $obj_array is missing from the Docblock of getTimestampArray()</error>
+    </parse_markers>
+  </file>
+  <file path="lib/helpers/migration_helper.php" hash="b1deb8eb9e51d478ff418252c4094b8a" package="mysql\php\migrations\Controllers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmMigrationHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Controllers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="85" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Controllers">
+      <extends/>
+      <name>MpmMigrationHelper</name>
+      <full_name>\MpmMigrationHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmMigrationHelper contains a number of static functions which are used during the migration process.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Controllers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="29" package="mysql\php\migrations\Controllers">
+        <name>setCurrentMigration</name>
+        <full_name>setCurrentMigration</full_name>
+        <docblock line="20">
+          <description><![CDATA[Sets the current active migration.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="20" name="param" description="the ID of the migration to set as the current one" type="int" variable="$id">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="20" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="29">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="69" package="mysql\php\migrations\Controllers">
+        <name>runMigration</name>
+        <full_name>runMigration</full_name>
+        <docblock line="53">
+          <description><![CDATA[Performs a single migration.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="53" name="uses" description="\global\MpmStringHelper::getFilenameFromTimestamp()" refers="\global\MpmStringHelper::getFilenameFromTimestamp()"/>
+          <tag line="53" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="53" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="53" name="uses" description="\global\MpmCommandLineWriter::getInstance()" refers="\global\MpmCommandLineWriter::getInstance()"/>
+          <tag line="53" name="uses" description="\global\MpmCommandLineWriter::writeLine()" refers="\global\MpmCommandLineWriter::writeLine()"/>
+          <tag line="53" name="uses" description="\global\MPM_DB_PATH" refers="\global\MPM_DB_PATH"/>
+          <tag line="53" name="param" description="a simple object with migration information (from a migration list)" type="object" variable="$obj">
+            <type by_reference="false">object</type>
+          </tag>
+          <tag line="53" name="param" description="&amp;$total_migrations_run a running total of migrations run" type="int" variable="$method">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="53" name="param" description="if true, exceptions will not cause the script to exit" type="bool" variable="$forced">
+            <type by_reference="false">bool</type>
+          </tag>
+          <tag line="53" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="69">
+          <name>$obj</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="69">
+          <name>$method</name>
+          <default><![CDATA['up']]></default>
+          <type/>
+        </argument>
+        <argument line="69">
+          <name>$forced</name>
+          <default><![CDATA[false]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="141" package="mysql\php\migrations\Controllers">
+        <name>getCurrentMigrationTimestamp</name>
+        <full_name>getCurrentMigrationTimestamp</full_name>
+        <docblock line="131">
+          <description><![CDATA[Returns the timestamp of the migration currently rolled to.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="131" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="131" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="131" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="131" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="131" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="195" package="mysql\php\migrations\Controllers">
+        <name>getListOfMigrations</name>
+        <full_name>getListOfMigrations</full_name>
+        <docblock line="180">
+          <description><![CDATA[Returns an array of migrations which need to be run (in order).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="180" name="uses" description="\global\MpmMigrationHelper::getTimestampFromId()" refers="\global\MpmMigrationHelper::getTimestampFromId()"/>
+          <tag line="180" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="180" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="180" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="180" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="180" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="180" name="param" description="the ID of the migration to stop on" type="int" variable="$toId">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="180" name="param" description="the direction of the migration; should be 'up' or 'down'" type="string" variable="$direction">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="180" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="195">
+          <name>$toId</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="195">
+          <name>$direction</name>
+          <default><![CDATA['up']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="261" package="mysql\php\migrations\Controllers">
+        <name>getTimestampFromId</name>
+        <full_name>getTimestampFromId</full_name>
+        <docblock line="248">
+          <description><![CDATA[Returns a timestamp when given a migration ID number.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="248" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="248" name="uses" description="\global\MpmDbHelper::getPdoObj()" refers="\global\MpmDbHelper::getPdoObj()"/>
+          <tag line="248" name="uses" description="\global\MpmDbHelper::getMysqliObj()" refers="\global\MpmDbHelper::getMysqliObj()"/>
+          <tag line="248" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="248" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="248" name="param" description="the ID number of the migration" type="int" variable="$id">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="248" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="261">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="328" package="mysql\php\migrations\Controllers">
+        <name>getCurrentMigrationNumber</name>
+        <full_name>getCurrentMigrationNumber</full_name>
+        <docblock line="318">
+          <description><![CDATA[Returns the number of the migration currently rolled to.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="318" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="318" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="318" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="318" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="318" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="389" package="mysql\php\migrations\Controllers">
+        <name>getMigrationCount</name>
+        <full_name>getMigrationCount</full_name>
+        <docblock line="379">
+          <description><![CDATA[Returns the total number of migrations.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="379" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="379" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="379" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="379" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="379" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="431" package="mysql\php\migrations\Controllers">
+        <name>getLatestMigration</name>
+        <full_name>getLatestMigration</full_name>
+        <docblock line="421">
+          <description><![CDATA[Returns the ID of the latest migration.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="421" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="421" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="421" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="421" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="421" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="474" package="mysql\php\migrations\Controllers">
+        <name>doesMigrationExist</name>
+        <full_name>doesMigrationExist</full_name>
+        <docblock line="462">
+          <description><![CDATA[Checks to see if a migration with the given ID actually exists.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="462" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="462" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="462" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="462" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="462" name="param" description="the ID of the migration" type="int" variable="$id">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="462" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="474">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="524" package="mysql\php\migrations\Controllers">
+        <name>getMigrationObject</name>
+        <full_name>getMigrationObject</full_name>
+        <docblock line="512">
+          <description><![CDATA[Returns a migration object; this object contains all data stored in the DB for the particular migration ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="512" name="uses" description="\global\MpmDbHelper::getMethod()" refers="\global\MpmDbHelper::getMethod()"/>
+          <tag line="512" name="uses" description="\global\MpmDbHelper::getDbObj()" refers="\global\MpmDbHelper::getDbObj()"/>
+          <tag line="512" name="uses" description="\global\MPM_METHOD_MYSQLI" refers="\global\MPM_METHOD_MYSQLI"/>
+          <tag line="512" name="uses" description="\global\MPM_METHOD_PDO" refers="\global\MPM_METHOD_PDO"/>
+          <tag line="512" name="param" description="the ID of the migration" type="int" variable="$id">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="512" name="return" description="" type="object">
+            <type by_reference="false">object</type>
+          </tag>
+        </docblock>
+        <argument line="524">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/helpers/string_helper.php" hash="3795b270244ffcb915b6050bcf6b55d4" package="mysql\php\migrations\Helpers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmStringHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Helpers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Helpers">
+      <extends/>
+      <name>MpmStringHelper</name>
+      <full_name>\MpmStringHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmStringHelper class holds a number of static methods which manipulate strings.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Helpers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="27" package="mysql\php\migrations\Helpers">
+        <name>getTimestampFromFilename</name>
+        <full_name>getTimestampFromFilename</full_name>
+        <docblock line="20">
+          <description><![CDATA[Returns a timestamp when given a migration filename.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="param" description="the migration filename" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="20" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="27">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="58" package="mysql\php\migrations\Helpers">
+        <name>getFilenameFromTimestamp</name>
+        <full_name>getFilenameFromTimestamp</full_name>
+        <docblock line="51">
+          <description><![CDATA[Returns a filename when given a migration timestamp.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="51" name="param" description="the migration timestamp" type="string" variable="$timestamp">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="51" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="58">
+          <name>$timestamp</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="70" package="mysql\php\migrations\Helpers">
+        <name>strToCamel</name>
+        <full_name>strToCamel</full_name>
+        <docblock line="63">
+          <description><![CDATA[Coverts a string from this_notation to ThisNotation (CamelCase)]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="63" name="param" description="the string in this_notation" type="string" variable="$no_camel">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="63" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="70">
+          <name>$no_camel</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="103" package="mysql\php\migrations\Helpers">
+        <name>camelToLower</name>
+        <full_name>camelToLower</full_name>
+        <docblock line="96">
+          <description><![CDATA[Converts a string from CamelCaps to this_notation.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="96" name="param" description="a string in CamelCaps" type="string" variable="$camel">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="96" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="103">
+          <name>$camel</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="125" package="mysql\php\migrations\Helpers">
+        <name>addSingleQuotes</name>
+        <full_name>addSingleQuotes</full_name>
+        <docblock line="118">
+          <description><![CDATA[Adds single quotes and escapes single quotes and backslashes to the given string]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="118" name="param" description="the string we need to quote" type="string" variable="$arg">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="118" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="125">
+          <name>$arg</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/helpers/template_helper.php" hash="dc482aaf2fdd545c365e404bb680d3da" package="mysql\php\migrations\Helpers">
+    <docblock line="2">
+      <description><![CDATA[This file houses the MpmtemplateHelper class.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Helpers"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="17" package="mysql\php\migrations\Helpers">
+      <extends/>
+      <name>MpmTemplateHelper</name>
+      <full_name>\MpmTemplateHelper</full_name>
+      <docblock line="11">
+        <description><![CDATA[The MpmTemplateHelper class is a very basic templating class which enables custom migration, schema, test data files as well as a custom header.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="11" name="package" description="mysql_php_migrations"/>
+        <tag line="11" name="subpackage" description="Helpers"/>
+      </docblock>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="30" package="mysql\php\migrations\Helpers">
+        <name>getTemplateAsArrayOfLines</name>
+        <full_name>getTemplateAsArrayOfLines</full_name>
+        <docblock line="20">
+          <description><![CDATA[Returns the requested template file as an array, each item in that array is a single line from the file.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="uses" description="\global\MpmTemplateHelpger::getTemplate()" refers="\global\MpmTemplateHelpger::getTemplate()"/>
+          <tag line="20" name="param" description="the filename of the template being requested" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="20" name="param" description="an array of key value pairs that correspond to variables that should be replaced in the template file" type="array" variable="$vars">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="20" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="30">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="30">
+          <name>$vars</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="47" package="mysql\php\migrations\Helpers">
+        <name>getTemplate</name>
+        <full_name>getTemplate</full_name>
+        <docblock line="37">
+          <description><![CDATA[Returns the requested template file as a string]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="37" name="uses" description="\global\MPM_PATH" refers="\global\MPM_PATH"/>
+          <tag line="37" name="param" description="the filename of the template being requested" type="string" variable="$file">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="37" name="param" description="an array of key value pairs that correspond to variables that should be replaced in the template file" type="array" variable="$vars">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="37" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="47">
+          <name>$file</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="47">
+          <name>$vars</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="lib/init.php" hash="c085290a5f996e0773f445226c2b1854" package="mysql\php\migrations\Globals">
+    <docblock line="2">
+      <description><![CDATA[This file is included by the migrate.php script; it includes the MpmStringHelper and MpmAutoloadHelper classes and sets up the auto-class loading.]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="2" name="package" description="mysql_php_migrations"/>
+      <tag line="2" name="subpackage" description="Globals"/>
+      <tag line="2" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="2" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="16" type="Require Once" package="Default">
+      <name/>
+      <docblock line="13">
+        <description><![CDATA[Include the database connection info.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </include>
+    <include line="64" type="Require Once" package="Default">
+      <name/>
+      <docblock line="61">
+        <description><![CDATA[Include the MpmClassUndefinedException class.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </include>
+    <include line="69" type="Require Once" package="Default">
+      <name/>
+      <docblock line="66">
+        <description><![CDATA[Include the MpmStringHelper class.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </include>
+    <include line="74" type="Require Once" package="Default">
+      <name/>
+      <docblock line="71">
+        <description><![CDATA[Include the MpmAutoloadHelper class.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </include>
+    <constant namespace="global" line="33" package="mysql\php\migrations\Globals">
+      <name>MPM_DB_PATH</name>
+      <full_name>\MPM_DB_PATH</full_name>
+      <value><![CDATA[MPM_PATH . '/db/']]></value>
+      <docblock line="30">
+        <description><![CDATA[]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="30" name="ignore" description=""/>
+      </docblock>
+    </constant>
+    <constant namespace="global" line="42" package="mysql\php\migrations\Globals">
+      <name>MPM_METHOD_PDO</name>
+      <full_name>\MPM_METHOD_PDO</full_name>
+      <value><![CDATA[1]]></value>
+      <docblock line="39">
+        <description><![CDATA[Flag to use PDO to talk to the database.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </constant>
+    <constant namespace="global" line="50" package="mysql\php\migrations\Globals">
+      <name>MPM_METHOD_MYSQLI</name>
+      <full_name>\MPM_METHOD_MYSQLI</full_name>
+      <value><![CDATA[2]]></value>
+      <docblock line="47">
+        <description><![CDATA[Flag to use MySQLi to talk to the database.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </constant>
+    <constant namespace="global" line="58" package="mysql\php\migrations\Globals">
+      <name>STDIN</name>
+      <full_name>\STDIN</full_name>
+      <value><![CDATA[fopen("php://stdin", "r")]]></value>
+      <docblock line="55">
+        <description><![CDATA[In some cases STDIN built-in can be undefined]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </constant>
+  </file>
+  <file path="migrate.php" hash="c6ba345abf938e42f3e253660d5327e5" package="mysql\php\migrations\Globals">
+    <docblock line="3">
+      <description><![CDATA[This file is the main script which should be run on the command line in order to perform database migrations.]]></description>
+      <long-description><![CDATA[<p>If you want to use this script like so:  ./migrate.php -- you will need to give it executable permissions (chmod +x migrate.php) and ensure the top line of this script points to the actual location of your PHP binary.</p>]]></long-description>
+      <tag line="3" name="package" description="mysql_php_migrations"/>
+      <tag line="3" name="subpackage" description="Globals"/>
+      <tag line="3" name="license" description="http://www.opensource.org/licenses/bsd-license.php  The New BSD License"/>
+      <tag line="3" name="link" description="http://code.google.com/p/mysql-php-migrations/" link="http://code.google.com/p/mysql-php-migrations/"/>
+    </docblock>
+    <include line="36" type="Require Once" package="Default">
+      <name/>
+      <docblock line="33">
+        <description><![CDATA[Include the init script.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </include>
+    <constant namespace="global" line="26" package="mysql\php\migrations\Globals">
+      <name>MPM_PATH</name>
+      <full_name>\MPM_PATH</full_name>
+      <value><![CDATA[dirname(__FILE__)]]></value>
+      <docblock line="23">
+        <description><![CDATA[Define the full path to this file.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </constant>
+    <constant namespace="global" line="31" package="mysql\php\migrations\Globals">
+      <name>MPM_VERSION</name>
+      <full_name>\MPM_VERSION</full_name>
+      <value><![CDATA['2.1.4']]></value>
+      <docblock line="28">
+        <description><![CDATA[Version Number - for reference]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+    </constant>
+  </file>
+  <file path="migrations/2012_08_21_21_15_44.php" hash="12ba06345064463450f11237fcd7c41f" package="Default">
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends>\MpmMysqliMigration</extends>
+      <name>Migration_2012_08_21_21_15_44</name>
+      <full_name>\Migration_2012_08_21_21_15_44</full_name>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="6" package="Default">
+        <name>up</name>
+        <full_name>up</full_name>
+        <argument line="6">
+          <name>$mysqli</name>
+          <default><![CDATA[]]></default>
+          <type>\ExceptionalMysqli</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="11" package="Default">
+        <name>down</name>
+        <full_name>down</full_name>
+        <argument line="11">
+          <name>$mysqli</name>
+          <default><![CDATA[]]></default>
+          <type>\ExceptionalMysqli</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file migrations/2012_08_21_21_15_44.php</error>
+      <error line="3" code="50000">No DocBlock was found for \Migration_2012_08_21_21_15_44</error>
+      <error line="6" code="50010">No DocBlock was found for method up()</error>
+      <error line="11" code="50010">No DocBlock was found for method down()</error>
+    </parse_markers>
+  </file>
+  <package name="Default" full_name="Default"/>
+  <package name="mysql" full_name="mysql">
+    <package name="php" full_name="mysql\php">
+      <package name="migrations" full_name="mysql\php\migrations">
+        <package name="Classes" full_name="mysql\php\migrations\Classes"/>
+        <package name="Controllers" full_name="mysql\php\migrations\Controllers"/>
+        <package name="Exceptions" full_name="mysql\php\migrations\Exceptions"/>
+        <package name="Globals" full_name="mysql\php\migrations\Globals"/>
+        <package name="Helpers" full_name="mysql\php\migrations\Helpers"/>
+      </package>
+    </package>
+  </package>
+  <namespace name="global" full_name="global"/>
+  <marker count="0">todo</marker>
+  <marker count="0">fixme</marker>
+  <deprecated count="0"/>
+</project>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JSON - Testing</title>
+
+
+<script src="js/jquery-1.8.2.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+
+
+function functionalTest(urlStr, dataStr, typeStr, outputId) {
+  if (typeof typeStr === 'undefined')
+    typeStr = 'POST';
+  
+  testId = $('#functional_tests').children().size();
+  
+  if (typeof outputId === 'undefined') {
+	  outputId = '#test'+testId+' .result'; 
+    $('#functional_tests').append('<li id="test'+testId+'"><h3>Test '+testId+': '+ urlStr +'</h3><div><strong>Parameter:</strong> '+dataStr+'</div><p class="result"></p></li>');
+  }
+  
+  var r;
+  $.ajax({
+      url: urlStr,
+      data: dataStr,
+      type: typeStr,
+      dataType: 'text',
+      async: false
+    }).done(function(data){
+      r = data;
+      $(outputId).html(data);
+    }).fail(function(jqXhr, textStatus){
+      r = textStatus;
+      $(outputId).html(jqXhr.responseText);
+    });
+  
+  return r;
+}
+
+var session_id;
+
+function login(result) {
+	  var r = functionalTest('session.json?action=login', 'email=jdtest8@codemaschine.de&password=Test1234', 'POST', result);
+	  //console.log(r);
+	  session_id = $.parseJSON(r).session_id;
+	  $('#session_id').html(session_id);
+	  
+	  $('#session_id_field_wrapper').html('&session_id='+session_id);
+	  $('#session_id_con').val('&session_id='+session_id);
+}
+
+
+function logout(result) {
+	functionalTest('session.json?action=logout', 'session_id='+session_id, 'GET', result);
+	session_id = null;
+	$('#session_id').html('');
+	$('#session_id_field_wrapper').html('');
+	$('#session_id_con').val('');
+}
+
+</script>
+
+
+<style type="text/css">
+body {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+}
+
+h3 {
+  margin: 0;
+}
+</style>
+</head>
+<body>
+
+
+<input type="hidden" name="session_id_con" id="session_id_con" />
+<form id="testerform" action="#">
+  URL: <input id="url" name="url" type="text" style="width: 400px;">
+  <button onclick="$('#url').val($('#url').val() + $('#session_id_con').val()); return false;">&lt;</button><span id="session_id_field_wrapper"></span>
+  
+  
+  
+  <br>
+  POST: <input id="post" name="text" type="text" style="width: 400px;">
+  <input type="submit" value="senden">
+</form>
+
+<button onclick="login('#result');">Einloggen</button>
+<button onclick="logout('#result');">Ausloggen</button>
+
+<script type="text/javascript">
+
+$('#testerform').submit(function(){
+	functionalTest($('#url').val(), $('#post').val(), 'POST', '#result');
+	return false;
+});
+
+
+
+</script>
+
+<hr>
+<div id="result">
+
+</div>
+
+<p>
+  <strong>Session-ID: <span id="session_id" class="session_id"></span></strong>
+</p>
+
+<h2>Functional Tests</h2>
+<ul id="functional_tests">
+</ul>
+
+
+
+<script>
+
+$('#url').val(window.location.href.substr(0, window.location.href.length - window.location.href.split('/').pop().length));
+
+//Functional Tests
+var r, json, n;
+
+
+r = functionalTest('gebet.json?action=create', 'prayer[name]=Testina&prayer[prayer]=Ein+Testanliegen');
+json = $.parseJSON(r);
+var prayer = json.content;
+var edit_hash = json.content.edit_hash;
+var prayer_id = json.content.id;
+
+functionalTest('gebet.json?action=update&edit_hash='+edit_hash, 'prayer[prayer]=Testanliegen+mit+geändertem+Text&prayer[sharing]=email_only');
+
+functionalTest('gebet.json?action=extend&edit_hash='+edit_hash, 'prayer[deadline]=1416864967');
+
+n = functionalTest('note.json?action=create&edit_hash='+edit_hash, 'note[note]=eine+note');
+json = $.parseJSON(n);
+var note = json.content;
+
+functionalTest('gebet.json?action=show&edit_hash='+edit_hash);
+
+functionalTest('note.json?action=update&edit_hash='+edit_hash+'&id='+note.id, 'note[note]=eine+bearbeitete+note');
+
+functionalTest('note.json?action=delete&edit_hash='+edit_hash+'&id='+note.id);
+
+r = functionalTest('feedback.json?action=create&prayer_id='+prayer_id+'&edit_hash='+edit_hash, 'feedback[feedback]=Das+ist+ein+Testfeedback');
+json = $.parseJSON(r);
+var feedback = json.content;
+
+functionalTest('feedback.json?action=update&edit_hash='+edit_hash+'&id='+feedback.id, 'feedback[feedback]=Das+ist+ein+Testfeedback+mit+anderem+Text&feedback[prayer_closed]=1');
+
+functionalTest('feedback.json?action=delete&edit_hash='+edit_hash+'&id='+feedback.id);
+
+
+functionalTest('gebet.json?action=delete&edit_hash='+edit_hash);
+
+
+
+
+login();
+
+functionalTest('user.json?action=current_user', 'session_id='+session_id);
+
+functionalTest('gebet.json?action=meine_anliegen', 'session_id='+session_id);
+
+functionalTest('beter.json?action=index&full=1', 'session_id='+session_id);
+  
+
+logout();
+
+
+
+</script>
+</body>
+</html>
