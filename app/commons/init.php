@@ -29,7 +29,7 @@ $displayMessage = array();
 
 if (strrpos($_FRAMEWORK['controller'], '.') === false) {
   $_FRAMEWORK['format'] = 'php';
-  $_FRAMEWORK['controller'] .= 'php';
+  $_FRAMEWORK['controller'] .= 'php'; // TODO: Nicht '.php'
 }
 else {
   $_FRAMEWORK['format'] = strtolower(substr($_FRAMEWORK['controller'], strrpos($_FRAMEWORK['controller'], '.') + 1));
@@ -162,6 +162,7 @@ require_once 'lib/functions.php';
 
 $model_files = scandir('model');
 foreach ($model_files as $file) {
+	// include app/model/*.php
 	if (substr($file, -4) === '.php')
 		require_once 'model/'.$file;
 }
