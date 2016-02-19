@@ -82,7 +82,7 @@ if (!empty($_POST))
 /* untested
 function framework_exception_wrapper($e) {
   global $log;
-  
+
   $log->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}
 {$e->getTraceAsString()}");
   //throw $e;
@@ -102,14 +102,14 @@ $log->debug("Error reporting level: ".error_reporting());
 function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
   $log = new Logger(dirname(__FILE__).'/../log/log.txt', $debug ? 0 : 1);
   $fwlog = new Logger(dirname(__FILE__).'/../log/fwlog.txt', $debug ? 0 : 1);
-  
+
   $backtrace = debug_backtrace();
   $log->error("{$errstr} in {$errfile} on line {$errline}
 ".export_backtrace());
-  
+
   $fwlog->error("{$errstr} in {$errfile} on line {$errline}
 ".export_backtrace());
-  
+
   return false; // continue with the normal error handler;
 }
 set_error_handler('framework_error_wrapper', error_reporting());
@@ -128,15 +128,15 @@ function fatal_handler($debug = 0) {
     $errfile = $error["file"];
     $errline = $error["line"];
     $errstr  = $error["message"];
-    
+
     if ($errno & error_reporting()) {
-      
+
       $backtrace = debug_backtrace();
-      
+
       $log = new Logger(dirname(__FILE__).'/../log/log.txt', $debug ? 0 : 1);
       $log->error("{$errstr} in {$errfile} on line {$errline}
       ".export_backtrace());
-      
+
       $fwlog = new Logger(dirname(__FILE__).'/../log/fwlog.txt', $debug ? 0 : 1);
       $fwlog->error("{$errstr} in {$errfile} on line {$errline}
       ".export_backtrace());
@@ -177,10 +177,6 @@ require_once 'commons/session.php';
 
 $additionalHeaderData = array();
 
-
-
 $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-
-
 
 ?>
