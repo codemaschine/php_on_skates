@@ -597,7 +597,7 @@ class RelationHasOne extends Relation {
   public function destroy() {
     $this->get();
     if ($this->obj)
-      $o->destroy();
+      $this->obj->destroy();
     $this->obj = NULL;
   }
   
