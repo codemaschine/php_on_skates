@@ -509,12 +509,24 @@ function show_debug_msg() {
 }
 
 function date_to_db_format($d) {
+  if (!is_string($d))
+    return null;
+  
   $d_ary = explode('.', $d);
+  if (count($d_ary) !== 3)
+    return $d;
+  
   return $d_ary[2].'-'.$d_ary[1].'-'.$d_ary[0];
 }
 
 function date_to_readable($d) {
+  if (!is_string($d))
+    return null;
+  
   $d_ary = explode('-', $d);
+  if (count($d_ary) !== 3)
+    return $d;
+  
   return $d_ary[2].'.'.$d_ary[1].'.'.$d_ary[0];
 }
 
