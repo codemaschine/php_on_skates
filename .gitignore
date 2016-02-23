@@ -5,3 +5,4 @@
 .svnignore
 logs/*
 app/log/*
+skates.sublime-*
