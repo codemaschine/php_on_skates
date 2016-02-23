@@ -5,7 +5,7 @@ require_once 'generators.php';
 
 
 
-if (!$argv[2])
+if (!$argv[2]) {
 	echo "ERROR: missing generator
 
 Available generators:
@@ -13,9 +13,28 @@ Available generators:
     migration  Generate a migration
 
 ";
+  return;
+}
+
+if (!$argv[3]) {
+  echo "ERROR: missing name for object to generate!";
+  return;
+}
+
+function unpack_field_defs($field_defs) {
+  $fields = array();
+  foreach ($field_defs as $def) {
+    if (!preg_match('/([\w]+):([\w]+)/', $def, $matches))
+      die("Error: wrong format in field definitions. Use format <field_name>:<type>");
+      $fields[$matches[1]] = $matches[2];
+  }
+  return $fields;
+}
+
 
 
 switch ($argv[2]) {
+  case 'scaffold':
   case 'model':
 
   	$name = ucfirst($argv[3]);
@@ -30,6 +49,9 @@ switch ($argv[2]) {
       array_push($field_defs, 'updated_at:datetime');
 
     $fields = unpack_field_defs($field_defs);
+
+    //if ($argv[2] === 'scaffold')
+    //  need some stuff here ...
 
   	if (model_generator($name, $fields) !== false) // returns false when skipping
       migration_generator('create'.Inflect::pluralize($name), $fields);  //TODO: better pluralization here
