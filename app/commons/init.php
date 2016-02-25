@@ -39,6 +39,21 @@ else {
 }
 
 
+
+/* determine action */
+if ($_GET['action'])
+	$_FRAMEWORK['action'] = $_GET['action'];
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['id'])
+	$_FRAMEWORK['action'] = $_GET['action'] = 'show';
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET')
+	$_FRAMEWORK['action'] = $_GET['action'] = 'index';
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['id'])
+	$_FRAMEWORK['action'] = $_GET['action'] = 'update';
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
+	$_FRAMEWORK['action'] = $_GET['action'] = 'create';
+
+
+
 $_FRAMEWORK['view'] = $_FRAMEWORK['controller']; // Default view name is action name or controllers name
 if ($_GET['action']) {
   if (strpos($_GET['action'], '/') !== false)
