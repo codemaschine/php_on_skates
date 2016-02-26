@@ -1,8 +1,8 @@
 <?php
 
 
-function __($label, $locale = null) {
-  global $_FRAMEWORK;
+function __($label, $locale = null, $fallback = false) {
+  global $_FRAMEWORK, $environment;
   
   if ($locale === null)
     $locale = $_FRAMEWORK['locale'];
@@ -13,6 +13,11 @@ function __($label, $locale = null) {
   if ($_FRAMEWORK['default_locale']) {
     $t = _get_translation($label, $_FRAMEWORK['default_locale']);
     if ($t !== false) return $t;       // return translation if found
+  }
+  
+  if ($fallback || $environment === 'production') {
+  	$label_elems = explode('.', $label);
+  	return ucfirst(str_replace('_', ' ', $label_elems[count($label_elems) - 1]));
   }
 
   return "translation missing: ".$label;

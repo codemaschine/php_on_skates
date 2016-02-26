@@ -17,7 +17,7 @@ function strtolowerunderscore($str) {
 }
 
 function strtouppercamelcase($str) {
-  return str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($str))));
+  return preg_replace_callback('/(?:^|_)(.?)/',function($matches){return strtoupper($matches[1]);},$str);
 }
 
 
@@ -39,6 +39,10 @@ function export_backtrace() {
 
 function get_max_upload_size() { // in Bytes
   return min(let_to_num(ini_get('post_max_size')), let_to_num(ini_get('upload_max_filesize')));
+}
+
+function array_remove_keys(array &$array, array $keys) {
+	$array = array_diff_key($array, array_flip($keys));
 }
 
 

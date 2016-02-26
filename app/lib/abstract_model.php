@@ -157,6 +157,10 @@ abstract class AbstractModel {
 
 
   // -- instance methods
+  
+  public function get_class_label() {
+  	return strtolowerunderscore(get_class($this));
+  }
 
   public function get_id() {
     return $this->id;
@@ -206,12 +210,12 @@ abstract class AbstractModel {
     $entries = $this->attr; // make a copy of attributes
 
     if (empty($entries))
-  	  throw new Exception("Define some  '$table'!", E_USER_ERROR);
+  	  throw new Exception("Define some fields in '$table'!", E_USER_ERROR);
 
   	if ($this->is_new())
-  	  $entries['created_at'] = time();
+  	  $entries['created_at'] = $this->attr_defs['created_at'] === 'datetime' ? gmdate(DB_DATETIME_FORMAT) : time();
 
-    $entries['updated_at'] = time();
+    $entries['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? gmdate(DB_DATETIME_FORMAT) : time();
 
     $assignments = array();
     foreach ($entries as $key => &$value) {
@@ -230,6 +234,8 @@ abstract class AbstractModel {
       	  $value = $value ? '1' : '0';
       	elseif (is_string($value))
       	  $value = "'".mysql_real_escape_string($value)."'";
+      	elseif (is_float($value))
+      	  $value = var_export($value, true); // avoid the usage of , instead of . as decimal separator caused by setlocale.
       	elseif (!is_numeric($value))
       	  $value = 'NULL'; // Default: drop other values
 
@@ -304,11 +310,7 @@ abstract class AbstractModel {
    * @return boolean any validation errors that aborts the saving?
    */
   public function update_attributes($new_attrs, $skip_validation = false) {
-    global $log;
-    $log->debug('vor dem Mischen: '.var_inspect($this->attr));
-    $log->debug('mische mit: '.var_inspect($new_attrs));
     $this->secure_merge($new_attrs);
-    $log->debug('nach dem Mischen: '.var_inspect($this->attr));
     return $this->_save($skip_validation, array_keys($new_attrs));
   }
 
@@ -968,7 +970,17 @@ abstract class AbstractModel {
     $default_type = $this->attr_defs[$key];
     $cur_type = gettype($value);
     if ($cur_type == 'double') $cur_type = 'float';
-
+    
+    switch ($default_type) {
+    	case 'decimal': $default_type = 'float'; break;
+    	case 'text':
+    	case 'binary':
+    	case 'datetime':
+    	case 'date':
+    	case 'time': $default_type = 'string'; break;
+    	case 'primary_key': $default_type = 'integer'; break;
+    }
+    
     if ($cur_type != $default_type) {
       //$log->debug("$key => $value: has type $cur_type, should be $default_type");
       switch ($default_type) {

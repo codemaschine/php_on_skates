@@ -2,9 +2,15 @@
 
 
 function url_for($o, $params = array()) {
-  global $_FRAMEWORK;
-  if (is_string($o)) { // if string, this is already an url, so just return it.
-    
+  global $_FRAMEWORK, $log;
+  if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
+  	if (preg_match('/^\w+$/', $o))
+  		$o = $_FRAMEWORK['controller'].'?action='.$o;
+  	elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
+  		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
+  		$o = $parts[0].'.php?action='.$parts[1];
+  	}
+  	
     // -- add Site information
     if ($_GET['site'] && strpos($o,'site=') === false) {
        $o = strpos($o,'?') === false ? $o.'?' : $o.'&';
@@ -14,7 +20,7 @@ function url_for($o, $params = array()) {
   }
   
   if ($o instanceof AbstractModel) {
-    array_merge(array('controller' => strtolowerunderscore(get_class($o)).'.php', 'action' => 'show', 'id' => $o->get_id()), $params);
+    $params = array_merge(array('controller' => $o->get_class_label(), 'action' => 'show', 'id' => $o->get_id()), $params);
   }
   else
     $params = $o;
@@ -26,8 +32,7 @@ function url_for($o, $params = array()) {
     $params['controller'] = $_FRAMEWORK['controller'];
   if (!isset($params['action']))
     $params['action'] = $_GET['action'];
-  
-  if (strtolower(substr($params['controller'], 0, -4)) != '.php')
+  if (strtolower(substr($params['controller'], -4)) != '.php')
     $params['controller'] = strtolowerunderscore($params['controller']).'.php';
   
   $controller = $params['controller'];
@@ -180,8 +185,10 @@ class Form {
     return select_tag($this->w($name), $options_for_select, $html_options);
   }
   
-  public function label($for, $label, $html_options = array()) {
+  public function label($for, $label = NULL, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
+    if ($label === NULL)
+    	$label = __('models.attributes.'.$this->model->get_class_label().'.'.$for, null, true);
     return '<label for="'._name_to_id($this->w($for)).'"'._to_html_attributes($html_options).'>'.$label.'</label>';
   }
   
@@ -211,7 +218,6 @@ function remote_link_tag($name, $href, $options = array(), $html_options = array
   return link_tag($name, $href, $options, $html_options);
 }
 
-
 function link_tag($name, $href, $options = array(), $html_options = NULL) {
   if ($html_options === NULL)
     $html_options = $options;
@@ -237,7 +243,19 @@ function link_tag($name, $href, $options = array(), $html_options = NULL) {
   return $result;
 }
 
+/**
+ * alias for link_tag
+ */
+function link_to($name, $href, $options = array(), $html_options = NULL) {
+	return link_tag($name, $href, $options, $html_options);
+}
 
+/**
+ * alias for remote_link_tag
+ */
+function remote_link_to($name, $href, $options = array(), $html_options = array()) {
+	return remote_link_tag($name, $href, $options, $html_options);
+}
 
 
 function remote_form_tag($uri, $options = array(), $html_options = array()) {
