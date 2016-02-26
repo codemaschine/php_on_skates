@@ -1,6 +1,6 @@
 <?php
 
-class Migration_###date### extends MpmMigration
+class Migration____date___ extends MpmMigration
 {
 
     public function up(PDO &$pdo)

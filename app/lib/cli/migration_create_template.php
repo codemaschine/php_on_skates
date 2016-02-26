@@ -1,18 +1,18 @@
 <?php
 
-class Migration_###date### extends MpmMigration
+class Migration____date___ extends MpmMigration
 {
 
     public function up(PDO &$pdo)
     {
-        $this->create_table('###table_name###', array(
-            ###field_definitions###
-        ));###index_definitions###
+        $this->create_table('___table_name___', array(
+            ___field_definitions___
+        ));___index_definitions___
     }
 
     public function down(PDO &$pdo)
     {
-        $this->drop_table('###table_name###');
+        $this->drop_table('___table_name___');
     }
 
 }

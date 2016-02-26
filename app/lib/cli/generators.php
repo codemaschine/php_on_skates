@@ -46,7 +46,7 @@ class FileGenerator {
 
     $template = file_get_contents(dirname(__FILE__).'/'.$this->templateUri);
     foreach ($this->markers as $name => $value) {
-      $template = str_replace("###$name###", $value, $template);
+      $template = str_replace("___{$name}___", $value, $template);
     }
     file_put_contents($this->fileUri, $template);
 
@@ -74,7 +74,7 @@ function model_generator($model_name, $fields){
 	$table_name = strtolowerunderscore($model_name).'s';
 
   $g->generate(array(
-    'model_name' => $model_name,
+    'model_name' => strtouppercamelcase($model_name),
     'table_name' => $table_name,
     'mass_assignables' => $mass_assignable_str,
     'field_definitions' => $field_defs_str));
@@ -146,7 +146,109 @@ function migration_generator($migration_name, $fields){
 }
 
 function controller_generator($model_name) {
-  if (!$model_name)
-    die("ERROR: Missing model name");
+  $model_name = strtouppercamelcase($model_name);  // just to make sure that is upper camel case
+  $filename = strtolowerunderscore($model_name).'.php';
+  $g = new FileGenerator('controller_template.php', 'app/controller/'.$filename);
+  
+  $model_var_name = strtolowerunderscore($model_name);
+  $g->generate(array(
+  		'model_name' => $model_name,
+  		'model_var_name' => $model_var_name,
+  		'model_var_name_pl' => Inflect::pluralize($model_var_name),
+  ));
+}
 
+
+function views_generator($model_name, $fields){
+	if (!$fields)
+		die("ERROR: Missing field defs");
+	
+    $model_var_name = strtolowerunderscore($model_name);
+    $model_readable_name = ucfirst(str_replace('_', ' ', $model_var_name));
+	$views_dir = dirname(__FILE__).'/../../../app/views/'.$model_var_name;
+    if (!file_exists($views_dir))
+		mkdir($views_dir);
+	
+	$views_dir = 'app/views/'.$model_var_name.'/';
+	$model_var_name_pl = Inflect::pluralize($model_var_name);
+	
+	
+	// index view
+	$g = new FileGenerator('view_index_template.php', $views_dir.'index.php');
+	$listing_header_rows = '';
+	foreach ($fields as $name => $type) {
+		$listing_header_rows .= "\n      <th>".ucfirst(str_replace('_', ' ',$name))."</th>";
+	}
+	$listing_body_rows = '';
+	foreach ($fields as $name => $type) {
+		$listing_body_rows .= "\n      <td><?= \${$model_var_name}->get('$name'); ?></td>";
+	}
+	$g->generate(array(
+			'model_var_name' => $model_var_name,
+			'model_readable_name' => $model_readable_name,
+			'model_readable_name_pl' => Inflect::pluralize($model_readable_name),
+			'model_var_name_pl' => $model_var_name_pl,
+			'listing_header_rows' => $listing_header_rows,
+			'listing_body_rows' => $listing_body_rows
+	));
+	
+	
+	// show view
+	$g = new FileGenerator('view_show_template.php', $views_dir.'show.php');
+	$show_entries = '';
+	foreach ($fields as $name => $type) {
+		$show_entries .= '
+<p>
+	<strong>'.ucfirst(str_replace('_', ' ',$name)).'</strong>
+	<?= $'.$model_var_name.'->get(\''.$name.'\'); ?>
+</p>
+';
+	}
+	$g->generate(array(
+			'model_var_name' => $model_var_name,
+			'model_readable_name' => $model_readable_name,
+			'show_entries' => $show_entries
+	));
+	
+	
+	// new view
+	$g = new FileGenerator('view_new_template.php', $views_dir.'new.php');
+	$g->generate(array(
+			'model_var_name' => $model_var_name,
+			'model_readable_name' => $model_readable_name,
+	));
+	
+	// edit view
+	$g = new FileGenerator('view_edit_template.php', $views_dir.'edit.php');
+	$g->generate(array(
+			'model_var_name' => $model_var_name,
+			'model_readable_name' => $model_readable_name,
+	));
+	
+	// form partial
+	$g = new FileGenerator('view_form_template.php', $views_dir.'_form.php');
+	$form_fields = '';
+	foreach ($fields as $name => $type) {
+		$form_fields .= '
+<div class="field">
+	<?= $f->label(\''.$name.'\'); ?><br>
+	<?= $f->';
+switch ($type) {
+	case 'bool':
+	case 'boolean':
+		$form_fields .= 'check_box';
+	case 'text':
+		$form_fields .= 'text_area';
+	default:
+		$form_fields .= 'text_field';
+}
+$form_fields .= '(\''.$name.'\'); ?>
+</div>
+';
+	}
+	$g->generate(array(
+			'model_var_name' => $model_var_name,
+			'model_readable_name' => $model_readable_name,
+			'form_fields' => $form_fields
+	));
 }

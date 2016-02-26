@@ -9,8 +9,10 @@ if (!$argv[2]) {
 	echo "ERROR: missing generator
 
 Available generators:
-		model      Generate a model
-    migration  Generate a migration
+	controller  Generate a controller
+	model       Generate a model
+    migration   Generate a migration
+	
 
 ";
   return;
@@ -35,10 +37,33 @@ function unpack_field_defs($field_defs) {
 
 switch ($argv[2]) {
   case 'scaffold':
+	
+  case 'views':
+	
+	$name = ucfirst($argv[3]);
+	
+	$field_defs = array_slice($argv, 4);
+	$fields = unpack_field_defs($field_defs);
+
+	views_generator($name, $fields);
+	
+	if ($argv[2] != 'scaffold')
+		break;
+
+  case 'controller':
+	
+	$name = ucfirst($argv[3]);
+	controller_generator($name);
+	
+	
+	if ($argv[2] != 'scaffold')
+		break;
+	
+		
   case 'model':
 
-  	$name = ucfirst($argv[3]);
-  	$field_defs = array_slice($argv, 4);
+	$name = ucfirst($argv[3]);
+	$field_defs = array_slice($argv, 4);
 
     $field_names = array_keys(unpack_field_defs($field_defs));
     if (!in_array('id', $field_names))
@@ -50,10 +75,7 @@ switch ($argv[2]) {
 
     $fields = unpack_field_defs($field_defs);
 
-    //if ($argv[2] === 'scaffold')
-    //  need some stuff here ...
-
-  	if (model_generator($name, $fields) !== false) // returns false when skipping
+	if (model_generator($name, $fields) !== false) // returns false when skipping
       migration_generator('create'.Inflect::pluralize($name), $fields);  //TODO: better pluralization here
 
     break;
