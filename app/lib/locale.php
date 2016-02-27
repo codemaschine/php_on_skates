@@ -25,6 +25,23 @@ function __($label, $locale = null, $fallback = false) {
 }
 
 
+function has_translation($label, $locale = null) {
+	global $_FRAMEWORK;
+
+	if ($locale === null)
+		$locale = $_FRAMEWORK['locale'];
+
+	$t = _get_translation($label, $locale);
+	if ($t !== false) return true;       // return translation if found
+
+	if ($_FRAMEWORK['default_locale']) {
+		$t = _get_translation($label, $_FRAMEWORK['default_locale']);
+		if ($t !== false) return true;       // return translation if found
+	}
+	return false;
+}
+
+
 function _get_translation($label, $locale) {
   global $_FRAMEWORK, $site_config;
   

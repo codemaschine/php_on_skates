@@ -1,5 +1,8 @@
 <?php
 
+use SKATES\DateTime;
+use SKATES\Date;
+
 require_once 'lib/db.php';
 require_once 'lib/base.php';
 
@@ -236,6 +239,9 @@ abstract class AbstractModel {
       	  $value = "'".mysql_real_escape_string($value)."'";
       	elseif (is_float($value))
       	  $value = var_export($value, true); // avoid the usage of , instead of . as decimal separator caused by setlocale.
+      	elseif ($value instanceof DateTime) { // works for Date-class, too!
+      	  $value = $value->toDbFormat();
+      	}
       	elseif (!is_numeric($value))
       	  $value = 'NULL'; // Default: drop other values
 
@@ -975,8 +981,6 @@ abstract class AbstractModel {
     	case 'decimal': $default_type = 'float'; break;
     	case 'text':
     	case 'binary':
-    	case 'datetime':
-    	case 'date':
     	case 'time': $default_type = 'string'; break;
     	case 'primary_key': $default_type = 'integer'; break;
     }
@@ -988,6 +992,8 @@ abstract class AbstractModel {
         case 'integer': $value = intval($value); break; // filter_var($value, FILTER_SANITIZE_NUMBER_INT); break;   // Notice that neither settype() nor filter_var() work here correctly, they can still return a string!!!
         case 'float': $value = floatval($value); break;
         case 'bool':
+        case 'date':
+        case 'datetime': $value = new DateTime($value, DateTime::getUTCTimeZone()); break;
         case 'boolean': $value = is_string($value) ? filter_var($value, FILTER_VALIDATE_BOOLEAN) : $value == true; break; // if string, evaluate also string content like "false", "0", "off" and alike. If other type, cast to boolean
         default:
           if (!settype($value, $default_type))

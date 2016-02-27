@@ -43,7 +43,7 @@ define('ONE_MONTH',   2592000);
 define('ONE_YEAR', 31536000);
 
 define('DB_DATETIME_FORMAT', 'Y-m-d H:i:s');
-
+define('DB_DATE_FORMAT', 'Y-m-d');
 
 
 class HttpStatusCode {

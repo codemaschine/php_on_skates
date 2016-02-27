@@ -1,6 +1,10 @@
 <?php
 
 require_once 'lib/php_base_ext.php';
+require_once 'lib/date_and_time.php';
+
+use \SKATES\DateTime;
+use \SKATES\Date;
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_COMPILE_ERROR | E_COMPILE_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE );
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
