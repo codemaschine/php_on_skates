@@ -71,9 +71,9 @@ function model_generator($model_name, $fields){
   }
 
   $mass_assignable_str = join(', ', array_diff(array_keys($fields), array('created_at', 'updated_at')));
-	$table_name = strtolowerunderscore($model_name).'s';
+	$table_name = strtolowerunderscore(Inflect::pluralize($model_name));
 
-  $g->generate(array(
+  return $g->generate(array(
     'model_name' => strtouppercamelcase($model_name),
     'table_name' => $table_name,
     'mass_assignables' => $mass_assignable_str,
