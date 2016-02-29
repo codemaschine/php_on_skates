@@ -146,8 +146,12 @@
           {
               $pattern = '/' . $pattern . '$/i';
               
-              if ( preg_match( $pattern, $string ) )
-                  return preg_replace( $pattern, $result, $string);
+              if ( preg_match( $pattern, $string, $matches ) ) {
+              	  if (ctype_upper(substr($matches[count($matches) -1], 0, 1)))
+              	  	return ucfirst(preg_replace( $pattern, $result, $string));
+                  else
+                    return preg_replace( $pattern, $result, $string);
+              }
           }
           
           // check for matches using regular expressions
@@ -171,8 +175,12 @@
           {
               $pattern = '/' . $pattern . '$/i';
               
-              if ( preg_match( $pattern, $string ) )
-                  return preg_replace( $pattern, $result, $string);
+              if ( preg_match( $pattern, $string, $matches ) ) {
+              	  if (ctype_upper(substr($matches[count($matches) -1], 0, 1)))
+                    return ucfirst(preg_replace( $pattern, $result, $string));
+              	  else
+              	  	return preg_replace( $pattern, $result, $string);
+              }
           }
           
           // check for matches using regular expressions

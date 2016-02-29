@@ -236,9 +236,9 @@ function views_generator($model_name, $fields){
 switch ($type) {
 	case 'bool':
 	case 'boolean':
-		$form_fields .= 'check_box';
+		$form_fields .= 'check_box'; break;
 	case 'text':
-		$form_fields .= 'text_area';
+		$form_fields .= 'text_area'; break;
 	default:
 		$form_fields .= 'text_field';
 }
