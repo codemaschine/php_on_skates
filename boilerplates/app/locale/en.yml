@@ -1,0 +1,9 @@
+
+skates:
+    formats:
+        datetime: m/d/Y H:i
+        date: m/d/Y
+
+
+
+hello_world: Hello World!

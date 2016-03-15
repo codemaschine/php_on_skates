@@ -1,0 +1,15 @@
+This file indicates that the development environment is used, simply by it's
+existance.
+
+If you want to use the production environment on your server
+  * just delete this file, or
+  * change the lines in config.php to set the production-environment in a
+    different way. 
+    WARNING: Do not use $_SERVER['name'] to determine the environment. It will
+    not work with Command line skripts (e.g. when you want to migrate your 
+    database).
+    Use 
+    strpos(dirname(__FILE__), 'a_specific_folder_on_server_path') !== FALSE)
+    to determine the production environment instead.
+  
+  

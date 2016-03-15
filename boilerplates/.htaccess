@@ -1,0 +1,18 @@
+Options +FollowSymlinks
+RewriteEngine On
+php_value memory_limit 128M
+php_value max_execution_time 259200
+php_value upload_max_filesize 128M
+php_value post_max_size 128M
+
+
+# Rewrite php-files that does not exist (because they lay in path 'controller/' instead of '/')
+RewriteCond %{REQUEST_FILENAME} ^(.+)\.[a-zA-Z]+$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{QUERY_STRING} ^(.*)$
+RewriteRule ^(.+)$ skates.php?frameworkController=$1&%1 [NC]
+
+# Rewrite all path accesses to their index.php-controller
+RewriteCond %{QUERY_STRING} ^(.*)$
+RewriteRule ^(.*/)*$ skates.php?frameworkController=$1index.php&%1 [NC]
+
