@@ -64,13 +64,14 @@ function model_generator($model_name, $fields){
 
   if ($fields['id'])
     unset($fields['id']);
-
+  
+  $field_defs_str = '';
   foreach ($fields as $field => $type) {
     $field_defs_str .= "'$field' => '$type',
       ";
   }
 
-  $mass_assignable_str = join(', ', array_diff(array_keys($fields), array('created_at', 'updated_at')));
+  $mass_assignable_str = "'".join("', '", array_diff(array_keys($fields), array('created_at', 'updated_at')))."'";
 	$table_name = strtolowerunderscore(Inflect::pluralize($model_name));
 
   return $g->generate(array(
@@ -83,6 +84,7 @@ function model_generator($model_name, $fields){
 function migration_generator($migration_name, $fields){
   $indexes = array();
 
+  $field_defs_str = '';
   foreach ($fields as $field => $type) {
     $field_defs_str .= "'$field' => '$type',
             ";
