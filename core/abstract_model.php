@@ -21,8 +21,8 @@ abstract class AbstractModel {
   protected static $table_name = NULL;
   protected static $default_find_options = array();
 
-  protected static $soft_delete = false; // if true, a record will not really be deleted but marked as 'deleted'. NOTICE: Requires a column 'deleted'
-  protected static $soft_delete_type = 'boolean'; // or 'time'
+  protected static $soft_delete = false; // if true, a record will not really be deleted but marked as 'deleted'. NOTICE: Requires a column 'deleted_at'
+  protected static $soft_delete_type = 'datetime'; // or 'boolean'
 
   protected static function default_scope() {
     return array();
@@ -301,9 +301,10 @@ abstract class AbstractModel {
 
   public function delete() {
   	if (!$this->is_new()) {
-    	if (static::$soft_delete)
-    		db_query('UPDATE `'.static::$table_name.'` SET '. (is_string(static::$soft_delete) ? static::$soft_delete : 'deleted').' = '.(static::$soft_delete_type == 'time' ? time() : 1).' WHERE id = '.$this->id);
-    	else
+  		if (static::$soft_delete) {
+  			$deleted_column = is_string(static::$soft_delete) ? static::$soft_delete : 'deleted_at';
+    		db_query('UPDATE `'.static::$table_name.'` SET '.$deleted_column.' = '.(static::$soft_delete_type == 'datetime' || static::$soft_delete_type == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE id = '.$this->id);
+  		} else
         db_query('DELETE FROM `'.static::$table_name."` WHERE id = $this->id");
       $this->id = NULL;
     }
@@ -739,8 +740,12 @@ abstract class AbstractModel {
     }  // conditions ende
 
     if (static::$soft_delete && !$options['unscoped']) {
-      $delete_col = is_string(static::$soft_delete) ? static::$soft_delete : 'deleted';
-    	array_push($elements, "($delete_col = 0 OR $delete_col IS NULL)");
+      $attr_defs = static::attribute_definitions();
+      $delete_col = is_string(static::$soft_delete) ? static::$soft_delete : 'deleted_at';
+        if (static::$soft_delete_type == 'datetime' && $attr_defs[$delete_col] == 'datetime')
+          array_push($elements, "$delete_col IS NULL");
+        else
+    	  array_push($elements, "($delete_col = 0 OR $delete_col IS NULL)");
     }
 
     if ((static::default_scope()) && !$options['unscoped'] && !$options['escape_default_scope']) {
