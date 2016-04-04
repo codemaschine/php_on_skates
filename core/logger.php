@@ -46,6 +46,9 @@ class Logger {
       }
       $msg .= '] ';
     }
+
+    if (!is_string($message))
+      $message = var_inspect($message);
     $msg .= $message."\r\n";
     
     if ($fp = fopen($this->fileName, "a+")) {
