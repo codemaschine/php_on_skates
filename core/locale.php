@@ -24,6 +24,10 @@ function __($label, $locale = null, $fallback = false) {
   
 }
 
+function __m($label, $locale = null, $fallback = false) {
+	return __('models.attributes.'.$label, $locale, $fallback);
+}
+
 
 function has_translation($label, $locale = null) {
 	global $_FRAMEWORK;
