@@ -4,7 +4,7 @@
 define('SKATES', 1);
 
 
-$abs_base_path = substr(dirname(__FILE__),0,strrpos(dirname(dirname(dirname(__FILE__))),'/'));
+$abs_base_path = dirname(dirname(dirname(__FILE__)));
 define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
 define('APP_DIR', $abs_base_path.'/app/');

@@ -21,7 +21,7 @@ class FileGenerator {
 
   public function setFilename($filename) {
   	$this->filename = $filename;
-    $this->fileUri = dirname(__FILE__).'/../../../'.$filename;
+    $this->fileUri = ROOT_DIR.$filename;
   }
   public function setTemplateUri($templateUri) {
     $this->templateUri = $templateUri;

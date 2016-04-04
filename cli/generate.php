@@ -26,9 +26,12 @@ if (!$argv[3]) {
 function unpack_field_defs($field_defs) {
   $fields = array();
   foreach ($field_defs as $def) {
-    if (!preg_match('/([\w]+):([\w]+)/', $def, $matches))
-      die("Error: wrong format in field definitions. Use format <field_name>:<type>");
+    if (!preg_match('/([_\w]+):([\w]+)/', $def, $matches))
+      die("Error: wrong format in field definition '$def'. Use format <field_name>:<type>");
+    if (count($matches) > 2)  
       $fields[$matches[1]] = $matches[2];
+    else
+      $fields[$matches[0]] = $matches[1];
   }
   return $fields;
 }
@@ -86,7 +89,7 @@ switch ($argv[2]) {
     $field_defs = array_slice($argv, 4);
     $fields = unpack_field_defs($field_defs);
 
-    migration_generator($migration_name, $field_defs);
+    migration_generator($migration_name, $fields);
 
     break;
 
