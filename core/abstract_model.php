@@ -231,6 +231,9 @@ abstract class AbstractModel {
 
 
       if ($this->is_new() || $this->attr_loaded[$key] !== $value) { // only update if the the attribute is really dirty!!!
+      	if (!$this->is_new() && $key == 'created_at')
+      		continue;
+      	
       	if ($value === NULL)
       		$value = 'NULL';
       	elseif (is_bool($value))
