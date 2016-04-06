@@ -216,4 +216,6 @@ $additionalHeaderData = array();
 
 $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
+require_once APP_PATH.'application.php';
+
 ?>
