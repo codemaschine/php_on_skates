@@ -190,13 +190,7 @@ function redirect_to($target) {
   $_FRAMEWORK['redirect'] = true;
   
   if (is_array($target)) {
-  	$controller = $target['controller'];
-  	if (!$controller)
-  		throw new ErrorException('no controller set in redirect_to()');
-  	if (substr(strtolower($controller), -4) !== '.php')
-  		$controller .= '.php';
-  	unset($target['controller']);
-  	$target = $controller.'?'.http_build_query(target);
+  	$target = url_for($target);
   }
   elseif (preg_match('/^\w+$/', $target))
   	$target = $_FRAMEWORK['controller'].'?action='.$target;
