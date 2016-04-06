@@ -998,7 +998,7 @@ abstract class AbstractModel {
         case 'int':
         case 'integer': $value = intval($value); break; // filter_var($value, FILTER_SANITIZE_NUMBER_INT); break;   // Notice that neither settype() nor filter_var() work here correctly, they can still return a string!!!
         case 'float': $value = floatval($value); break;
-        case 'date':
+        case 'date': $value = new Date($value, DateTime::getUTCTimeZone()); break;
         case 'datetime': $value = new DateTime($value, DateTime::getUTCTimeZone()); break;
         case 'bool':
         case 'boolean': $value = is_string($value) ? filter_var($value, FILTER_VALIDATE_BOOLEAN) : $value == true; break; // if string, evaluate also string content like "false", "0", "off" and alike. If other type, cast to boolean
