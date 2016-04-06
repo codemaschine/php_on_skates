@@ -1,6 +1,8 @@
 <?php
 
 
+use SKATES\DateTime;
+
 function url_for($o, $params = array()) {
   global $_FRAMEWORK, $log;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
@@ -27,6 +29,12 @@ function url_for($o, $params = array()) {
   
   if (!is_array($params))
     throw new Exception('Wrong arguments. Must be a string containing the url, an object of type AbstactModel or an array with parameters');
+  
+  foreach ($params as &$p) {
+  	if ($p instanceof AbstractModel) {
+  		$p = $p->get_id();
+  	}
+  }
   
   if (!isset($params['controller']))
     $params['controller'] = $_FRAMEWORK['controller'];
@@ -89,11 +97,29 @@ function select_tag($name, $options_tags_str, $html_options = array()) {
 }
 
 function options_for_select($ary, $selected_val = NULL) {
+  if ($selected_val instanceof AbstractModel)
+  	$selected_val = $selected_val->get_id();
+	
   $result = '';
   $is_assoc = is_assoc($ary);
-	foreach ($ary as $label => $value)
-	  $result .= option_tag($is_assoc ? $label : $value, $value, $selected_val);
-	return $result;
+  if (!$is_assoc && $ary && $ary[0] instanceof AbstractModel) {
+  	foreach ($ary as $o) {
+  		if (method_exists($o, 'option_name'))
+  			$label = $o->option_name();
+  		elseif (isset($o->attr['name']))
+  			$label = $o->attr['name'];
+  		else
+  			$label = $o->get_id();
+  		
+  		$result .= option_tag($label, $o->get_id(), $selected_val);
+  	}
+  	return $result;
+  }
+  else {
+	  foreach ($ary as $label => $value)
+	    $result .= option_tag($is_assoc ? $label : $value, $value, $selected_val);
+	  return $result;
+  }
 }
 
 function option_tag($label, $value, $selected_val) {
@@ -108,6 +134,11 @@ function submit_tag($value, $html_options = array()) {
 function _input_tag($type, $name, $value, $attrs = array()) {
   if (!$attrs['id'])
     $attrs['id'] = _name_to_id($name);
+  
+  if ($value instanceof AbstractModel)
+  	$value = $value->get_id();
+  elseif ($value instanceof DateTime)
+    $value = $value->toDbFormat();
   
   return '<input type="'.$type.'" name="'.$name.'" value="'.h($value).'"'._to_html_attributes($attrs).' />';
 }
