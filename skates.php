@@ -4,6 +4,10 @@ $abs_base_path = substr(dirname(__FILE__),0,strrpos(dirname(__FILE__),'/'));
 define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
 define('APP_DIR', $abs_base_path.'/app/');
+define('ROOT_PATH', ROOT_DIR);
+define('SKATES_PATH', SKATES_DIR);
+define('APP_PATH', APP_DIR);
+
 
 chdir('app');
 
@@ -127,7 +131,7 @@ try {
     	$fwlog->info('Render JSON, Code '.$_FRAMEWORK['status_code']);
     	echo render_json($_FRAMEWORK['render_content'], $_FRAMEWORK['status_code']);
     }
-    elseif (is_xhr() || $_FRAMEWORK['render_type'] == 'partial' || !file_exists('views/layout/'.$_FRAMEWORK['layout'])) {
+    elseif ($_FRAMEWORK['render_type'] == 'partial' || !file_exists('views/layout/'.$_FRAMEWORK['layout'])) { // || is_xhr()
       if (!file_exists('views/layout/'.$_FRAMEWORK['layout']))
           $fwlog->warning('WARNING: Layout views/layout/'.$_FRAMEWORK['layout'].' not found! Fallback to rendering as partial.');
       $fwlog->info('Render Partial "'.$_FRAMEWORK['view'].'", Format: '.$_FRAMEWORK['format'].', Code '.$_FRAMEWORK['status_code']);
