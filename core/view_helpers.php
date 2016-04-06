@@ -213,6 +213,10 @@ class Form {
     if (($this->closed)) throw new Exception("Form is already closed!");
     if (is_array($options_for_select))
       $options_for_select = options_for_select($options_for_select, $this->model->get($name));
+    if ($html_options['include_blank']) {
+    	$options_for_select = '<option value="">'.(is_string($html_options['include_blank']) ? $html_options['include_blank'] : '').'</option>'.$options_for_select;
+    	unset($html_options['include_blank']);
+    }
     return select_tag($this->w($name), $options_for_select, $html_options);
   }
   
@@ -328,9 +332,9 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   if ($options['loadingText'] || $options['loading'] || $options['loadingJS']) {
     $result.= ", beforeSend: function(xhr) { ";
     if ($options['loadingText'])
-      $result .= "$('#".($options['loading'] ? $options['loading'] : $options['update'])."').html('".str_replace("'", "\\'", $options['loadingText'])."'); ";
+      $result .= "$('".($options['loading'] ? $options['loading'] : $options['update'])."').html('".str_replace("'", "\\'", $options['loadingText'])."'); ";
     if ($options['loadingText'] || $options['loading'])
-      $result .= "$('#".($options['loading'] ? $options['loading'] : $options['update'])."').show(); ";
+      $result .= "$('".($options['loading'] ? $options['loading'] : $options['update'])."').show(); ";
     if ($options['loadingJS'])
       $result .= $options['loadingJS'];
     $result .= ' }';
@@ -342,9 +346,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   if ($options['update'] || $options['updateJS']) {
     $result.= ", success: function(data, textStatus, xhr) { ";
     if ($options['update'])
-      $result.= "$('#".$options['update']."').html(data);"; // wird wohl nicht benötigt, javascript wird schon ausgeführt: $('#".$options['update']."').find('script').each(function(i) {eval($(this).text());});
-    if ($options['updateBySelector'])
-      $result.= "$('".$options['updateBySelector']."').html(data);";
+      $result.= "$('".$options['update']."').html(data);"; // wird wohl nicht benötigt, javascript wird schon ausgeführt: $('#".$options['update']."').find('script').each(function(i) {eval($(this).text());});
     if ($options['updateJS'])
       $result.= $options['updateJS'];
     $result.= " }";
@@ -353,7 +355,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     $result.= ", error: function(xhr, textStatus, errorThrown) { ";
     if ($options['update'] && empty($options['errorJS']) || $options['error']) {
       $elemId = $options['error'] ? $options['error'] : $options['update'];
-      $result.= "$('#$elemId').html(xhr.responseText); ";  /*
+      $result.= "$('$elemId').html(xhr.responseText); ";  /*
       anscheinend brauchen wir das gar nicht, da der Skriptblock automatisch augeführt wird.
       $('#$elemId').find('script').each(function(i) {
                     try { eval($(this).text()); }
