@@ -160,7 +160,7 @@ abstract class AbstractModel {
 
 
   // -- instance methods
-  
+
   public function get_class_label() {
   	return strtolowerunderscore(get_class($this));
   }
@@ -231,25 +231,23 @@ abstract class AbstractModel {
       //if ($value === NULL)   // do nothing to not overwrite the database value
       //  continue;
 
-
       if ($this->is_new() || $this->attr_loaded[$key] !== $value) { // only update if the the attribute is really dirty!!!
-      	if (!$this->is_new() && $key == 'created_at')
-      		continue;
-      	
-      		
+        if (!$this->is_new() && $key == 'created_at')
+          continue;
+
         if ($this->attr_defs[$key] == 'attachment') {
-        	if ($files['error'][$key] === UPLOAD_ERR_OK) {
-        	
-        		$assignments[] = "`{$key}_file_name` = '".mysql_real_escape_string($files['name'][$key])."'";
-        		$assignments[] = "`{$key}_content_type` = '".mysql_real_escape_string($files['type'][$key])."'";
-        		$assignments[] = "`{$key}_file_size` = {$files['size'][$key]}";
-        		$assignments[] = "`{$key}_updated_at` = '".gmdate(DB_DATETIME_FORMAT)."'";
-        		
-        		$files_to_save[$key] = $files['name'][$key];
-        	}
-        	continue;
+          if ($files['error'][$key] === UPLOAD_ERR_OK) {
+
+            $assignments[] = "`{$key}_file_name` = '".mysql_real_escape_string($files['name'][$key])."'";
+            $assignments[] = "`{$key}_content_type` = '".mysql_real_escape_string($files['type'][$key])."'";
+            $assignments[] = "`{$key}_file_size` = {$files['size'][$key]}";
+            $assignments[] = "`{$key}_updated_at` = '".gmdate(DB_DATETIME_FORMAT)."'";
+
+            $files_to_save[$key] = $files['name'][$key];
+          }
+          continue;
         }
-      	
+
       	if ($value === NULL)
       		$value = 'NULL';
       	elseif (is_bool($value))
@@ -282,28 +280,28 @@ abstract class AbstractModel {
 
       if ($is_new)
         $this->id = mysql_insert_id();
-      
-        
-        
-      // save files, now we have the ID 
+
+
+
+      // save files, now we have the ID
       if ($files_to_save) {
       	if (!file_exists(ROOT_PATH.'files'))
       		mkdir(ROOT_PATH.'files');
       	if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label()))
       		mkdir(ROOT_PATH.'files/'.$this->get_class_label());
-      	
+
       	foreach ($files_to_save as $key => $name) {
-      			
+
       		if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key))
       			mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key);
-      		
+
       		if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id))
       			mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id);
-      		
+
       		move_uploaded_file($files['tmp_name'][$key], ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id.'/'.$name);
       	}
       }
-      
+
 
       // update in cache
       static::insert_into_cache($this);
@@ -1021,7 +1019,7 @@ abstract class AbstractModel {
     $default_type = $this->attr_defs[$key];
     $cur_type = gettype($value);
     if ($cur_type == 'double') $cur_type = 'float';
-    
+
     switch ($default_type) {
     	case 'decimal': $default_type = 'float'; break;
     	case 'text':
@@ -1029,7 +1027,7 @@ abstract class AbstractModel {
     	case 'time': $default_type = 'string'; break;
     	case 'primary_key': $default_type = 'integer'; break;
     }
-    
+
     if ($cur_type != $default_type) {
       //$log->debug("$key => $value: has type $cur_type, should be $default_type");
       switch ($default_type) {

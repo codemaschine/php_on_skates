@@ -116,7 +116,7 @@ function time_forward_to($interval) {
 function beginning_of_day($time = NULL) {
   if ($time === NULL)
     $time = time();
-  
+
   return mktime(0,0,0, date('m', $time), date('d', $time), date('Y', $time));
 }
 
@@ -147,10 +147,10 @@ function validateFile($file_var, $label = "Datei", $allow_empty = false) {
       set_error("$label darf nicht leer sein.");
     else {
       switch ($_FILES[$file_var]['error']) {
-        case UPLOAD_ERR_INI_SIZE: 
+        case UPLOAD_ERR_INI_SIZE:
           set_error("$label: Dateigrï¿½ï¿½e ist zu groï¿½.");
           break;
-        case UPLOAD_ERR_PARTIAL: 
+        case UPLOAD_ERR_PARTIAL:
           set_error("$label wurde nur teilweise hochgeladen.");
           break;
         case UPLOAD_ERR_NO_FILE:
@@ -171,11 +171,11 @@ function saveFile($file_var, $upload_dir) {
     $filename_base = substr($filename, 0, $sep_pos); // no dot
     $filename_ext = substr($filename, $sep_pos);     // with dot
   }
-  
-  
+
+
   $filename = str_replace($search, $replace, $filename);
   $filename = preg_replace("/[^a-zA-Z0-9\._-]*/", '', $filename);
-  
+
   if (!move_uploaded_file($_FILES[$file_var]['tmp_name'],$upload_dir.'/'.$filename))
     die ("Die hochgeladene Datei konnte intern nicht verschoben werden. Bitte benachrichtigen Sie den Administrator.");
   return $filename;
@@ -188,7 +188,7 @@ function saveFile($file_var, $upload_dir) {
 function redirect_to($target) {
   global $_FRAMEWORK;
   $_FRAMEWORK['redirect'] = true;
-  
+
   if (is_array($target)) {
   	$target = url_for($target);
   }
@@ -198,7 +198,7 @@ function redirect_to($target) {
   	$parts = strpos($target, '/') !== false ? explode('/', $target) : explode('#', $target);
   	$target = $parts[0].'.php?action='.$parts[1];
   }
-  
+
   $_FRAMEWORK['redirect_to'] = $target;
 }
 
@@ -208,13 +208,13 @@ function forward_to($controller, $action = NULL, $layout = NULL, $status_code = 
   if ($layout)
     $_FRAMEWORK['layout'] = $layout;
   $_FRAMEWORK['view'] = $action ? $action.'.php' : $controller; // Default view name is action name or controllers name
-  
+
   if ($action)
     $_GET['action'] = $action;
-  
+
   if ($status_code)
     $_FRAMEWORK['status_code'] = $status_code;
-    
+
   $_FRAMEWORK['forward'] = true;
 }
 
@@ -223,7 +223,7 @@ function render($obj, $status_code = NULL) {
   global $_FRAMEWORK, $fwlog, $log, $site_config;
   $locals = array();
   $render_type = 'view';
-  
+
   // parse paramter $obj, prepare variables
   if (is_array($obj)) {
     if ($obj['action']) {
@@ -244,11 +244,11 @@ function render($obj, $status_code = NULL) {
     }
     elseif ($obj['json'])
       $render_type = 'json';
-      
-    
+
+
     if ($obj['locals'])
       $locals = $obj['locals'];
-    
+
     if ($obj['addJS'])
       $addJS = $obj['addJS'];
   }
@@ -259,17 +259,17 @@ function render($obj, $status_code = NULL) {
     $view = $obj;
     $addJS = $_FRAMEWORK['addJS'];
   }
-  
-  
-  
-  if ($_FRAMEWORK['is_rendering'] || $_FRAMEWORK['is_layouting']) {   // do rendering ... 
+
+
+
+  if ($_FRAMEWORK['is_rendering'] || $_FRAMEWORK['is_layouting']) {   // do rendering ...
     extract($GLOBALS, EXTR_REFS);
     if ($render_type == 'text') {
       if ($obj['return_output'])
         return $obj['text'];
       else
         echo $obj['text'];
-      
+
       return;
     }
     elseif ($render_type == 'json') {
@@ -280,54 +280,54 @@ function render($obj, $status_code = NULL) {
     		$json_render_options['include'] = $obj['include'];
     	return skates_json_encode($obj['json'], $json_render_options);
     }
-    
-    
+
+
     //  adapt according to format
     if (strpos($view, '.') === false || !file_exists('views/'.$view)) {
       if (strpos($view, '.') !== false)
         $view = substr($view, 0, strrpos($view, '.'));
-    
+
       if ($_FRAMEWORK['format'] != 'php')
         $view .= '.'.$_FRAMEWORK['format'];
-      
+
       $view .= '.php';
     }
-    
+
     if (strpos($view, '/') === false) // add controller path if not specified
       $view = ($_FRAMEWORK['is_layouting'] ? 'layout' : substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
-    
-    
+
+
     // security check: is it allowed and possible to render this file?
     $view = str_replace('../', '', $view);
-    
+
     if ($site_config['view_prefix']) {
       if (strpos($view, '/_') === false)
         $site_specific_view = substr_replace($view, $site_config['view_prefix'], strpos($view, '/') + 1, 0);
       else
         $site_specific_view = substr_replace($view, $site_config['view_prefix'], strpos($view, '/_') + 2, 0);
     }
-    
+
     //$log->debug("--------==== existiert ".$site_specific_view);
     if ($site_config['view_prefix'] && file_exists('views/'.$site_specific_view))   // hinzufügen des Prefix bei Praybox, wenn spezielle view dafür vorhanden ist
       $view = $site_specific_view;
     elseif (!file_exists('views/'.$view)) {
       throw new ErrorException("View $view does not exist!");
     }
-    
-    
+
+
     foreach ($locals as $key => $value) {
       $$key = $value;
     }
-    
+
     //$log->debug('$obj: '.var_export($obj, true));
     if (is_array($obj) && $obj['return_output'])
       ob_start();
-    
+
     require 'views/'.$view;
     if (isset($addJS) && $addJS) {
       echo '<script type="text/javascript">'.$addJS.'</script>';
     }
-    
+
     if (is_array($obj) && $obj['return_output']) {
       $buffer = ob_get_clean();
       return $buffer;
@@ -352,42 +352,42 @@ function render($obj, $status_code = NULL) {
 
 
 /**
- * 
- * @param string $view the name of the partial to be rendered. If the name does not start with an underscore it will be added automatically. You may also specify the folder for different  
- * @param array|integer|bool $obj1 Can be array of arguments to export as variables inside the partial, a HTTP-Status-Code to set (if used in a controller) or a flag if the output should be returned instead of echoed. 
+ *
+ * @param string $view the name of the partial to be rendered. If the name does not start with an underscore it will be added automatically. You may also specify the folder for different
+ * @param array|integer|bool $obj1 Can be array of arguments to export as variables inside the partial, a HTTP-Status-Code to set (if used in a controller) or a flag if the output should be returned instead of echoed.
  * @param array|integer|bool $obj2 like $obj1
  * @param array|integer|bool $obj3 like $obj1
  * @return Ambigous <void, unknown>
  */
 function render_partial($view, $obj1 = NULL, $obj2 = NULL, $obj3 = NULL) {
   global $_FRAMEWORK, $log;
-  
+
   $locals = array();
   $status_code = NULL;
   $return_output = false;
-  
+
   if (is_array($obj1))
     $locals = $obj1;
   elseif (is_integer($obj1))
     $status_code = $obj1;
   elseif (is_bool($obj1))
     $return_output = $obj1;
-  
+
   if (is_array($obj2))
     $locals = $obj2;
   elseif (is_integer($obj2))
     $status_code = $obj2;
   elseif (is_bool($obj2))
     $return_output = $obj2;
-  
+
   if (is_array($obj3))
     $locals = $obj3;
   elseif (is_integer($obj3))
     $status_code = $obj3;
   elseif (is_bool($obj3))
     $return_output = $obj3;
-  
-  
+
+
   $last_slash = strrpos($view, '/');
   if ($last_slash === false)
     $controller = '';
@@ -395,7 +395,7 @@ function render_partial($view, $obj1 = NULL, $obj2 = NULL, $obj3 = NULL) {
     $controller = substr($view, 0, $last_slash);
     $view = substr($view, $last_slash + 1);
   }
-  
+
   return render(array('partial' => $view, 'controller' => $controller, 'locals' => $locals, 'return_output' => $return_output), $status_code);
 }
 
@@ -405,7 +405,7 @@ function render_text($text, $status_code = 200, $return_output = false) {
 
 
 /**
- * 
+ *
  * @param AbstractModel|array $data one or more models to output in json-format
  * @param integer $status_code
  * @param string $return_output
@@ -469,11 +469,11 @@ function show_errors($error_hash = NULL) {
 	  $errors = $_SESSION['errors'];
 		unset($_SESSION['errors']);
   }
-  
+
   if (isset($error_hash))
     array_merge($errors, $error_hash);
-  
-	
+
+
 	if (!empty($errors)) {
     echo '<div class="errors"><h3>Bitte Ã¼berprÃ¼fe deine Eingaben:</h3><p>';
     foreach ($errors as $errorMsg) {
@@ -498,9 +498,9 @@ function show_flash($obj = NULL) {
   }
   else
     $type = $obj;
-  
+
   $flash_message_temp_id = 'ft'.(time() % 1000).rand(0,1000);
-  
+
   if (is_flash()) {
     echo '<div id="'.$flash_message_temp_id.'" class="alertbox">';
     if ($type) {
@@ -542,9 +542,9 @@ function pop_flash($obj = NULL) {
   }
   else
     $type = $obj;
-  
+
   $r = null;
-  
+
   if (is_flash()) {
 	  if ($type) {
 	  	if (isset($_SESSION['flash'][$type])) {
@@ -557,7 +557,7 @@ function pop_flash($obj = NULL) {
 	  	unset($_SESSION['flash']);
 	  }
   }
-  
+
   return $r;
 }
 
@@ -575,22 +575,22 @@ function show_debug_msg() {
 function date_to_db_format($d) {
   if (!is_string($d))
     return null;
-  
+
   $d_ary = explode('.', $d);
   if (count($d_ary) !== 3)
     return $d;
-  
+
   return $d_ary[2].'-'.$d_ary[1].'-'.$d_ary[0];
 }
 
 function date_to_readable($d) {
   if (!is_string($d))
     return null;
-  
+
   $d_ary = explode('-', $d);
   if (count($d_ary) !== 3)
     return $d;
-  
+
   return $d_ary[2].'.'.$d_ary[1].'.'.$d_ary[0];
 }
 
@@ -699,7 +699,7 @@ function array_model_extract_ids(array $ary) {
 
 
 /**
- * 
+ *
  * @param string $mutex_name unique mutex name
  * @param integer $unlock_timeout Timout to automatically release the lock (in minutes)
  * @throws Exception
@@ -708,50 +708,50 @@ function cron_mutex_trylock($mutex_name, $unlock_timeout = NULL) {
 	$tmpDir = '/tmp';
 	if (!is_writable($tmpDir))
 		throw new Exception("Ordner $tmpDir ist nicht beschreibar, Mutex-Lock kann nicht gesetzt werden.");
-	
+
 	$lock_name = "skates_cron_mutex_".preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
-	
+
   $lockfile = "$tmpDir/$lock_name.lock";
   $prelockfile = "$tmpDir/{$lock_name}_pre.lock";
-  
+
   // ---
-  
-  
+
+
 	$is_free = true;
-  
+
   $fp = fopen($prelockfile, 'w+');   // Versuche Lock zu reservieren. KRITISCHER ABSCHNITT!! Daher extra Lock dafür
   flock($fp, LOCK_EX);
   if (file_exists($lockfile)) { //
   	$is_free = false;
-  	
+
   	if ($unlock_timeout) {  // prüfen, ob automatisch geunlocked werden muss.
   		$lock_time = intval(file_get_contents($lockfile));
-  		
+
   		if ($lock_time > 0 && time() > $lock_time + ($unlock_timeout * 60))
   			$is_free = true;
-  		
+
   	}
   }
-  
+
   if ($is_free)
   	file_put_contents($lockfile, time());  // ist frei. --> locken
   flock($fp, LOCK_UN);
   fclose($fp);
-  
+
   return $is_free;
 }
 
 
 function cron_mutex_unlock($mutex_name) {
 	$tmpDir = '/tmp';
-	
+
 	$lock_name = "skates_cron_mutex_".preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
-	
+
 	$lockfile = "$tmpDir/$lock_name.lock";
-	
+
 	if (file_exists($lockfile))
 		unlink($lockfile);
-	
+
 }
 
 
@@ -789,8 +789,8 @@ function authenticated(array $actions = array(), $exclude = false) {
 	  $condition = $_GET['action'] && in_array($_GET['action'], $actions); // only
 	else
 		$condition = !$_GET['action'] || !in_array($_GET['action'], $actions); // except
-	  
-	
+
+
 	if (!is_logged_in() && $condition){
 		set_flash("Du wurdest ausgeloggt, weil du ".sitename()." längere Zeit nicht benutzt hast. Bitte logge dich neu ein.");
 		if (is_json())
@@ -800,7 +800,7 @@ function authenticated(array $actions = array(), $exclude = false) {
 		}
 		else
 			redirect_to('index.php');
-		
+
 		return false;
 	}
 	else return true;
@@ -815,20 +815,20 @@ function authenticated_except(array $actions) {
 
 
 /**
- * 
+ *
  * @param array|string $req_set does the request belong to this set of controllers (and optionally of their actions if specified)?
  */
 function is_request_of($req_set) {
 	global $_FRAMEWORK, $log;
-	
+
 	if (is_string($req_set))
 		$req_set = array($req_set);
-	
+
 	$cur_controller = $_FRAMEWORK['controller'];
 	$cur_action = $_GET['action'];
-	
+
 	$log->debug('cur_action: '.$cur_action);
-	 
+
 	foreach ($req_set as $key => $val) {  // check, if current controller and action is in the set. immediately return true, if yes
 		if (is_int($key)) { // if key is numeric, then $val is the controller and there're no actions specified for this controller. So check only for the controller
 			if ($val == $cur_controller) return true;
@@ -844,7 +844,7 @@ function is_request_of($req_set) {
 			}
 		}
 	}
-	
+
 	return false; // not found, so it is not in the set
 }
 

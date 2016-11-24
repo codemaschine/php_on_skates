@@ -1,4 +1,4 @@
-<?php 
+<?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT);
 
 $abs_base_path = substr(dirname(__FILE__),0,strrpos(dirname(dirname(__FILE__)),'/'));
@@ -57,11 +57,11 @@ function run_sql_file($location){
 function copy_recursive($source, $dest) {
 	if (substr($dest,-1) == '/')
 		$dest = substr($dest,0,strlen($dest) - 1);
-	
+
 	global $message;
 	if (!file_exists($dest) && !mkdir($dest, 0775))
 		return false;
-	else 
+	else
 		@chmod($dest, 0775);
 	foreach (
 	$iterator = new \RecursiveIteratorIterator(
@@ -73,7 +73,7 @@ function copy_recursive($source, $dest) {
 				$message .= "Created dir: ".$dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName()."<br>\n";
 			    chmod($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0775);
 			}
-				
+
 		} else {
 			if (copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName())) {
 				$message .= "Created file: ".$dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName()."<br>\n";
@@ -121,51 +121,51 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
     $message = 'Host, user and database are required!';
     break;
   }
-  
+
   extract($_POST);
-  
-  
+
+
   // check database connection
   try {
   	$pdo = new PDO("mysql:host=$dbhost;dbname=$database;charset=utf8mb4", $dbuser, $dbpassword);
   } catch (PDOException $e) {
   	echo 'Connection failed: ' . $e->getMessage();
   }
-  
-  
-  
+
+
+
   // -- create the app-directory
   if (!copy_recursive(SKATES_DIR.'boilerplates/app', APP_DIR)) {
   	$message = "Error: Cannot create app directory and it's files: ".APP_DIR;
   	break;
   }
-  
+
   // -- create the app-directory
   if (!copy_recursive(SKATES_DIR.'static', ROOT_DIR)) {
   	$message = "Error: Cannot static files (css and js files) in root dir!";
   	break;
   }
-  
+
   if (copy(SKATES_DIR.'boilerplates/.htaccess', ROOT_DIR.'.htaccess')) {
   	$message .= "Created file: ".ROOT_DIR.'.htaccess';
   	chmod(ROOT_DIR.'.htaccess', 0664);
   }
   else
   	$message .= "Error: Could not create file: ".ROOT_DIR.'.htaccess';
-  
+
   chdir(ROOT_DIR);
-  
+
   /*
   $skates_path = substr(dirname(__FILE__),strrpos(dirname(__FILE__),'/') + 1);
   if (!$skates_path != 'skates') { // in case that it's skates_[version]: create a symbolic link;
     if (!symlink($skates_path, 'skates'))
     	$message .= "WARNING: Could not create symbolic link to path to '$skates_path' with name 'skates'. You have to create this link manually or rename '$skates_path' to 'skates'";
   }
-  
+
   if (!symlink('skates/skates.php', 'skates.php'))
   	$message .= "WARNING: Could not create symbolic link to file 'skates/skates.php' with name 'skates.php' . You have to create this link manually or copy the file.";
   */
-  	
+
   $config_file = file_get_contents(SKATES_DIR.'boilerplates/config.php');
   foreach (array('DEV_DB_HOST' => $dbhost, 'DEV_DB_USER' => $dbuser, 'DEV_DB_PASS' => $dbpassword, 'DEV_DB_NAME' => $database) as $name => $value) {
   	$config_file = str_replace("__{$name}__", $value, $config_file);
@@ -174,13 +174,13 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   	$message = 'Could not create file "app/config.php". Please check file permissions!';
   	break;
   }
-  
+
   chmod(APP_DIR."config.php", 0664);
-  
+
   copy(SKATES_DIR.'boilerplates/development.txt',APP_DIR.'development.txt');
   chmod(APP_DIR.'development.txt', 0664);
-  
-  
+
+
   // create bin folder
   mkdir(ROOT_DIR.'bin');
   chmod(ROOT_DIR.'bin', 0775);
@@ -191,12 +191,12 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   //chmod('./skates.php', 0775);
   symlink('../skates/core/db/migrate.php', 'migrate.php');
   //chmod('./migrate.php', 0775);
-  
-  
-  
-  
-  //$message .= 
-  
+
+
+
+
+  //$message .=
+
   $initialized = true;
   break;
 }
@@ -218,30 +218,30 @@ else {
 <form action="" method="post">
 <p>
   <label for="dbhost">
-    DB-Host 
+    DB-Host
   </label>
-  <input id="dbhost" name="dbhost" type="text" size="50" value="<?php echo isset($_POST['dbhost']) ? $_POST['dbhost'] : '127.0.0.1'; ?>" />   
+  <input id="dbhost" name="dbhost" type="text" size="50" value="<?php echo isset($_POST['dbhost']) ? $_POST['dbhost'] : '127.0.0.1'; ?>" />
 </p>
 <p>
   <label for="dbuser">
     DB-User
   </label>
-  <input id="dbuser" name="dbuser" type="text" size="50" value="<?php echo isset($_POST['dbuser']) ? $_POST['dbuser'] : 'root'; ?>" />  
+  <input id="dbuser" name="dbuser" type="text" size="50" value="<?php echo isset($_POST['dbuser']) ? $_POST['dbuser'] : 'root'; ?>" />
 </p>
 <p>
   <label for="dbpassword">
     DB-Password
   </label>
-  <input id="dbpassword" name="dbpassword" type="text" size="50" value="<?php echo isset($_POST['dbpassword']) ? $_POST['dbpassword'] : 'root'; ?>" />  
+  <input id="dbpassword" name="dbpassword" type="text" size="50" value="<?php echo isset($_POST['dbpassword']) ? $_POST['dbpassword'] : 'root'; ?>" />
 </p>
 <p>
   <label for="database">
     Database
   </label>
-  <input id="database" name="database" type="text" size="50" value="<?php echo isset($_POST['database']) ? $_POST['database'] : ''; ?>" />  
+  <input id="database" name="database" type="text" size="50" value="<?php echo isset($_POST['database']) ? $_POST['database'] : ''; ?>" />
 </p>
 <p>
-  <input id="submit" name="submit" type="submit" value="Installation starten" />  
+  <input id="submit" name="submit" type="submit" value="Installation starten" />
 </p>
 </form>
 
