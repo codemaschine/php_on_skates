@@ -18,39 +18,39 @@ class MpmMigrationBase
 {
 	protected $dbObj;
 	protected $default_types;
-	
+
 	public function setDbObj(&$dbObj) {
 	  $this->dbObj = &$dbObj;
 	}
-	
-	
+
+
 	public function __construct() {
 	  $this->default_types = array(
 	    'primary_key' => "int(11) DEFAULT NULL auto_increment PRIMARY KEY",
 	    'string' => array( 'name' => "varchar", 'limit' => 255, 'null' => true ),
-	    'text' => array( 'name' => "text", 'null' => true ), 
+	    'text' => array( 'name' => "text", 'null' => true ),
 	    'integer' => array( 'name' => "int", 'limit' => 4, 'null' => false, 'default' => 0), // 'null' => false is important, because otherwise the select-statement has to check if value = 0 OR value IS NULL
-	    'int' => array( 'name' => "int", 'limit' => 4, 'null' => false, 'default' => 0), 
-	    'double' => array( 'name' => "double", 'null' => true ), 
-	    'float' => array( 'name' => "float", 'null' => true ), 
-	    'decimal' => array( 'name' => "decimal", 'null' => true ), 
-	    'datetime' => array( 'name' => "datetime", 'null' => true ), 
-	    'timestamp' => array( 'name' => "int", 'limit' => 4, 'unsigned' => true, 'default' => 0 ), 
-	    'time' => array( 'name' => "time", 'null' => true ), 
-	    'date' => array( 'name' => "date", 'null' => true ), 
-	    'binary' => array( 'name' => "blob", 'null' => true ), 
+	    'int' => array( 'name' => "int", 'limit' => 4, 'null' => false, 'default' => 0),
+	    'double' => array( 'name' => "double", 'null' => true ),
+	    'float' => array( 'name' => "float", 'null' => true ),
+	    'decimal' => array( 'name' => "decimal", 'null' => true ),
+	    'datetime' => array( 'name' => "datetime", 'null' => true ),
+	    'timestamp' => array( 'name' => "int", 'limit' => 4, 'unsigned' => true, 'default' => 0 ),
+	    'time' => array( 'name' => "time", 'null' => true ),
+	    'date' => array( 'name' => "date", 'null' => true ),
+	    'binary' => array( 'name' => "blob", 'null' => true ),
 	    'boolean' => array( 'name' => "tinyint", 'limit' => 1, 'null' => false, 'default' => 0), // 'null' => false is important, because otherwise the select-statement has to check if value = 0 OR value IS NULL
 	    'bool' => array( 'name' => "tinyint", 'limit' => 1, 'null' => false, 'default' => 0),
 	    'set' => array( 'name' => 'set', 'null' => true)
 	  );
 	}
-	
-  
+
+
 	public function create_table($table, $column_defs) {
-	  
+
 	  if (!in_array('primary_key', $column_defs))
 	    $column_defs = array_merge(array('id' => 'primary_key'), $column_defs);
-	  
+
 	  $columns_sql = array();
 	  foreach ($column_defs as $column => $options) {
 	    $part = "`$column` ";
@@ -58,52 +58,52 @@ class MpmMigrationBase
 	      if (!isset($this->default_types[$options]))
 	        throw new Exception("'$options' is not a valid datatype!");
 	      $part .= $this->getTypeSql($options, $this->default_types[$options]);
-	      
+
 	    }
 	    else {
 	      //var_dump($options);
 	      $type = $options[0] ? $options[0] : $options['type'];
-	      
+
 	      if (!isset($this->default_types[$type]))
 	        throw new Exception("'$type' is not a valid datatype!");
 	      $part .= $this->getTypeSql($type, array_merge($this->default_types[$type], $options));
 	    }
 	    $columns_sql[]= $part;
 	  }
-	  
+
 	  $sql = "CREATE TABLE `$table` (".implode(', ', $columns_sql).") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 	  $this->exec($sql);
 	}
-	
+
 	public function drop_table($table) {
 	  $this->exec("DROP TABLE `$table`");
 	}
-	
+
 	public function add_column($table, $column, $type, $options = array()) {
 	  $options = array_merge($this->default_types[$type], $options);
 	  $sql = "ALTER TABLE `$table` ADD `$column` ".$this->getTypeSql($type, $options);
 	  if ($options['after'])
 	    $sql .= " AFTER `{$options['after']}`";
 	  $this->exec($sql);
-	  
+
 	}
-	
+
 	public function change_column($table, $column, $type, $options = array()) {
 	  $options = array_merge($this->default_types[$type], $options);
 	  $this->exec("ALTER TABLE `$table` CHANGE `$column` `$column` ".$this->getTypeSql($type, $options));
 	}
-	
+
 	public function remove_column($table, $column) {
 	  $this->exec("ALTER TABLE `$table` DROP `$column`");
 	}
-	
-	
+
+
 	public function rename_column($table, $column, $new_column) {
 	  $row = $this->query_with_first_row("show columns from `$table` LIKE '$column'");
-	  
+
 	  $this->exec("ALTER TABLE `$table` CHANGE `$column` `$new_column` ".$row['Type']);
 	}
-	
+
 	public function add_index($table, $columns, $options = array()) {
 	  if (is_array($columns)) {
 	    $columns = join(', ', $columns);
@@ -111,11 +111,11 @@ class MpmMigrationBase
 	  }
 	  else
 	    $index_name = $options['name'] ? $options['name'] : $columns;
-	  
+
 	  $sql = "ALTER TABLE `$table` ADD ".($options['unique'] ? 'UNIQUE ' : '')."INDEX `$index_name` (".$this->bquotes($columns).")";
 	  $this->exec($sql);
 	}
-	
+
 	public function remove_index($table, $columns, $options = array()) {
 	  if ($options['name'])
 	    $index_name = $options['name'];
@@ -124,20 +124,20 @@ class MpmMigrationBase
 	  }
 	  else
 	    $index_name = $columns;
-	   
+
 	  $sql = "ALTER TABLE `$table` DROP INDEX `$index_name`";
 	  $this->exec($sql);
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	// ----------------------
-	
-	
+
+
 	private function query_with_first_row($sql) {
 	  if ($this->dbObj  instanceof PDO) {
 	    $res = $this->dbObj->query($sql);
@@ -149,9 +149,9 @@ class MpmMigrationBase
 	    return $res->fetch_assoc();
 	  }
 	}
-	
-	
-	
+
+
+
 	private function exec($sql) {
 	  echo "\r\n".$sql."\r\n";
 	  if ($this->dbObj  instanceof PDO) {
@@ -162,12 +162,12 @@ class MpmMigrationBase
 	    return $test->query($sql);
 	  }
 	}
-	
-	
+
+
 	private function getTypeSql($type, $options) {
 	  if (is_array($options))
 	    $options = array_merge($this->default_types[$type], $options);
-	  
+
 	  //echo "__________";
 	  //var_dump($options);
 	  switch($type) {
@@ -207,7 +207,7 @@ class MpmMigrationBase
 	    default:
 	      $sql .= $options['name'];
 	  }
-	  
+
 	  $sql .= $options['null'] ? ' NULL' : ' NOT NULL';
 	  if ($options['default'] !== null) {
 	    $sql .= ' DEFAULT ';
@@ -218,22 +218,22 @@ class MpmMigrationBase
 	  }
 	  if ($options['unique'])
 	    $sql .= ' UNIQUE';
-	  
+
 	  return $sql;
 	}
-	
-	
+
+
 	private function bquotes($o) {
 	  return $this->quotes($o, '`');
 	}
-	
+
 	private function quotes($o, $sym = '"') {
 	  if (is_array($o)) {
 	    $n = array();
-	     
+
 	    foreach ($o as $value)
 	      array_push($n, $sym.$value.$sym);
-	     
+
 	    return $n;
 	  }
 	  else
