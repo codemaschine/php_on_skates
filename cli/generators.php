@@ -167,7 +167,7 @@ function views_generator($model_name, $fields){
 	
     $model_var_name = strtolowerunderscore($model_name);
     $model_readable_name = ucfirst(str_replace('_', ' ', $model_var_name));
-	$views_dir = dirname(__FILE__).'/../../../app/views/'.$model_var_name;
+	$views_dir = dirname(__FILE__).'/../../app/views/'.$model_var_name;
     if (!file_exists($views_dir))
 		mkdir($views_dir);
 	
@@ -241,6 +241,8 @@ switch ($type) {
 		$form_fields .= 'check_box'; break;
 	case 'text':
 		$form_fields .= 'text_area'; break;
+	case 'attachment':
+		$form_fields .= 'file_field'; break;
 	default:
 		$form_fields .= 'text_field';
 }

@@ -58,6 +58,10 @@ function text_field_tag($name, $value, $html_options = array()) {
   return _input_tag('text', $name, $value, $html_options);
 }
 
+function file_field_tag($name, $value, $html_options = array()) {
+	return _input_tag('file', $name, $value, $html_options);
+}
+
 function text_area_tag($name, $value, $html_options = array()) {
   if (!$html_options['cols'])
     $html_options['cols'] = 40;
@@ -189,6 +193,10 @@ class Form {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return text_field_tag($this->w($name), $this->model->get($name), $html_options);
   }
+  public function file_field($name, $html_options = array()) {
+  	if (($this->closed)) throw new Exception("Form is already closed!");
+  	return file_field_tag($this->w($name), $this->model->get($name), $html_options);
+  }
   public function text_area($name, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return text_area_tag($this->w($name), $this->model->get($name), $html_options);
@@ -314,6 +322,10 @@ function form_tag($uri, $options = array(), $html_options = array()) {
       $html_options['onsubmit'] = NULL;
     }
     $result .= _jquery_ajax($uri, $options, true).'"';
+  }
+  
+  if ($options['multipart']) {
+  	$html_options['enctype'] = 'multipart/form-data';
   }
   
   $result .= _to_html_attributes($html_options).'>';

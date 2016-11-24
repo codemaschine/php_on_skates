@@ -80,21 +80,39 @@ class MpmMigrationBase
 	}
 
 	public function add_column($table, $column, $type, $options = array()) {
+	  if ($type === 'attachment') {
+		$this->add_column($table, $column.'_file_name', 'string');
+		$this->add_column($table, $column.'_content_type', 'string');
+		$this->add_column($table, $column.'_file_size', 'integer');
+		$this->add_column($table, $column.'_updated_at', 'datetime');
+		return;
+	  }
 	  $options = array_merge($this->default_types[$type], $options);
 	  $sql = "ALTER TABLE `$table` ADD `$column` ".$this->getTypeSql($type, $options);
 	  if ($options['after'])
 	    $sql .= " AFTER `{$options['after']}`";
 	  $this->exec($sql);
-
 	}
 
 	public function change_column($table, $column, $type, $options = array()) {
+		if ($type === 'attachment') {
+			throw new Exception('Cannot change type "attachment"!');
+		}
 	  $options = array_merge($this->default_types[$type], $options);
 	  $this->exec("ALTER TABLE `$table` CHANGE `$column` `$column` ".$this->getTypeSql($type, $options));
 	}
 
 	public function remove_column($table, $column) {
-	  $this->exec("ALTER TABLE `$table` DROP `$column`");
+		$col = $this->query_with_first_row("show columns from `$table` like '$column%'");
+		
+		if (strtolower($col['Field']) !== strtolower($column)) { // ... indicates that it is an attachment
+			$this->remove_column($table, $column.'_file_name');
+			$this->remove_column($table, $column.'_content_type');
+			$this->remove_column($table, $column.'_file_size');
+			$this->remove_column($table, $column.'_updated_at');
+			return;
+		}
+		$this->exec("ALTER TABLE `$table` DROP `$column`");
 	}
 
 
@@ -149,7 +167,6 @@ class MpmMigrationBase
 	    return $res->fetch_assoc();
 	  }
 	}
-
 
 
 	private function exec($sql) {
