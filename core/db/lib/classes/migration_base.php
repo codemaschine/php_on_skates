@@ -26,7 +26,7 @@ class MpmMigrationBase
 
 	public function __construct() {
 	  $this->default_types = array(
-	    'primary_key' => "int(11) DEFAULT NULL auto_increment PRIMARY KEY",
+	    'primary_key' => "int(11) NOT NULL auto_increment PRIMARY KEY",
 	    'string' => array( 'name' => "varchar", 'limit' => 255, 'null' => true ),
 	    'text' => array( 'name' => "text", 'null' => true ),
 	    'integer' => array( 'name' => "int", 'limit' => 4, 'null' => false, 'default' => 0), // 'null' => false is important, because otherwise the select-statement has to check if value = 0 OR value IS NULL
