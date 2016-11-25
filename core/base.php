@@ -130,7 +130,8 @@ function end_of_day($time = NULL) {
 
 
 function sanitize($str) {
-  return mysql_real_escape_string($str);
+  global $db_link;
+  return mysqli_real_escape_string($db_link, $str);
 }
 
 function h($str, $flags = ENT_COMPAT) {

@@ -212,6 +212,8 @@ class MpmMigrationBase
 
 
 	private function getTypeSql($type, $options) {
+    global $db_link;
+
 	  if (is_array($options))
 	    $options = array_merge($this->default_types[$type], $options);
 
@@ -259,7 +261,7 @@ class MpmMigrationBase
 	  if ($options['default'] !== null) {
 	    $sql .= ' DEFAULT ';
 	    if ($type == 'string' || $type == 'text' || $type == 'set')
-	      $sql .= "'".mysql_escape_string($options['default'])."'";
+	      $sql .= "'".mysql_escape_string($db_link, $options['default'])."'";
 	    else
 	      $sql .= $options['default'] ? $options['default'] : 0;
 	  }

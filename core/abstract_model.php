@@ -200,7 +200,8 @@ abstract class AbstractModel {
   }
 
   private function _save($skip_validation = false, $update_fields = NULL) {
-    global $log;
+    global $log, $db_link;
+
     $files_to_save = array();
     $files = array_shift($_FILES);
     $is_new = $this->is_new();
@@ -238,8 +239,8 @@ abstract class AbstractModel {
         if ($this->attr_defs[$key] == 'attachment') {
           if ($files['error'][$key] === UPLOAD_ERR_OK) {
 
-            $assignments[] = "`{$key}_file_name` = '".mysql_real_escape_string($files['name'][$key])."'";
-            $assignments[] = "`{$key}_content_type` = '".mysql_real_escape_string($files['type'][$key])."'";
+            $assignments[] = "`{$key}_file_name` = '".mysqli_real_escape_string($db_link, $files['name'][$key])."'";
+            $assignments[] = "`{$key}_content_type` = '".mysqli_real_escape_string($db_link, $files['type'][$key])."'";
             $assignments[] = "`{$key}_file_size` = {$files['size'][$key]}";
             $assignments[] = "`{$key}_updated_at` = '".gmdate(DB_DATETIME_FORMAT)."'";
 
@@ -253,7 +254,7 @@ abstract class AbstractModel {
       	elseif (is_bool($value))
       	  $value = $value ? '1' : '0';
       	elseif (is_string($value))
-      	  $value = "'".mysql_real_escape_string($value)."'";
+      	  $value = "'".mysqli_real_escape_string($db_link, $value)."'";
       	elseif (is_float($value))
       	  $value = var_export($value, true); // avoid the usage of , instead of . as decimal separator caused by setlocale.
       	elseif ($value instanceof DateTime) { // works for Date-class, too!
@@ -279,7 +280,7 @@ abstract class AbstractModel {
       db_query($query);
 
       if ($is_new)
-        $this->id = mysql_insert_id();
+        $this->id = mysqli_insert_id($db_link);
 
 
 
@@ -698,6 +699,8 @@ abstract class AbstractModel {
 
 
   public static function count_by($fields = NULL, $options = array()) {
+    global $db_link;
+
     if (empty(static::$table_name))
       self::set_table_name();
 
@@ -718,10 +721,10 @@ abstract class AbstractModel {
     }
 
     $res = db_query($query);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
       return $row[0];
     else
-      throw new Exception(mysql_error());
+      throw new Exception(mysqli_error($db_link));
   }
 
   public static function count_all($options = array()) {
@@ -731,7 +734,7 @@ abstract class AbstractModel {
 
 
   private static function build_conditions_sql($fields, $options) {
-    global $log;
+    global $log, $db_link;
 
     $elements = array();
 
@@ -759,7 +762,7 @@ abstract class AbstractModel {
         if ($options['conditions']) { // gibt es noch zu ersetzende variablen?
           if (strpos($cond_stmt, '?') === false) {
             //$log->debug("Keine Fragezeichen in conditions-string gefunden");
-            $cond_stmt = vprintf($cond_stmt, array_map(create_function('$s','return mysql_real_escape_string($s);'), $options['conditions']));
+            $cond_stmt = vprintf($cond_stmt, array_map(create_function('$s','return mysqli_real_escape_string($db_link, $s);'), $options['conditions']));
           }
           else {
             $i = 0;
@@ -815,8 +818,8 @@ abstract class AbstractModel {
     $res = db_query($query);
 
     if ($take == self::FIRST) {
-      if (mysql_num_rows($res)) {
-        $row = mysql_fetch_assoc($res);
+      if (mysqli_num_rows($res)) {
+        $row = mysqli_fetch_assoc($res);
         $obj = static::new_instance($row, false);
         $obj->cast_attributes();
 
@@ -834,10 +837,10 @@ abstract class AbstractModel {
     }
     else {
       $return_array = array();
-      if ($exception_if_not_found && mysql_num_rows($res) != $exception_if_not_found)
+      if ($exception_if_not_found && mysqli_num_rows($res) != $exception_if_not_found)
         throw new Exception("Not all Records were found");
 
-      while ($row = mysql_fetch_assoc($res)) {
+      while ($row = mysqli_fetch_assoc($res)) {
         $obj = static::new_instance($row, false);
         $obj->cast_attributes();
 
@@ -910,6 +913,8 @@ abstract class AbstractModel {
 
   // -- other helper functions
   public static function sanitize_value($value) {
+    global $db_link;
+
     if ($value instanceof AbstractModel)
       $value = $value->get_id();
     elseif (is_array($value)) {
@@ -921,7 +926,7 @@ abstract class AbstractModel {
     elseif (is_bool($value))
       $value = $value ? '1' : '0';
     elseif (is_string($value))
-      $value = "'".mysql_real_escape_string($value)."'";
+      $value = "'".mysqli_real_escape_string($db_link, $value)."'";
     elseif (!is_numeric($value))
       $value = 'NULL'; // Default: drop other values
     else
