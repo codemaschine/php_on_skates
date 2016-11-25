@@ -14,45 +14,6 @@ if (file_exists(APP_DIR))
 $message = '';
 $initialized = false;
 
-//http://stackoverflow.com/questions/4027769/running-mysql-sql-files-in-php/4027786#4027786
-function run_sql_file($location){
-  //load file
-  $commands = file_get_contents($location);
-
-  //delete comments
-  $lines = explode("\n",$commands);
-  $commands = '';
-  foreach($lines as $line){
-    $line = trim($line);
-    if( $line && !startsWith($line,'--') && !startsWith($line,'#') && !startsWith($line,'/*')){
-      $commands .= $line . "\n";
-    }
-  }
-
-  //convert to array
-  $commands = explode(";", $commands);
-
-  //run commands
-  $total = $success = 0;
-  $errors = array();
-  foreach($commands as $command){
-    if(trim($command)){
-      $total += 1;
-      if (@mysql_query($command)===false)
-        $errors []= "#$total: ".mysql_error().'. Statement: '.$command;
-      else
-        $success += 1;
-    }
-  }
-
-  //return number of successful queries and total number of queries found
-  return array(
-      "success" => $success,
-      "total" => $total,
-      "errors" => $errors
-  );
-}
-
 
 function copy_recursive($source, $dest) {
 	if (substr($dest,-1) == '/')
