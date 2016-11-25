@@ -35,9 +35,9 @@ function db_init($env_name = null) {
       mysqli_close($db_link);
     }
 
-    $db_link = @mysqli_connect($new_db_config->host, $new_db_config->user, $new_db_config->pass, ($new_db_config->port ? $new_db_config->port : ini_get("mysqli.default_port")));
+    $db_link = @mysqli_connect($new_db_config->host, $new_db_config->user, $new_db_config->pass, $new_db_config->name, ($new_db_config->port ? $new_db_config->port : ini_get("mysqli.default_port")));
     if (!$db_link) {
-      throw new Exception('Keine Datenbank-Verbindung m&ouml;glich: ' . mysqli_error($db_link));
+      throw new Exception('Keine Datenbank-Verbindung m&ouml;glich: ' . mysqli_connect_error());
     }
 
     mysqli_set_charset($db_link, 'utf8');
@@ -53,8 +53,12 @@ function db_init($env_name = null) {
 }
 
 // TODO: Remove parameter $link?
-function db_query($query_string, $link = $db_link) {
-  global $fwlog;
+function db_query($query_string, $link = false) {
+  global $fwlog, $db_link;
+
+  if (!$link) {
+    $link = $db_link;
+  }
 
   if (!$link) {
     throw new Exception('Ung&uuml;ltiger Aufruf: Ein DB-Link muss angegeben werden.');
