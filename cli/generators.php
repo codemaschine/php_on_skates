@@ -213,11 +213,20 @@ function views_generator($model_name, $fields){
 	));
 	
 	
+	// is multipart form?
+	$multipart = false;
+	foreach ($fields as $name => $type) {
+		if ($type === 'attachment')
+			$multipart = true;
+	}
+	
+	
 	// new view
 	$g = new FileGenerator('view_new_template.php', $views_dir.'new.php');
 	$g->generate(array(
 			'model_var_name' => $model_var_name,
 			'model_readable_name' => $model_readable_name,
+			'multipart' => ($multipart ? ", array('multipart' => true)" : '')
 	));
 	
 	// edit view
@@ -225,6 +234,7 @@ function views_generator($model_name, $fields){
 	$g->generate(array(
 			'model_var_name' => $model_var_name,
 			'model_readable_name' => $model_readable_name,
+			'multipart' => ($multipart ? ", array('multipart' => true)" : '')
 	));
 	
 	// form partial

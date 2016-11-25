@@ -41,7 +41,8 @@ class MpmMigrationBase
 	    'binary' => array( 'name' => "blob", 'null' => true ),
 	    'boolean' => array( 'name' => "tinyint", 'limit' => 1, 'null' => false, 'default' => 0), // 'null' => false is important, because otherwise the select-statement has to check if value = 0 OR value IS NULL
 	    'bool' => array( 'name' => "tinyint", 'limit' => 1, 'null' => false, 'default' => 0),
-	    'set' => array( 'name' => 'set', 'null' => true)
+	    'set' => array( 'name' => 'set', 'null' => true),
+	  	'attachment' => 'attachment' // will be substituted
 	  );
 	}
 
@@ -53,6 +54,16 @@ class MpmMigrationBase
 
 	  $columns_sql = array();
 	  foreach ($column_defs as $column => $options) {
+	  	if ($options === 'attachment') {
+	  		$part = '';
+	  		$part .= "`{$column}_file_name` ".$this->getTypeSql('string', $this->default_types['string']).', ';
+	  		$part .= "`{$column}_content_type` ".$this->getTypeSql('string', $this->default_types['string']).', ';
+	  		$part .= "`{$column}_file_size` ".$this->getTypeSql('integer', $this->default_types['integer']).', ';
+	  		$part .= "`{$column}_updated_at` ".$this->getTypeSql('datetime', $this->default_types['datetime']);
+	  		$columns_sql[]= $part;
+	  		continue;
+	  	}
+	    
 	    $part = "`$column` ";
 	    if (gettype($options) == 'string') {
 	      if (!isset($this->default_types[$options]))
@@ -103,9 +114,15 @@ class MpmMigrationBase
 	}
 
 	public function remove_column($table, $column) {
-		$col = $this->query_with_first_row("show columns from `$table` like '$column%'");
+		$row = $this->query_with_first_row("show columns from `$table` like '$column'");
+		if (!$row) {
+			$rows = $this->query("show columns from `$table` LIKE '$column%'");
+			$fields = array();
+			foreach ($rows as $r)
+				$fields[] = $r['Field'];
+		}
 		
-		if (strtolower($col['Field']) !== strtolower($column)) { // ... indicates that it is an attachment
+		if (!$row && in_array($column.'_file_name', $fields) && in_array($column.'_file_size', $fields)) { // ... indicates that it is an attachment
 			$this->remove_column($table, $column.'_file_name');
 			$this->remove_column($table, $column.'_content_type');
 			$this->remove_column($table, $column.'_file_size');
@@ -117,9 +134,22 @@ class MpmMigrationBase
 
 
 	public function rename_column($table, $column, $new_column) {
-	  $row = $this->query_with_first_row("show columns from `$table` LIKE '$column'");
-
-	  $this->exec("ALTER TABLE `$table` CHANGE `$column` `$new_column` ".$row['Type']);
+		$row = $this->query_with_first_row("show columns from `$table` like '$column'");
+		if (!$row) {
+			$rows = $this->query("show columns from `$table` LIKE '$column%'");
+			$fields = array();
+			foreach ($rows as $r)
+				$fields[] = $r['Field'];
+		}
+		
+		if (!$row && in_array($column.'_file_name', $fields) && in_array($column.'_file_size', $fields)) { // ... indicates that it is an attachment
+			$this->rename_column($table, $column.'_file_name', $new_column.'_file_name');
+			$this->rename_column($table, $column.'_content_type', $new_column.'_content_type');
+			$this->rename_column($table, $column.'_file_size', $new_column.'_file_size');
+			$this->rename_column($table, $column.'_updated_at', $new_column.'_updated_at');
+			return;
+		}
+		$this->exec("ALTER TABLE `$table` CHANGE `$column` `$new_column` ".$row['Type']);
 	}
 
 	public function add_index($table, $columns, $options = array()) {
