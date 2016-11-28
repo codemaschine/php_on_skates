@@ -108,6 +108,8 @@ abstract class AbstractModel {
   public function __construct($attr = array(), $secure_merge = true) {
     $this->attr_defs = static::attribute_definitions();
     $this->configuration();
+    
+    $this->attr = array_fill_keys(array_keys($this->attr_defs), null);  // initialize the attributes with empty values.
 
     if (is_array($attr)) {
     	if ($this->mass_assignable && $secure_merge)
@@ -1011,14 +1013,13 @@ abstract class AbstractModel {
 
   public function cast_attribute($key) {
     global $log;
-
-    if (!array_key_exists($key, $this->attr_defs))
+    if (!array_key_exists($key, $this->attr_defs) && $this->attr_defs[$key] !== 'attachment')
 	    return;
 
     $default_type = $this->attr_defs[$key];
 
     $value = $this->attr[$key];
-    if ($value === NULL && $default_type !== 'boolean' && $default_type !== 'bool')      // if current value is NULL then do not do any casting!!! Otherwise, e.g in case of a string NULL will be casted to '' which overwrites the current database value to an empty string. Only in case of a boolean we must ensure the value to be true of false, because NULL is forbidden.
+    if ($value === NULL && $default_type !== 'boolean' && $default_type !== 'bool' && $default_type !== 'attachment')      // if current value is NULL then do not do any casting!!! Otherwise, e.g in case of a string NULL will be casted to '' which overwrites the current database value to an empty string. Only in case of a boolean we must ensure the value to be true of false, because NULL is forbidden.
       return;
 
     $default_type = $this->attr_defs[$key];
@@ -1036,7 +1037,7 @@ abstract class AbstractModel {
     if ($cur_type != $default_type) {
       //$log->debug("$key => $value: has type $cur_type, should be $default_type");
       switch ($default_type) {
-      	case 'attachment': break; // do nothing!
+      	case 'attachment': if ($this->attr[$key.'_file_name']) $value = new Attachment($key, $this); break;
         case 'int':
         case 'integer': $value = intval($value); break; // filter_var($value, FILTER_SANITIZE_NUMBER_INT); break;   // Notice that neither settype() nor filter_var() work here correctly, they can still return a string!!!
         case 'float': $value = floatval($value); break;

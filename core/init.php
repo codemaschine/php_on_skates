@@ -200,7 +200,7 @@ if (!extension_loaded('yaml')) {
 }
 $_FRAMEWORK['translations'] = array();
 require_once 'locale.php';
-
+require_once 'attachment.php';
 require_once 'base.php';
 require_once 'db.php';
 $db_link = db_init();
