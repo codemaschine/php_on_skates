@@ -239,12 +239,25 @@ abstract class AbstractModel {
           continue;
 
         if ($this->attr_defs[$key] == 'attachment') {
-          if ($files['error'][$key] === UPLOAD_ERR_OK) {
-
+          
+          if (!$value && $this->attr_loaded[$key] instanceof Attachment && $this->attr_loaded[$key] !== $value || // attachment has changed
+              $value  && $this->attr_loaded[$key] instanceof Attachment) { // attachment shall be deleted
+            $this->delete_attachment($this->attr_loaded[$key]);
+          }
+          
+          // upload  / add attachment
+          if ($value && $files['error'][$key] === UPLOAD_ERR_OK) {
+            $this->attr[$key.'_file_name'] = $files['name'][$key];
+            $this->attr[$key.'_content_type'] = $files['type'][$key];
+            $this->attr[$key.'_file_size'] = $files['size'][$key];
+            $this->attr[$key.'_updated_at'] = new DateTime();
+            
             $assignments[] = "`{$key}_file_name` = '".mysqli_real_escape_string($db_link, $files['name'][$key])."'";
             $assignments[] = "`{$key}_content_type` = '".mysqli_real_escape_string($db_link, $files['type'][$key])."'";
             $assignments[] = "`{$key}_file_size` = {$files['size'][$key]}";
-            $assignments[] = "`{$key}_updated_at` = '".gmdate(DB_DATETIME_FORMAT)."'";
+            $assignments[] = "`{$key}_updated_at` = '".$this->attr[$key.'_updated_at']->toDbFormat()."'";
+            
+            $this->cast_attribute($key);
 
             $files_to_save[$key] = $files['name'][$key];
           }
@@ -338,8 +351,26 @@ abstract class AbstractModel {
         case 'destroy': $relation->destroy(); break;
       }
     }
+    
+    // check if there're any files to delete
+    foreach ($this->attr_loaded as $key => $value) {
+      if ($value instanceof Attachment) {
+        $this->delete_attachment($value);
+      }
+    }
+    
     $this->delete();
   }
+  
+  private function delete_attachment(Attachment &$attachment) {
+    unlink(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name());
+    rmdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id);
+    $this->attr[$attachment->get_field_name()] = null;
+    $this->attr[$attachment->get_field_name().'_file_name'] = null;
+    $this->attr[$attachment->get_field_name().'_content_type'] = null;
+    $this->attr[$attachment->get_field_name().'_file_size'] = null;
+  }
+  
 
   public function delete() {
   	if (!$this->is_new()) {
