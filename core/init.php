@@ -18,6 +18,18 @@ if (get_magic_quotes_gpc()) {
 }
 // ----------------------
 
+// ---- if files send on POST request, mark their names in post variables
+
+if ($_POST && $_FILES) {
+	foreach ($_FILES as $model_name => $file) {
+		if (isset($_POST[$model_name])) {
+			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
+		}
+	}
+}
+// ----
+
+
 register_shutdown_function("status_500_on_error");
 function status_500_on_error() {
   $error = error_get_last();
