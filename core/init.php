@@ -222,7 +222,8 @@ require_once 'view_helpers.php';
 require_once 'class.chip_password_generator.php';
 
 // init session
-require_once 'session.php';
+// TODO: Maybe require APP_PATH.'commons/session.php' instead?
+// require_once 'session.php';
 
 $additionalHeaderData = array();
 
