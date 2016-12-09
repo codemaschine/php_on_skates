@@ -59,7 +59,7 @@ case 'update':
 		if (is_json())
 			return render_json_response(null, HttpStatusCode::UNPROCESSABLE_ENTITY /* = 422 */, 'validation failed');
 		else
-			render('new');
+			render('edit');
 	}
 
 break;

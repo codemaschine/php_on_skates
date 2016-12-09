@@ -215,18 +215,16 @@ abstract class AbstractModel {
 
     $this->cast_attributes();
 
-    $entries = $this->attr; // make a copy of attributes
-
-    if (empty($entries))
+    if (empty($this->attr))
   	  throw new Exception("Define some fields in '$table'!", E_USER_ERROR);
 
   	if ($this->is_new())
-  	  $entries['created_at'] = $this->attr_defs['created_at'] === 'datetime' ? gmdate(DB_DATETIME_FORMAT) : time();
+  	  $this->attr['created_at'] = $this->attr_defs['created_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
 
-    $entries['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? gmdate(DB_DATETIME_FORMAT) : time();
+  	$this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
 
     $assignments = array();
-    foreach ($entries as $key => &$value) {
+    foreach ($this->attr as $key => $value) {
       if (!array_key_exists($key, $this->attr_defs)) // || $update_fields && !in_array($key, $update_fields))   // this is a very bad idea to save only the the fields defined by $update_fields because it will discard changes of the before-filters!
   	    continue;
 
@@ -562,7 +560,7 @@ abstract class AbstractModel {
     $this->add_new_validator('format_of', $attr_name, ' ist keine gültige E-Mailadresse.', $options);
   }
 
-  protected function validates_confirmation_of($attr_name, $with_attr, $options) {
+  protected function validates_confirmation_of($attr_name, $with_attr, $options = array()) {
     $options['with'] = $with_attr;
     $this->add_new_validator('confirmation_of', $attr_name, ' stimmt mit der Bestätigung nicht überein.', $options);
   }
@@ -1062,6 +1060,7 @@ abstract class AbstractModel {
     	case 'text':
     	case 'binary':
     	case 'time': $default_type = 'string'; break;
+    	case 'set': $default_type = 'string'; break;
     	case 'primary_key': $default_type = 'integer'; break;
     }
 

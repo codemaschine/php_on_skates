@@ -230,6 +230,10 @@ class Form {
   
   public function label($for, $label = NULL, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
+    if (is_array($label)) {
+      $html_options = $label;
+      $label = NULL;
+    }
     if ($label === NULL)
     	$label = __('models.attributes.'.$this->model->get_class_label().'.'.$for, null, true);
     return '<label for="'._name_to_id($this->w($for)).'"'._to_html_attributes($html_options).'>'.$label.'</label>';
