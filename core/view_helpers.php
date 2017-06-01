@@ -385,7 +385,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   $result.= ", type: '".$options['method']."'";
   
   if ($sendAsFormPost)
-    $result.= ", data: $(this).serializeArray()";
+    $result.= ", data: $(".(is_string($sendAsFormPost) ? "'$sendAsFormPost'" : 'this').").serializeArray()";
   elseif ($options['data'])
     $result.= ", data: ".$options['data'];
   
