@@ -203,9 +203,10 @@ abstract class AbstractModel {
 
   private function _save($skip_validation = false, $update_fields = NULL) {
     global $log, $db_link;
-
+    
     $files_to_save = array();
-    $files = array_shift($_FILES);
+    $files_copy = $_FILES;
+    $files = array_shift($files_copy);
     $is_new = $this->is_new();
 
     if ($this->dirty || !$skip_validation && !$this->is_valid() || $is_new && $this->before_create() === false || !$is_new && $this->before_update() === false || $this->before_save() === false)
