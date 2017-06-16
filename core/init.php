@@ -20,12 +20,41 @@ if (get_magic_quotes_gpc()) {
 
 // ---- if files send on POST request, mark their names in post variables
 
-if ($_POST && $_FILES) {
-	foreach ($_FILES as $model_name => $file) {
-		if (isset($_POST[$model_name])) {
-			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
-		}
+function _skates_files2post($files, &$post) {		// $_FILES (to $_POST (optional))
+	foreach ($files as $key => $value) {
+		$f_key           = $key;
+		$f_name_tree     = array($key=>$value["name"]);
+		$f_type_tree     = array($key=>$value["type"]);
+		$f_tmp_name_tree = array($key=>$value["tmp_name"]);
+		$f_error_tree    = array($key=>$value["error"]);
+		$f_size_tree     = array($key=>$value["size"]);
 	}
+	_skates_process_node($post, $f_name_tree, $f_type_tree, $f_tmp_name_tree, $f_error_tree, $f_size_tree);
+	return $post;
+};
+
+function _skates_process_node(&$post_tree, $f_name_tree, $f_type_tree, $f_tmp_name_tree, $f_error_tree, $f_size_tree) {
+	foreach ($f_name_tree as $child => $f_name_subtree) {
+		if (!is_array($f_name_subtree)) { // subtree
+			$post_tree[$child] = array(
+					"name"     => $f_name_tree[$child],
+					"type"     => $f_type_tree[$child],
+					"tmp_name" => $f_tmp_name_tree[$child],
+					"error"    => $f_error_tree[$child],
+					"size"     => $f_size_tree[$child]
+			);
+		}
+		_skates_process_node($post_tree[$child], $f_name_tree[$child], $f_type_tree[$child], $f_tmp_name_tree[$child], $f_error_tree[$child], $f_size_tree[$child]);
+	}
+}
+
+if ($_POST && $_FILES) {
+//	foreach ($_FILES as $model_name => $file) {
+//		if (isset($_POST[$model_name])) {
+//			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
+//		}
+//	}
+	_skates_files2post($_FILES, $_POST);
 }
 // ----
 

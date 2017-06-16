@@ -205,8 +205,6 @@ abstract class AbstractModel {
     global $log, $db_link;
     
     $files_to_save = array();
-    $files_copy = $_FILES;
-    $files = array_shift($files_copy);
     $is_new = $this->is_new();
 
     if ($this->dirty || !$skip_validation && !$this->is_valid() || $is_new && $this->before_create() === false || !$is_new && $this->before_update() === false || $this->before_save() === false)
@@ -225,10 +223,11 @@ abstract class AbstractModel {
   	$this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
 
     $assignments = array();
+
+
     foreach ($this->attr as $key => $value) {
       if (!array_key_exists($key, $this->attr_defs)) // || $update_fields && !in_array($key, $update_fields))   // this is a very bad idea to save only the the fields defined by $update_fields because it will discard changes of the before-filters!
   	    continue;
-
   	  //$log->debug("Value of $key is ".var_export($value, true));
       //if ($value === NULL)   // do nothing to not overwrite the database value
       //  continue;
@@ -239,26 +238,31 @@ abstract class AbstractModel {
 
         if ($this->attr_defs[$key] == 'attachment') {
           
-          if (!$value && $this->attr_loaded[$key] instanceof Attachment && $this->attr_loaded[$key] !== $value || // attachment has changed
-              $value  && $this->attr_loaded[$key] instanceof Attachment) { // attachment shall be deleted
-            $this->delete_attachment($this->attr_loaded[$key]);
+          if ($this->attr_loaded[$key] instanceof Attachment && is_array($value)) // || // attachment has changed
+          	//!$value  && $this->attr_loaded[$key] instanceof Attachment) // attachment shall be deleted
+              {             
+              	$this->delete_attachment($this->attr_loaded[$key]);
           }
           
           // upload  / add attachment
-          if ($value && $files['error'][$key] === UPLOAD_ERR_OK) {
-            $this->attr[$key.'_file_name'] = $files['name'][$key];
-            $this->attr[$key.'_content_type'] = $files['type'][$key];
-            $this->attr[$key.'_file_size'] = $files['size'][$key];
+          if ($value && is_array($value) && $value['error']=== UPLOAD_ERR_OK) {
+          	$this->attr[$key.'_file_name'] = $value['name'];
+            $this->attr[$key.'_content_type'] = $value['type'];
+            $this->attr[$key.'_file_size'] = $value['size'];
             $this->attr[$key.'_updated_at'] = new DateTime();
             
-            $assignments[] = "`{$key}_file_name` = '".mysqli_real_escape_string($db_link, $files['name'][$key])."'";
-            $assignments[] = "`{$key}_content_type` = '".mysqli_real_escape_string($db_link, $files['type'][$key])."'";
-            $assignments[] = "`{$key}_file_size` = {$files['size'][$key]}";
+            $assignments[] = "`{$key}_file_name` = '".mysqli_real_escape_string($db_link, $value['name'])."'";
+            $assignments[] = "`{$key}_content_type` = '".mysqli_real_escape_string($db_link, $value['type'])."'";
+            $assignments[] = "`{$key}_file_size` = {$value['size']}";
             $assignments[] = "`{$key}_updated_at` = '".$this->attr[$key.'_updated_at']->toDbFormat()."'";
             
             $this->cast_attribute($key);
 
-            $files_to_save[$key] = $files['name'][$key];
+			// $files_to_save[$key] = $value['name'];
+			$files_to_save[$value['tmp_name']] = array (
+            		"key" => $key,
+            		"name" => $value['name']
+            );
           }
           continue;
         }
@@ -305,15 +309,19 @@ abstract class AbstractModel {
       	if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label()))
       		mkdir(ROOT_PATH.'files/'.$this->get_class_label());
 
-      	foreach ($files_to_save as $key => $name) {
-
-      		if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key))
-      			mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key);
-
-      		if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id))
-      			mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id);
-
-      		move_uploaded_file($files['tmp_name'][$key], ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id.'/'.$name);
+		//$log->debug(var_inspect($files_to_save));
+    	foreach ($files_to_save as $tmp_name => $values) {
+      		
+    	  $key  = $values['key'];
+    	  $name = $values['name'];
+      		
+      	  if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key))
+      	    mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key);
+      			
+      	  if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id))
+      	    mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id);
+      				
+      	  move_uploaded_file($tmp_name, ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id.'/'.$name);
       	}
       }
 

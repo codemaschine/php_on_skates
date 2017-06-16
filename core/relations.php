@@ -269,8 +269,14 @@ class RelationHasMany extends Relation {
 
 
   public function set($obj) {
-    if (!is_array($obj))
+  	if (!is_array($obj))
       throw new Exception('Cannot set collection of '.$this->model_classname.' because $obj is not an array!');
+  	
+    foreach ($obj as &$e) {
+    	$classname = $this->model_classname;
+    	if (is_array($e))
+    		$e = new $classname($e);
+    }
 
     $this->obj = $obj;
     $this->modified = true;
