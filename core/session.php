@@ -136,7 +136,10 @@ function is_logged_in() {
 
 function is_admin() {
   global $current_user;
-  return is_logged_in() && $current_user->is_admin();
+  if(is_logged_in() && $current_user->get('is_admin')==1){
+      return TRUE;
+  }
+  return FALSE;
 }
 
 
