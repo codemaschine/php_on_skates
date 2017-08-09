@@ -17,7 +17,6 @@ if (get_magic_quotes_gpc()) {
   $_COOKIE = stripslashes_recursive($_COOKIE);
 }
 // ----------------------
-
 // ---- if files send on POST request, mark their names in post variables
 
 function _skates_files2post($files, &$post) {		// $_FILES (to $_POST (optional))

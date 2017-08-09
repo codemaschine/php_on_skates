@@ -11,6 +11,11 @@ define('APP_PATH', APP_DIR);
 
 chdir('app');
 
+/*
+var_dump($_POST);
+var_dump($_FILES);
+exit();
+*/
 
 // ---- Do init -----
 $_FRAMEWORK = array();
