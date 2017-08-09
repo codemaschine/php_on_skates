@@ -33,17 +33,21 @@ function _skates_files2post($files, &$post) {		// $_FILES (to $_POST (optional))
 };
 
 function _skates_process_node(&$post_tree, $f_name_tree, $f_type_tree, $f_tmp_name_tree, $f_error_tree, $f_size_tree) {
-	foreach ($f_name_tree as $child => $f_name_subtree) {
-		if (!is_array($f_name_subtree)) { // subtree
-			$post_tree[$child] = array(
-					"name"     => $f_name_tree[$child],
-					"type"     => $f_type_tree[$child],
-					"tmp_name" => $f_tmp_name_tree[$child],
-					"error"    => $f_error_tree[$child],
-					"size"     => $f_size_tree[$child]
-			);
+	if (is_array($f_name_tree)) {
+		foreach ($f_name_tree as $child => $f_name_subtree) {
+			if (!is_array($f_name_subtree) && $f_name_subtree!="") { // subtree
+				$post_tree[$child] = array(
+						"name"     => $f_name_tree[$child],
+						"type"     => $f_type_tree[$child],
+						"tmp_name" => $f_tmp_name_tree[$child],
+						"error"    => $f_error_tree[$child],
+						"size"     => $f_size_tree[$child]
+				);
+			}
+			_skates_process_node($post_tree[$child], $f_name_tree[$child], $f_type_tree[$child], $f_tmp_name_tree[$child], $f_error_tree[$child], $f_size_tree[$child]);
+			if ($post_tree[$child] == NULL)
+				unset($post_tree[$child]);
 		}
-		_skates_process_node($post_tree[$child], $f_name_tree[$child], $f_type_tree[$child], $f_tmp_name_tree[$child], $f_error_tree[$child], $f_size_tree[$child]);
 	}
 }
 
@@ -53,6 +57,7 @@ if ($_POST && $_FILES) {
 //			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
 //		}
 //	}
+	
 	_skates_files2post($_FILES, $_POST);
 }
 // ----
