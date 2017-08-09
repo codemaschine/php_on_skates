@@ -189,6 +189,13 @@ abstract class AbstractModel {
   public function set($name, $value) {
     if (array_key_exists($name, $this->relations))
       return ($this->relations[$name]->set($value));
+      elseif ($this->attr_defs[$name] == 'attachment' && $value == NULL) {
+      	$this->attr[$name] = NULL;
+      	$this->attr[$name.'_file_name'] = NULL;
+      	$this->attr[$name.'_content_type'] = NULL;
+      	$this->attr[$name.'_file_size'] = NULL;
+      	$this->attr[$name.'_updated_at'] = NULL;
+    }
     else {
       $this->attr[$name] = $value;
       // $this->cast_attribute($name);  // blöde Idee! Gibt man bei deinem Integer-Feld einen String an, wird noch vor dem validieren gecastet. Dadurch wird entweder ein Wert gespeichert, den man gar nicht eingegeben hat, oder es wird ein Fehler zurückgeliefert, aber die ursprüngliche Eingabe ist verloren.
@@ -203,6 +210,8 @@ abstract class AbstractModel {
 
   private function _save($skip_validation = false, $update_fields = NULL) {
     global $log, $db_link;
+    
+//	$log->debug(var_inspect($this));
     
     $files_to_save = array();
     $is_new = $this->is_new();
@@ -223,25 +232,25 @@ abstract class AbstractModel {
   	$this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
 
     $assignments = array();
-
-
+    
     foreach ($this->attr as $key => $value) {
       if (!array_key_exists($key, $this->attr_defs)) // || $update_fields && !in_array($key, $update_fields))   // this is a very bad idea to save only the the fields defined by $update_fields because it will discard changes of the before-filters!
   	    continue;
-  	  //$log->debug("Value of $key is ".var_export($value, true));
-      //if ($value === NULL)   // do nothing to not overwrite the database value
-      //  continue;
 
       if ($this->is_new() || $this->attr_loaded[$key] !== $value) { // only update if the the attribute is really dirty!!!
         if (!$this->is_new() && $key == 'created_at')
           continue;
 
         if ($this->attr_defs[$key] == 'attachment') {
-          
-          if ($this->attr_loaded[$key] instanceof Attachment && is_array($value)) // || // attachment has changed
-          	//!$value  && $this->attr_loaded[$key] instanceof Attachment) // attachment shall be deleted
-              {             
+//        $log->debug("attachment $key hat value $value");
+          if ($this->attr_loaded[$key] instanceof Attachment && is_array($value) || // attachment has changed
+          	  !$value  && $this->attr_loaded[$key] instanceof Attachment) // attachment shall be deleted (means: if the the current value has not been changed and shall be kept, then $value is an object of type Attachment. If you set it to NULL in controller, this means it shall be deleted.)
+              {
               	$this->delete_attachment($this->attr_loaded[$key]);
+              	$assignments[] = "`{$key}_file_name` = NULL";
+              	$assignments[] = "`{$key}_content_type` = NULL";
+              	$assignments[] = "`{$key}_file_size` = 0";
+              	$assignments[] = "`{$key}_updated_at` = NULL";
           }
           
           // upload  / add attachment
@@ -282,13 +291,15 @@ abstract class AbstractModel {
       	  $value = 'NULL'; // Default: drop other values
 
         $assignments[] = "`$key` = $value";
+        
         //$log->debug('attribut zum neu: '.var_inspect($this->attr_loaded[$key]).' !== '.var_inspect($value));
       }
       //else
       	//$log->debug('attribut zum gleich '.var_inspect($this->attr_loaded[$key]).' === '.var_inspect($value));
     }
-    if (!empty($assignments)) {
 
+    if (!empty($assignments)) {
+    	
       //$log->debug("---- call update here: \r\n".export_backtrace());
 
       $query = ($this->is_new() ? 'INSERT INTO' : 'UPDATE').' `'.static::$table_name.'` SET '.implode(", ", $assignments);
@@ -309,7 +320,6 @@ abstract class AbstractModel {
       	if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label()))
       		mkdir(ROOT_PATH.'files/'.$this->get_class_label());
 
-		//$log->debug(var_inspect($files_to_save));
     	foreach ($files_to_save as $tmp_name => $values) {
       		
     	  $key  = $values['key'];
@@ -325,11 +335,9 @@ abstract class AbstractModel {
       	}
       }
 
-
       // update in cache
       static::insert_into_cache($this);
     }
-
 
     // save nested models
     foreach ($this->relations as &$relation) {
