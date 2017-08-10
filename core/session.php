@@ -80,6 +80,51 @@ function login_by_rmcode($rmcode, $userid) {
   }
 }
 
+function forgot($usermail){
+    global $site_config;
+    $user = User::find_first_by(array('email' => $usermail));
+    $code = substr(md5(mt_rand()), 0, 6);
+    if($user){
+        if(send_mail('reset_code', $usermail, array('user' => $user, 'code' => $code, 'site_configs' => $site_config))){
+            $user->set('reset_code', $code);
+            if($user->save()){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+        return FALSE;
+    }
+    return FALSE;
+}
+
+function delete_rscode($reset_code){
+    $user = User::find_first_by(array('reset_code' => $reset_code));
+    $user->set('reset_code', NULL);
+    if($user->save()){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function rscode_verify($reset_code){
+    $user = User::find_first_by(array('reset_code' => $reset_code));
+    if($user){
+        $_SESSION['reset_user_id']=$user->get('id');
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function reset_password($newpasswd){
+    $user = User::find($_SESSION['reset_user_id']);
+    if($user){
+        $hash=User::encrypt_password($newpasswd, $user->get('salt'));
+        $user->set('password', $hash);
+        $user->save();
+    }
+}
+
 function login(User $user, $remember_me = "off") {
   global $J_USER, $current_user;
   
