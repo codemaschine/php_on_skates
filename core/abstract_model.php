@@ -1084,7 +1084,8 @@ abstract class AbstractModel {
     if ($cur_type != $default_type) {
       //$log->debug("$key => $value: has type $cur_type, should be $default_type");
       switch ($default_type) {
-      	case 'attachment': if ($this->attr[$key.'_file_name']) $value = new Attachment($key, $this); break;
+      	case 'attachment':
+      	    if (!$this->attr[$key] || !is_array($this->attr[$key]) && $this->attr[$key.'_file_name']) $value = new Attachment($key, $this); break;
         case 'int':
         case 'integer': $value = intval($value); break; // filter_var($value, FILTER_SANITIZE_NUMBER_INT); break;   // Notice that neither settype() nor filter_var() work here correctly, they can still return a string!!!
         case 'float': $value = floatval($value); break;
