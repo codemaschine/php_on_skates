@@ -58,6 +58,10 @@ function text_field_tag($name, $value, $html_options = array()) {
   return _input_tag('text', $name, $value, $html_options);
 }
 
+function email_field_tag($name, $value, $html_options = array()) {
+    return _input_tag('email', $name, $value, $html_options);
+}
+
 function file_field_tag($name, $value, $html_options = array()) {
 	return _input_tag('file', $name, $value, $html_options);
 }
@@ -192,6 +196,10 @@ class Form {
   public function text_field($name, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return text_field_tag($this->w($name), $this->model->get($name), $html_options);
+  }
+  public function email_field($name, $html_options = array()) {
+      if (($this->closed)) throw new Exception("Form is already closed!");
+      return email_field_tag($this->w($name), $this->model->get($name), $html_options);
   }
   public function file_field($name, $html_options = array()) {
   	if (($this->closed)) throw new Exception("Form is already closed!");

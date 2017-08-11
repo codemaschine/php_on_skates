@@ -84,8 +84,9 @@ function forgot($usermail){
     global $site_config;
     $user = User::find_first_by(array('email' => $usermail));
     $code = substr(md5(mt_rand()), 0, 6);
+    $mailconfigs=Config::find_first();
     if($user){
-        if(send_mail('reset_code', $usermail, array('user' => $user, 'code' => $code, 'site_configs' => $site_config))){
+        if(send_mail('reset_code', $usermail, array('user' => $user, 'code' => $code, 'mail_configs' => $mailconfigs))){
             $user->set('reset_code', $code);
             if($user->save()){
                 return TRUE;
