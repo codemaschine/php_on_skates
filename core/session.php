@@ -181,10 +181,21 @@ function is_logged_in() {
 
 function is_admin() {
   global $current_user;
-  if(is_logged_in() && $current_user->get('is_admin')==1){
+  if(is_logged_in() && $current_user->get('role')=="admin"){
       return TRUE;
   }
   return FALSE;
+}
+
+function is_manager() {
+    global $current_user;
+    if(is_logged_in()){
+        if($current_user->get('role')=="admin" or($current_user->get('role')=="manager")){
+            return TRUE;
+        }
+        return FALSE;
+    }
+    return FALSE;
 }
 
 
