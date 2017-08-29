@@ -503,11 +503,14 @@ function show_flash($obj = NULL) {
   $flash_message_temp_id = 'ft'.(time() % 1000).rand(0,1000);
 
   if (is_flash()) {
-    echo '<div id="'.$flash_message_temp_id.'" class="alertbox">';
+    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>';
     if ($type) {
       if (isset($_SESSION['flash'][$type])) {
         foreach($_SESSION['flash'][$type] as $m){
-      		echo "<div class=\"$type\">".$m."</div>\r\n";
+      		echo $m;
         }
       	unset($_SESSION['flash'][$type]);
       }
@@ -515,7 +518,7 @@ function show_flash($obj = NULL) {
     else {
       foreach ($_SESSION['flash'] as $type => $messages) {
         foreach($_SESSION['flash'][$type] as $m){
-      		echo "<div class=\"$type\">$m</div>\r\n";
+            echo $m;
         }
       }
       unset($_SESSION['flash']);
