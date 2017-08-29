@@ -254,10 +254,6 @@ require_once 'view_helpers.php';
 
 require_once 'class.chip_password_generator.php';
 
-// init session
-// TODO: Maybe require APP_PATH.'commons/session.php' instead?
-require_once 'session.php';
-
 $additionalHeaderData = array();
 
 $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
