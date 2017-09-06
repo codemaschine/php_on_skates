@@ -378,8 +378,12 @@ abstract class AbstractModel {
   }
   
   private function delete_attachment(Attachment &$attachment) {
-    unlink(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name());
-    rmdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id);
+    if(file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name())){
+        unlink(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name());
+    }
+    if(file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id)){
+        rmdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id);
+    }
     $this->attr[$attachment->get_field_name()] = null;
     $this->attr[$attachment->get_field_name().'_file_name'] = null;
     $this->attr[$attachment->get_field_name().'_content_type'] = null;
