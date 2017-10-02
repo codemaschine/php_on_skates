@@ -409,8 +409,10 @@ class RelationHasMany extends Relation {
     $this->cached = true;
     $classname = $this->model_classname;
 
-    if ($classname::has_soft_delete())
-    	db_query("UPDATE ".$classname::get_table_name().' SET deleted = 1 WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    if ($classname::has_soft_delete()) {
+      $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    }
     else
       db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
   }
@@ -579,8 +581,10 @@ class RelationHasOne extends Relation {
       else return false;
     }
     else {
-    	if ($classname::has_soft_delete())
-    		db_query("UPDATE ".$classname::get_table_name().' SET deleted = 1 WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    	if ($classname::has_soft_delete()) {
+    	  $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+    	  db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    	}
     	else
         db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
       $this->modified = false;
@@ -594,8 +598,10 @@ class RelationHasOne extends Relation {
     $this->cached = true;
     $classname = $this->model_classname;
 
-    if ($classname::has_soft_delete())
-    	db_query("UPDATE ".$classname::get_table_name().' SET deleted = 1 WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    if ($classname::has_soft_delete()) {
+      $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    }
     else
       db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
   }

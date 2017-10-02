@@ -35,6 +35,14 @@ abstract class AbstractModel {
   public static function has_soft_delete() {
   	return static::$soft_delete;
   }
+  public static function get_soft_delete() {
+    return static::$soft_delete;
+  }
+  
+  public static function get_soft_delete_type() {
+    return static::$soft_delete_type;
+  }
+  
 
 
   protected $mass_assignable = array(); // mass assignable fields. If empty, the protection is switched of
