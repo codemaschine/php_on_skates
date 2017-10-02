@@ -410,7 +410,7 @@ class RelationHasMany extends Relation {
     $classname = $this->model_classname;
 
     if ($classname::has_soft_delete()) {
-      $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+      $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
       db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
     else
@@ -582,7 +582,7 @@ class RelationHasOne extends Relation {
     }
     else {
     	if ($classname::has_soft_delete()) {
-    	  $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+    	  $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
     	  db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     	}
     	else
@@ -599,7 +599,7 @@ class RelationHasOne extends Relation {
     $classname = $this->model_classname;
 
     if ($classname::has_soft_delete()) {
-      $deleted_column = is_string($classname::$soft_delete) ? $classname::$soft_delete : 'deleted_at';
+      $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
       db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
     else
