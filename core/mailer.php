@@ -22,7 +22,7 @@ function send_mail($mail_name, $to, $data = array()){
   // Hier Zugriff auf die übergebenen Objekte nur mittels $data[objektname] 
   
   	$sitename=sitename();
-  	$mailconfig=Config::find_first();
+  	//$mailconfig=Config::find_first();
   
 	switch($mail_name){
 	  case("reset_code"):
@@ -57,7 +57,7 @@ function send_mail($mail_name, $to, $data = array()){
 	 */
    // Achtung: Wenn mb_internal_encoding('UTF-8') ist, dann funktioniert das Senden von E-Mails mit mb_send_mail() mit ISO-8859-1 nicht!
    // --> Solange ISO-8859-1 E-Mails vesendet werden, nur mail() verwenden statt mb_send_mail()
-    $res = mail($to, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $subject), iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $text), "Return-Path: ".$mailconfig->get('contact_mail')."\nFrom: \"".$mailconfig->get('sitename')."\" <".$mailconfig->get('noreply_mail').">\nContent-Type: text/html;charset=iso-8859-1");
+   $res = mail($to, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $subject), iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $text), "Return-Path: ".$site_config['contact_email']."\nFrom: \"".$site_config['sitename']."\" <".$site_config['noreply_email'].">\nContent-Type: text/html;charset=iso-8859-1");
     
     $log->info("
 ====================================
