@@ -17,27 +17,28 @@ function include_mail_body($filename, $data) {
 }
 
 
-function send_mail($mail_name, $to, $data = array()){
+function send_mail($mail_name, $to, $data = array(), $subject = ""){
   global $c_base_url, $log, $current_user, $site_config;
   // Hier Zugriff auf die übergebenen Objekte nur mittels $data[objektname] 
   
   	$sitename=sitename();
   	//$mailconfig=Config::find_first();
-  
-	switch($mail_name){
-	  case("reset_code"):
-        $subject = "Passwort zuruecksetzen fuer $sitename";
-        break;
-      
-	  case("forgot_success"):
-	      $subject = "Passwort zurueckgesetzt fuer $sitename";
-	      break;
-     
-      
-        
-		default:
-			throw new ErrorException("No Mailing-Options defined for '$mail_name'");
-	}
+  	if ($subject == "") {
+    	switch($mail_name){
+    	  case("reset_code"):
+            $subject = "Passwort zuruecksetzen fuer $sitename";
+            break;
+          
+    	  case("forgot_success"):
+    	      $subject = "Passwort zurueckgesetzt fuer $sitename";
+    	      break;
+         
+          
+            
+    		default:
+    			throw new ErrorException("No Mailing-Options defined for '$mail_name'");
+    	}
+  	}
 	
 	// Push-Nachrichten sind jetzt ggf. gesendet worden.
 	// Wenn E-Mail-Adresse vorhanden, dann jetzt auch eine E-Mail senden, sonst nichts machen.
