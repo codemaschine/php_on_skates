@@ -22,7 +22,10 @@ class Attachment {
 	}
 	
 	public function url() {
-		return 'files/'.$this->base_model_instance->get_class_label().'/'.$this->name.'/'.$this->base_model_instance->get_id().'/'.$this->file_name;
+		return 'files/'.$this->base_model_instance->get_class_label().'/'.$this->name.'/'.$this->base_model_instance->get_id().'/'.urlencode($this->file_name);
+	}
+	public function urll() {
+	    return 'files/'.$this->base_model_instance->get_class_label().'/'.$this->name.'/'.$this->base_model_instance->get_id().'/'.$this->file_name;
 	}
 	public function file_name() {
 	  return $this->file_name;

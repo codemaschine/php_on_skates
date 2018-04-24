@@ -73,6 +73,8 @@ abstract class AbstractModel {
   protected function after_create() { return true; }
   protected function before_update() { return true; }
   protected function after_update() { return true; }
+  protected function before_destroy() { return true; }
+  protected function after_destroy() { return true; }
 
   protected function before_validate() { return true; }
 
@@ -367,6 +369,7 @@ abstract class AbstractModel {
 
 
   public function destroy() {
+    $this->before_destroy();
     foreach ($this->relations as &$relation) {
       $relation_options = $relation->_get_options();
       switch ($relation_options['dependent']) {
@@ -383,6 +386,7 @@ abstract class AbstractModel {
     }
     
     $this->delete();
+    $this->after_destroy();
   }
   
   private function delete_attachment(Attachment &$attachment) {
