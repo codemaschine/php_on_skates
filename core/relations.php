@@ -411,7 +411,7 @@ class RelationHasMany extends Relation {
 
     if ($classname::has_soft_delete()) {
       $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($classname::get_soft_delete_type() == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
     else
       db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
