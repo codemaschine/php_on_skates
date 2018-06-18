@@ -53,7 +53,7 @@ abstract class AbstractModel {
 
   public $attr = array();
   private $attr_loaded = array(); // peristed (clean) attributes.
-  public function get_clean_attr() {	return $this->attr_loaded; }
+  public function get_clean_attr($attr = NULL) {	return $attr === NULL ? $this->attr_loaded : $this->attr_loaded[$attr]; }
   public function get_persisted_attr() { return $this->get_clean_attr(); }  // alias for get_clean_attr()
 
 
