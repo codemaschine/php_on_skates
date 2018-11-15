@@ -226,7 +226,7 @@ abstract class AbstractModel {
     $files_to_save = array();
     $is_new = $this->is_new();
 
-    if ($this->dirty || !$skip_validation && !$this->is_valid() || $is_new && $this->before_create() === false || !$is_new && $this->before_update() === false || $this->before_save() === false)
+    if ($this->dirty || $is_new && $this->before_create() === false || !$is_new && $this->before_update() === false || $this->before_save() === false || !$skip_validation && !$this->is_valid())
       return false;
 
     //$log->debug('noch mal kurz in abstract_model gecheckt: '.$this);
