@@ -38,11 +38,11 @@ abstract class AbstractModel {
   public static function get_soft_delete() {
     return static::$soft_delete;
   }
-  
+
   public static function get_soft_delete_type() {
     return static::$soft_delete_type;
   }
-  
+
 
 
   protected $mass_assignable = array(); // mass assignable fields. If empty, the protection is switched of
@@ -118,7 +118,7 @@ abstract class AbstractModel {
   public function __construct($attr = array(), $secure_merge = true) {
     $this->attr_defs = static::attribute_definitions();
     $this->configuration();
-    
+
     $this->attr = array_fill_keys(array_keys($this->attr_defs), null);  // initialize the attributes with empty values.
 
     if (is_array($attr)) {
@@ -184,7 +184,7 @@ abstract class AbstractModel {
     return $this->id;
   }
   public function is_new() {
-    return $this->id == NULL;
+    return $this->get_id() == NULL;
   }
 
 
@@ -220,9 +220,9 @@ abstract class AbstractModel {
 
   private function _save($skip_validation = false, $update_fields = NULL) {
     global $log, $db_link;
-    
+
 //	$log->debug(var_inspect($this));
-    
+
     $files_to_save = array();
     $is_new = $this->is_new();
 
@@ -242,7 +242,7 @@ abstract class AbstractModel {
   	$this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
 
     $assignments = array();
-    
+
     foreach ($this->attr as $key => $value) {
       if (!array_key_exists($key, $this->attr_defs)) // || $update_fields && !in_array($key, $update_fields))   // this is a very bad idea to save only the the fields defined by $update_fields because it will discard changes of the before-filters!
   	    continue;
@@ -262,19 +262,19 @@ abstract class AbstractModel {
               	$assignments[] = "`{$key}_file_size` = 0";
               	$assignments[] = "`{$key}_updated_at` = NULL";
           }
-          
+
           // upload  / add attachment
           if ($value && is_array($value) && $value['error']=== UPLOAD_ERR_OK) {
           	$this->attr[$key.'_file_name'] = $value['name'];
             $this->attr[$key.'_content_type'] = $value['type'];
             $this->attr[$key.'_file_size'] = $value['size'];
             $this->attr[$key.'_updated_at'] = new DateTime();
-            
+
             $assignments[] = "`{$key}_file_name` = '".mysqli_real_escape_string($db_link, $value['name'])."'";
             $assignments[] = "`{$key}_content_type` = '".mysqli_real_escape_string($db_link, $value['type'])."'";
             $assignments[] = "`{$key}_file_size` = {$value['size']}";
             $assignments[] = "`{$key}_updated_at` = '".$this->attr[$key.'_updated_at']->toDbFormat()."'";
-            
+
             $this->cast_attribute($key);
 
 			// $files_to_save[$key] = $value['name'];
@@ -301,7 +301,7 @@ abstract class AbstractModel {
       	  $value = 'NULL'; // Default: drop other values
 
         $assignments[] = "`$key` = $value";
-        
+
         //$log->debug('attribut zum neu: '.var_inspect($this->attr_loaded[$key]).' !== '.var_inspect($value));
       }
       //else
@@ -309,7 +309,7 @@ abstract class AbstractModel {
     }
 
     if (!empty($assignments)) {
-    	
+
       //$log->debug("---- call update here: \r\n".export_backtrace());
 
       $query = ($this->is_new() ? 'INSERT INTO' : 'UPDATE').' `'.static::$table_name.'` SET '.implode(", ", $assignments);
@@ -331,16 +331,16 @@ abstract class AbstractModel {
       		mkdir(ROOT_PATH.'files/'.$this->get_class_label());
 
     	foreach ($files_to_save as $tmp_name => $values) {
-      		
+
     	  $key  = $values['key'];
     	  $name = $values['name'];
-      		
+
       	  if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key))
       	    mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key);
-      			
+
       	  if (!file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id))
       	    mkdir(ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id);
-      				
+
       	  move_uploaded_file($tmp_name, ROOT_PATH.'files/'.$this->get_class_label().'/'.$key.'/'.$this->id.'/'.$name);
       	}
       }
@@ -377,18 +377,18 @@ abstract class AbstractModel {
         case 'destroy': $relation->destroy(); break;
       }
     }
-    
+
     // check if there're any files to delete
     foreach ($this->attr_loaded as $key => $value) {
       if ($value instanceof Attachment) {
         $this->delete_attachment($value);
       }
     }
-    
+
     $this->delete();
     $this->after_destroy();
   }
-  
+
   private function delete_attachment(Attachment &$attachment) {
     if(file_exists(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name())){
         unlink(ROOT_PATH.'files/'.$this->get_class_label().'/'.$attachment->get_field_name().'/'.$this->id.'/'.$attachment->get_file_name());
@@ -401,7 +401,7 @@ abstract class AbstractModel {
     $this->attr[$attachment->get_field_name().'_content_type'] = null;
     $this->attr[$attachment->get_field_name().'_file_size'] = null;
   }
-  
+
 
   public function delete() {
   	if (!$this->is_new()) {
@@ -1239,7 +1239,7 @@ abstract class AbstractModel {
 
   private static $cache = array();
 
-  private static function get_from_cache($ids, $limit = 1) {
+  protected static function get_from_cache($ids, $limit = 1) {
     global $log, $fwlog;
 
     if (!self::$cache[get_called_class()])
@@ -1268,7 +1268,7 @@ abstract class AbstractModel {
     }
   }
 
-  private static function insert_into_cache(AbstractModel $record) {
+  protected static function insert_into_cache(AbstractModel $record) {
     if (!self::$cache[get_called_class()])
       self::$cache[get_called_class()] = array();
 
