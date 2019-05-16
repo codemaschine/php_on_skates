@@ -25,13 +25,14 @@ abstract class RoutingModel {
   * @return   RoutingModel
   */
   abstract public static function getInstance();
-  /*{
-      if (null === self::$_instance)
+  {
+      // This needs to be implemented in a non-abstract class:
+      /*if (null === self::$_instance)
       {
           self::$_instance = new self;
-      }
+      }*/
       return self::$_instance;
-  }*/
+  }
 
   /**
   * check, if an instance of the class exists.
