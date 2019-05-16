@@ -33,7 +33,7 @@ function url_for($o, $params = array()) {
     $params = $o;
 
   if (!is_array($params))
-    throw new Exception('Wrong arguments. Must be a string containing the url, an object of type AbstactModel or an array with parameters');
+    throw new Exception('Wrong arguments. Must be a string containing the url, an object of type AbstractModel or an array with parameters');
 
   foreach ($params as &$p) {
   	if ($p instanceof AbstractModel) {
@@ -56,7 +56,11 @@ function url_for($o, $params = array()) {
     $params['site'] = $_GET['site'];
   //---
 
-  return $controller.'?'.http_build_query($params);
+  if(RoutingModel::hasInstance()) {
+    return RoutingModel::getPrettyURL($controller, $params);
+  }
+  else
+    return $controller.'?'.http_build_query($params);
 }
 
 function text_field_tag($name, $value, $html_options = array()) {
