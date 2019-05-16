@@ -57,7 +57,7 @@ if ($_POST && $_FILES) {
 //			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
 //		}
 //	}
-	
+
 	_skates_files2post($_FILES, $_POST);
 }
 // ----
@@ -240,6 +240,7 @@ $db_link = db_init();
 require_once 'abstract_model.php';
 require_once 'relations.php';
 require_once 'functions.php';
+require_once 'routing_model.php';
 
 
 $model_files = scandir(APP_DIR.'model');
