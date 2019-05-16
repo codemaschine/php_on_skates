@@ -66,7 +66,7 @@ abstract class RoutingModel {
   * @param array $params array of parameters
   * @return string pretty URL (to be appended to the base path)
   */
-  abstract public static function getPrettyURL($controller, $params);
+  abstract public function getPrettyURL($controller, $params);
 
 }
 ?>

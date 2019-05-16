@@ -57,7 +57,8 @@ function url_for($o, $params = array()) {
   //---
 
   if(RoutingModel::hasInstance()) {
-    return RoutingModel::getPrettyURL($controller, $params);
+    $routing_model = RoutingModel::getInstance();
+    return $routing_model->getPrettyURL($controller, $params);
   }
   else
     return $controller.'?'.http_build_query($params);
