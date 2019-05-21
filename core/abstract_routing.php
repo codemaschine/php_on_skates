@@ -6,13 +6,13 @@
  * @author Wolfgang Köhler <koehler@bibeltv.de>
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-abstract class RoutingModel {
+abstract class AbstractRouting {
   /**
   * instance
   *
   * static variable containing the only (!) instance of the class
   *
-  * @var RoutingModel
+  * @var AbstractRouting
   */
   protected static $_instance = null;
 
@@ -22,7 +22,7 @@ abstract class RoutingModel {
   * If the only instance does not exist, create it now
   * Returns the only instance
   *
-  * @return   RoutingModel
+  * @return   AbstractRouting
   */
   public static function getInstance()
   {

@@ -56,9 +56,9 @@ function url_for($o, $params = array()) {
     $params['site'] = $_GET['site'];
   //---
 
-  if(RoutingModel::hasInstance()) {
-    $routing_model = RoutingModel::getInstance();
-    return $routing_model->getPrettyURL($controller, $params);
+  if(AbstractRouting::hasInstance()) {
+    $routing_instance = AbstractRouting::getInstance();
+    return $routing_instance->getPrettyURL($controller, $params);
   }
   else
     return $controller.'?'.http_build_query($params);

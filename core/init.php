@@ -240,7 +240,7 @@ $db_link = db_init();
 require_once 'abstract_model.php';
 require_once 'relations.php';
 require_once 'functions.php';
-require_once 'routing_model.php';
+require_once 'abstract_routing.php';
 
 
 $model_files = scandir(APP_DIR.'model');
