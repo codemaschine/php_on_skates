@@ -71,6 +71,17 @@ abstract class AbstractRouting {
   */
   abstract public function getPrettyURL($controller, $params);
 
+  /**
+  * checks if a given request URI requires a routing to a particular
+  * controller / action / view. Returns true and sets view parameters, if
+  * routing is necessary, false otherwise.
+  *
+  *
+  * @return boolean true, if routing is necessary, false otherwise
+  */
+  abstract public function checkForRouting();
+
+
 }
 ?>
 

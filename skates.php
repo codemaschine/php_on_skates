@@ -42,6 +42,11 @@ try {
   if (!$_FRAMEWORK['redirect']) {
     do {
       $_FRAMEWORK['forward'] = false;
+      require APP_DIR.'commons/pre_controller.php';
+      if(AbstractRouting::hasInstance()) {
+        $routing_instance = AbstractRouting::getInstance();
+        $routing_instance->checkForRouting();
+      }
       // ---- Load Controller
       if (!file_exists('controller/'.$_FRAMEWORK['controller'])) {
         if (!file_exists('controller/404.php'))
@@ -50,7 +55,6 @@ try {
           $_FRAMEWORK['controller'] = '404.php';
       }
 
-      require APP_DIR.'commons/pre_controller.php';
       if ($_FRAMEWORK['redirect'] || $_FRAMEWORK['render_type'])  // abort if redirect() or render() is called. Don't go into the controller
         break;
       require APP_DIR.'controller/'.$_FRAMEWORK['controller'];  // execute controller-action
