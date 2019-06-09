@@ -42,7 +42,7 @@ function url_for($o, $params = array()) {
   }
 
   if (!isset($params['controller']))
-    $params['controller'] = $pathname . "/" . $controllername;
+    $params['controller'] = $controllername;
   if (!isset($params['action']))
     $params['action'] = $_GET['action'];
   if (strtolower(substr($params['controller'], -4)) != '.php')
@@ -58,10 +58,11 @@ function url_for($o, $params = array()) {
 
   if(AbstractRouting::hasInstance()) {
     $routing_instance = AbstractRouting::getInstance();
+    $params['pathname'] = $pathname;
     return $routing_instance->getPrettyURL($controller, $params);
   }
   else
-    return $controller.'?'.http_build_query($params);
+    return $controller.'?'.http_build_query($params); // add pathname here?
 }
 
 function text_field_tag($name, $value, $html_options = array()) {

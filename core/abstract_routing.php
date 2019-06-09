@@ -61,6 +61,8 @@ abstract class AbstractRouting {
 
   /**
   * returns a pretty URL for a given controller and parameters
+  * The viewhelper url_for also passes the parameter 'pathname' in $params which
+  * provides the path to the main directory. This parameter may need to be unset.
   *
   *
   * @param string $controller name of the controller
