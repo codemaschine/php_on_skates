@@ -76,6 +76,12 @@ function status_500_on_error() {
 $echoLock=1; // Verhindert ausgabe durch commons_display_message();
 $displayMessage = array();
 
+// Remove trailing slahes produced by rewriting
+if (strrpos($_FRAMEWORK['controller'], '/') !== false && strrpos($_FRAMEWORK['controller'], '/') == strlen ($_FRAMEWORK['controller']) -1) {
+  $_FRAMEWORK['controller'] = substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '/') - 1);
+}
+
+
 if (strrpos($_FRAMEWORK['controller'], '.') === false) {
   $_FRAMEWORK['format'] = 'php';
   $_FRAMEWORK['controller'] .= 'php'; // TODO: Nicht '.php'
