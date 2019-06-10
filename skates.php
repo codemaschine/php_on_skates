@@ -24,7 +24,7 @@ if ($_GET['frameworkController']) {
   unset($_GET['frameworkController']);
 }
 
-if(isset($_FRAMEWORK['controller']) {
+if(isset($_FRAMEWORK['controller'])) {
   // Remove path to controller and trailing slahes produced by rewriting
   if (strrpos($_FRAMEWORK['controller'], '/') !== false) {
     // remove trailing slash
