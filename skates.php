@@ -24,18 +24,6 @@ if ($_GET['frameworkController']) {
   unset($_GET['frameworkController']);
 }
 
-if(isset($_FRAMEWORK['controller'])) {
-  // Remove path to controller and trailing slahes produced by rewriting
-  if (strrpos($_FRAMEWORK['controller'], '/') !== false) {
-    // remove trailing slash
-    if(strrpos($_FRAMEWORK['controller'], '/') == strlen ($_FRAMEWORK['controller']) -1)
-      $_FRAMEWORK['controller'] = substr($_FRAMEWORK['controller'], 0, -1);
-    // remove path
-    if (strrpos($_FRAMEWORK['controller'], '/') !== false)
-      $_FRAMEWORK['controller'] = substr($_FRAMEWORK['controller'], strrpos($_FRAMEWORK['controller'], '/') + 1);
-  }
-}
-
 require SKATES_DIR.'core/init.php';
 
 
