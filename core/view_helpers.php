@@ -4,18 +4,13 @@
 use SKATES\DateTime;
 
 function url_for($o, $params = array()) {
-  global $_FRAMEWORK, $log;
-  // Path to skates.php:
-  $pathname = dirname($_SERVER['PHP_SELF']);
-  $controllername = $_FRAMEWORK['controller'];
-  if($controllername[0] == "/")
-    $controllername = substr($controllername,1,strlen($controllername));
+  global $_FRAMEWORK;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
   	if (preg_match('/^\w+$/', $o))
-  		$o = $pathname . "/" . $controllername .'?action='.$o;
+  		$o = $_FRAMEWORK['controller'] .'?action='.$o;
   	elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
   		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
-  		$o = $pathname . "/" . $parts[0].'.php?action='.$parts[1];
+  		$o = $parts[0].'.php?action='.$parts[1];
   	}
 
     // -- add Site information
@@ -42,7 +37,7 @@ function url_for($o, $params = array()) {
   }
 
   if (!isset($params['controller']))
-    $params['controller'] = $controllername;
+    $params['controller'] = $_FRAMEWORK['controller'];
   if (!isset($params['action']))
     $params['action'] = $_GET['action'];
   if (strtolower(substr($params['controller'], -4)) != '.php')
@@ -58,7 +53,6 @@ function url_for($o, $params = array()) {
 
   if(AbstractRouting::hasInstance()) {
     $routing_instance = AbstractRouting::getInstance();
-    $params['pathname'] = $pathname;
     return $routing_instance->getPrettyURL($controller, $params);
   }
   else
