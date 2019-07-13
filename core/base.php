@@ -189,15 +189,12 @@ function saveFile($file_var, $upload_dir) {
 function redirect_to($target) {
   global $_FRAMEWORK;
   $_FRAMEWORK['redirect'] = true;
-  $controllername = $_FRAMEWORK['controller'];
-  if($controllername[0] == "/")
-    $controllername = substr($controllername,1,strlen($controllername));
 
   if (is_array($target)) {
   	$target = url_for($target);
   }
   elseif (preg_match('/^\w+$/', $target))
-  	$target = $controllername.'?action='.$target;
+  	$target = $_FRAMEWORK['controller'].'?action='.$target;
   elseif (preg_match('/^\w+(\/|#)\w+$/', $target)) {
   	$parts = strpos($target, '/') !== false ? explode('/', $target) : explode('#', $target);
   	$target = $parts[0].'.php?action='.$parts[1];
