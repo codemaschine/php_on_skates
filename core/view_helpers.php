@@ -369,7 +369,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     $result .= ' }';
 
     if ($options['loading'] && $options['loading'] != $options['update'])
-      $result.= ", complete: function(xhr) { $('#".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
+      $result.= ", complete: function(xhr) { $('".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
 
   }
   if ($options['update'] || $options['updateJS']) {
