@@ -30,12 +30,13 @@ require SKATES_DIR.'core/init.php';
 try {
   if (!$_FRAMEWORK['redirect']) {
     do {
-      $_FRAMEWORK['forward'] = false;
       require APP_DIR.'commons/pre_controller.php';
       if(AbstractRouting::hasInstance()) {
         $routing_instance = AbstractRouting::getInstance();
-        $routing_instance->checkForRouting();
+        if(!$_FRAMEWORK['forward'])
+          $routing_instance->checkForRouting();
       }
+      $_FRAMEWORK['forward'] = false;
       // ---- Load Controller
       if (!file_exists('controller/'.$_FRAMEWORK['controller'])) {
         if (!file_exists('controller/404.php'))
