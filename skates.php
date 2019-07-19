@@ -34,7 +34,8 @@ try {
       if(AbstractRouting::hasInstance()) {
         $routing_instance = AbstractRouting::getInstance();
         if(!$_FRAMEWORK['forward'])
-          $routing_instance->checkForRouting();
+          if($routing_instance->checkForRouting())
+            continue;
       }
       $_FRAMEWORK['forward'] = false;
       // ---- Load Controller
