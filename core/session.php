@@ -24,9 +24,9 @@ elseif (is_logged_in()) {  // if user is logged in
   if (!$current_user) // User könnte gelöscht sein.
     logout();
   else {
-    
+
     $current_user->set('last_seen', time()); // wird für Push-Notifications benötigt.
-    
+
     // Wenn auf allen Geräten abgemeldet
     if ($_SESSION["device_login_session_time"] < $current_user->get('logout_all_time')) {
       logout();
@@ -53,7 +53,7 @@ function login_by_password($login, $password, $remember_me = false) {
   if ($user->check_password_with($password))
     return login($user, $remember_me);
   else {// Logindaten falsch
-  	sleep(5); // SECURITY: gegen Brute-Force-Attaken schützen!!!! 
+  	sleep(5); // SECURITY: gegen Brute-Force-Attaken schützen!!!!
     return false;
   }
 }
@@ -128,13 +128,13 @@ function reset_password($newpasswd){
 
 function login(User $user, $remember_me = "off") {
   global $J_USER, $current_user;
-  
-  if (!$user->id())
+
+  if (!$user->get_id())
     return false;
-    
-  $_SESSION['user_id'] = $user->id();
+
+  $_SESSION['user_id'] = $user->get_id();
   if ($remember_me=="on") {
-    setcookie("user_id", $user->id(),time()+86400*3650);
+    setcookie("user_id", $user->get_id(),time()+86400*3650);
     if($user->get('rm_code')!==NULL){
         setcookie("user_rmcode", $user->get('rm_code'),time()+86400*365);
         $rm_code = $user->get('rm_code');
@@ -143,16 +143,16 @@ function login(User $user, $remember_me = "off") {
         setcookie("user_rmcode", $rm_code,time()+86400*365);
     }
   }
-  
+
   $user->attr['previous_login'] = $user->attr['last_login'];
   $user->attr['last_login'] = gmdate('Y-m-d h:i:s \G\M\T');
   $user->set('rm_code', $rm_code);
   $user->save(true);
-  
-  
+
+
   $J_USER = $_SESSION['user_attr'] = $user->attr;
   $current_user = $user;
-  
+
   $_SESSION['device_login_session_time'] = time();
   return true;
 }
@@ -160,16 +160,16 @@ function login(User $user, $remember_me = "off") {
 
 function logout($logout_all = false) {
   global $J_USER, $current_user;
-  
+
   unset($_SESSION['user_id']);
   unset($_SESSION['user_attr']);
-  
+
   setcookie("user_id", '',0);
   setcookie("user_identcode", '',0);
   setcookie("user_cookie_login_code", '',0);
-  
+
   $current_user->set('rm_code', NULL);
-  
+
   $J_USER = $current_user = NULL;
 }
 
