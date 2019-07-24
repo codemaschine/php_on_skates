@@ -443,10 +443,10 @@ function set_error($message) {
   set_flash($message, 'error');
 }
 
-/*
+
 function is_error() {
-  return isset($_SESSION['errors']) && !empty($_SESSION['errors']);
-}*/
+  return is_flash('error');
+}
 
 /*
 function set_errors($msgArray) {
@@ -488,8 +488,11 @@ function set_flash($message, $type = 'notice', $duration = NULL) {
   $_SESSION['flash'][$type][] = $message;
 }
 
-function is_flash() {
-  return isset($_SESSION['flash']) && $_SESSION['flash'];
+function is_flash($type = NULL) {
+  if($type != NULL)
+    return isset($_SESSION['flash'][$type]) && $_SESSION['flash'][$type];
+  else
+    return isset($_SESSION['flash']) && $_SESSION['flash'];
 }
 
 function show_flash($obj = NULL) {
