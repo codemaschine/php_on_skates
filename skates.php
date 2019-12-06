@@ -40,6 +40,7 @@ try {
       $_FRAMEWORK['forward'] = false;
       // ---- Load Controller
       if (!file_exists('controller/'.$_FRAMEWORK['controller'])) {
+        $_FRAMEWORK['status_code'] = 404;
         if (!file_exists('controller/404.php'))
           die("Page {$_FRAMEWORK['controller']} not found!");
         else
@@ -68,7 +69,7 @@ try {
     	echo render_json_response(null, 302, 'redirect() called instead of render_json(). This indicates that JSON is not implemented for this request where a HTML-Request would lead to this redirect.', array('location' => $uri));
     }
     else
-      header("Location: ".$uri);
+      header("Location: ".$uri, true, $_FRAMEWORK['status_code'] == 404 ? 404 : 302);
 
 
     $fwlog->info("Redirect to ".$uri);
