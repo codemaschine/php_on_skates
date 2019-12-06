@@ -69,7 +69,7 @@ try {
     	echo render_json_response(null, 302, 'redirect() called instead of render_json(). This indicates that JSON is not implemented for this request where a HTML-Request would lead to this redirect.', array('location' => $uri));
     }
     else
-      header("Location: ".$uri, true, $_FRAMEWORK['status_code'] == 404 ? 404 : 302);
+      header("Location: ".$uri, true);
 
 
     $fwlog->info("Redirect to ".$uri);
