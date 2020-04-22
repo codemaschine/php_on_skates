@@ -121,7 +121,12 @@ if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php
 }
 
 
-if ($_GET['l'] ?? null)
+require APP_DIR.'config.php';
+
+
+if (!empty($_FRAMEWORK['force_locale']))
+  $_FRAMEWORK['locale'] = $_FRAMEWORK['force_locale'];
+elseif (!empty($_GET['l']))
 	$_FRAMEWORK['locale'] = $_GET['l'];
 else
 	$_FRAMEWORK['locale'] = ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null) ? mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
