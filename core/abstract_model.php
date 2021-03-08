@@ -1156,9 +1156,6 @@ abstract class AbstractModel {
   public function toArray(array $options = array()) {
   	$associations = array();
 
-  	global $log;
-  	$log->debug('toArray options: '.var_inspect($options));
-
   	if ($options['include'] && (is_string($options['include']) || is_array($options['include']))) {
   		if (is_string($options['include']))
   			$options['include'] = array($options['include'] => array());

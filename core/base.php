@@ -344,8 +344,11 @@ function render($obj, $status_code = NULL) {
     $_FRAMEWORK['render_content'] = '';
     $_FRAMEWORK['render_options'] = array();
     if (is_array($obj)) {
-    	$_FRAMEWORK['render_content'] = $obj['json'] ? $obj['json'] : $obj['text'];
-    	$_FRAMEWORK['render_options'] = $obj;
+      $_FRAMEWORK['render_content'] = $obj['json'] ? $obj['json'] : $obj['text'];
+      // remove json and text from options, because of exponetiallity costs
+      unset($obj['json']);
+      unset($obj['text']);
+      $_FRAMEWORK['render_options'] = $obj;
     }
     $_FRAMEWORK['addJS'] = $addJS;
   }
