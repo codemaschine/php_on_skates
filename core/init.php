@@ -237,7 +237,9 @@ require_once 'locale.php';
 require_once 'attachment.php';
 require_once 'base.php';
 require_once 'db.php';
-$db_link = db_init();
+if ($db_config) {
+  $db_link = db_init();
+}
 require_once 'abstract_model.php';
 require_once 'relations.php';
 require_once 'functions.php';
