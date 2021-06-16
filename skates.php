@@ -9,6 +9,12 @@ define('SKATES_PATH', SKATES_DIR);
 define('APP_PATH', APP_DIR);
 
 
+// Include composer packages if exists
+if (file_exists(ROOT_DIR.'vendor/autoload.php')) {
+  include_once ROOT_DIR.'vendor/autoload.php';
+}
+
+
 chdir('app');
 
 /*
@@ -167,11 +173,12 @@ try {
     require APP_DIR.'commons/post_rendering.php';
   }
 
-} catch (ErrorException $e) {
+} catch (Throwable $e) {
   $log->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}\n{$e->getTraceAsString()}");
   $fwlog->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}\n{$e->getTraceAsString()}");
   if (is_json()) {
   	$_FRAMEWORK['is_rendering'] = true;
+    header("Content-Type: application/json; charset=utf-8");
   	echo render_json_response(null, 500, "Exception in File {$e->getFile()} on Line {$e->getLine()}: {$e->getMessage()}");
   }
   elseif ($environment == 'production')
