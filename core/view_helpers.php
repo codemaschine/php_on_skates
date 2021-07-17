@@ -56,7 +56,7 @@ function url_for($o, $params = array()) {
     return $routing_instance->getPrettyURL($controller, $params);
   }
   else
-    return $controller.'?'.http_build_query($params); // add pathname here?
+    return $controller.($params ? '?'.http_build_query($params) : ''); // add pathname here?
 }
 
 function text_field_tag($name, $value, $html_options = array()) {
@@ -374,8 +374,14 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   }
   if ($options['update'] || $options['updateJS']) {
     $result.= ", success: function(data, textStatus, xhr) { ";
-    if ($options['update'])
-      $result.= "$('".$options['update']."').html(data);"; // wird wohl nicht benötigt, javascript wird schon ausgeführt: $('#".$options['update']."').find('script').each(function(i) {eval($(this).text());});
+    if ($options['update']) {
+      $result.= "$('".$options['update']."').";
+      switch ($options['updateType']) {
+        case 'append': $result.= "append(data);"; break;
+        case 'prepend': $result.= "prepend(data);"; break;
+        default: $result.= "html(data);";
+      }
+    }
     if ($options['updateJS'])
       $result.= $options['updateJS'];
     $result.= " }";

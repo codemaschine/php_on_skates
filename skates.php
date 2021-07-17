@@ -26,7 +26,6 @@ if ($_GET['frameworkController']) {
 
 require SKATES_DIR.'core/init.php';
 
-
 try {
   if (!$_FRAMEWORK['redirect']) {
     do {
@@ -35,7 +34,7 @@ try {
         $routing_instance = AbstractRouting::getInstance();
         if(!$_FRAMEWORK['forward'])
           if($routing_instance->checkForRouting())
-            continue;
+            continue; // jump directly to redirect
       }
       $_FRAMEWORK['forward'] = false;
       // ---- Load Controller
@@ -147,7 +146,10 @@ try {
       $fwlog->info('Render Partial "'.$_FRAMEWORK['view'].'", Format: '.$_FRAMEWORK['format'].', Code '.$_FRAMEWORK['status_code']);
       if (!empty($_FRAMEWORK['view'])) {
         $_FRAMEWORK['is_rendering'] = true;
-        render($_FRAMEWORK['view']);
+        if ($_FRAMEWORK['render_type'] == 'partial')
+          render_partial($_FRAMEWORK['view'], is_array($_FRAMEWORK['render_options']) ? $_FRAMEWORK['render_options']['locals'] : '', $_FRAMEWORK['status_code']);
+        else
+          render($_FRAMEWORK['view']);
       }
       show_flash(); // dump the flash messages, if they aren't dumped yet. Usefull for bugfixing, but it can also be turned off
     }
