@@ -76,7 +76,7 @@ try {
     exit();
   }
   else {
-    if ($_FRAMEWORK['format'] == 'json') // At json-requests always return 200, because the status of request ist handled inside of the JSON-object!
+    if ($_FRAMEWORK['format'] == 'json' && (!isset($_FRAMEWORK['json_pass_http_status']) || !$_FRAMEWORK['json_pass_http_status'])) // At json-requests always return 200, because the status of request ist handled inside of the JSON-object!
       $_FRAMEWORK['status_code'] = 200;
 
     if ($_FRAMEWORK['status_code'] != 200)
