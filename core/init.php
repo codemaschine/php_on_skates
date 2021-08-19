@@ -7,15 +7,9 @@ use \SKATES\DateTime;
 use \SKATES\Date;
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_COMPILE_ERROR | E_COMPILE_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE );
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 
-// --- magic_qoutes on? Then remove slashes  (http://stackoverflow.com/questions/2496455/why-are-post-variables-getting-escaped-in-php)
-if (get_magic_quotes_gpc()) {
-  $_GET = stripslashes_recursive($_GET);
-  $_POST = stripslashes_recursive($_POST);
-  $_COOKIE = stripslashes_recursive($_COOKIE);
-}
 // ----------------------
 // ---- if files send on POST request, mark their names in post variables
 
