@@ -448,7 +448,7 @@ abstract class AbstractModel {
 
     $this->before_validate();
 
-    $log->debug('validators: '.var_export($this->validators, true));
+    // $log->debug('validators: '.var_export($this->validators, true));
 
     foreach ($this->validators as $validator) {
       $attr_name = $validator['attr_name'];

@@ -50,7 +50,6 @@ switch ($argv[1]) {
     require_once CORE_DIR.'date_and_time.php';
     require APP_DIR.'config.php';
     require_once CORE_DIR.'logger.php';
-    $debug = 1;
     $log = new Logger(ROOT_DIR.'log/clilog.txt', $debug ? 0 : 1);
     $fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1);
     require_once CORE_DIR.'locale.php';
