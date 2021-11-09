@@ -768,8 +768,8 @@ function is_json() {
 }
 
 function skates_json_encode($o, array $options = array()) {
-	if (is_a($o, AbstractModel)) {
-		return  $o->toJson($options);
+	if ($o instanceof AbstractModel) {
+		return $o->toJson($options);
 	}
 	elseif (is_array($o)) {
 		if (is_assoc($o)) {

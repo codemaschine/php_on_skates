@@ -20,6 +20,7 @@ abstract class AbstractModel {
 
   protected static $table_name = NULL;
   protected static $default_find_options = array();
+  protected static $default_to_array_except_option = array();
 
   protected static $soft_delete = false; // if true, a record will not really be deleted but marked as 'deleted'. NOTICE: Requires a column 'deleted_at'
   protected static $soft_delete_type = 'datetime'; // or 'boolean'
@@ -447,7 +448,7 @@ abstract class AbstractModel {
 
     $this->before_validate();
 
-    $log->debug('validators: '.var_export($this->validators, true));
+    // $log->debug('validators: '.var_export($this->validators, true));
 
     foreach ($this->validators as $validator) {
       $attr_name = $validator['attr_name'];
@@ -1200,9 +1201,13 @@ abstract class AbstractModel {
 
   		$attr = array_intersect_key($attr, array_flip($options['only']));
   	}
-  	elseif ($options['except']) {
+  	else {
   		if (is_string($options['except']))
   			$options['except'] = array($options['except']);
+      elseif (!$options['except'])
+        $options['except'] = array();
+
+      $options['except'] = array_merge(static::$default_to_array_except_option, $options['except']);
 
   		$attr = array_diff_key($attr, array_flip($options['except']));
   	}
