@@ -136,7 +136,7 @@ function options_for_select($ary, $selected_val = NULL) {
 }
 
 function option_tag($label, $value, $selected_val) {
-	return '<option value="'.h($value).'"'.($selected_val == $value && $selected_val !== NULL ? ' selected="selected"' : '').'>'.$label.'</option>';
+	return '<option value="'.h($value).'"'.(is_array($selected_val) && in_array($value, $selected_val) || $selected_val == $value && $selected_val !== NULL ? ' selected="selected"' : '').'>'.$label.'</option>';
 }
 
 function submit_tag($value, $html_options = array()) {
