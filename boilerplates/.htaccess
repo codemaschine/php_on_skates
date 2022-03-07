@@ -5,6 +5,7 @@ php_value max_execution_time 259200
 php_value upload_max_filesize 128M
 php_value post_max_size 128M
 
+RewriteRule \.(git|svn)(/.*)?$ - [F,NC]
 
 # Rewrite php-files that does not exist (because they lay in path 'controller/' instead of '/')
 RewriteCond %{REQUEST_FILENAME} ^(.+)\.[a-zA-Z]+$
