@@ -47,6 +47,10 @@ switch ($argv[1]) {
   case 'cli':
   case 'c':
     error_reporting(E_ALL ^  E_NOTICE);
+    // Include composer packages if exists
+    if (file_exists(ROOT_DIR.'vendor/autoload.php')) {
+      include_once ROOT_DIR.'vendor/autoload.php';
+    }
     require_once CORE_DIR.'date_and_time.php';
     require APP_DIR.'config.php';
     require_once CORE_DIR.'logger.php';
