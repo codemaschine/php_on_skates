@@ -27,6 +27,10 @@ function db_init($env_name = null) {
   else
     $new_db_config = $db_config;
 
+  if (!$new_db_config) {
+    return null;
+  }
+
   $fwlog->info("Set Database to '{$env_name}' (Host: {$new_db_config->host}, Port: {$new_db_config->port}, User: {$new_db_config->user}, Database: {$new_db_config->name})");
 
   if($db_link === NULL || $new_db_config->host != $db_config->host || $new_db_config->port != $db_config->port || $new_db_config->user != $db_config->user) {
