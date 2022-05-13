@@ -620,7 +620,10 @@ abstract class AbstractModel {
 
 
 
-  // is only a private template method!!!
+  /**
+   * is only a private template method!!!
+   * @return static|static[]|null
+   */
   private static function find_by($fields = NULL, $options = array(), $exception_if_not_found = false) {
 
     //--- Check if we can use cache
@@ -878,7 +881,9 @@ abstract class AbstractModel {
   }
 
 
-
+  /**
+   * @return null|static|static[]
+   */
   public static function find_by_sql($query, $take = self::ALL, $exception_if_not_found = false) {
     $res = db_query($query);
 
@@ -921,7 +926,9 @@ abstract class AbstractModel {
   }
 
 
-
+  /**
+   * @return static|static[]
+   */
   public static function find($ids, $options = array(), $exception_if_not_found = true) {
     if (empty($ids))
       throw new ErrorException('Missing id/ids for records to find of class "'.get_called_class().'"');
@@ -935,12 +942,17 @@ abstract class AbstractModel {
 
   }
 
+  /**
+   * @return static
+   */
   public static function find_first_by($fields, $options = array(), $exception_if_not_found = false) {
     $options['take'] = self::FIRST;
     return self::find_by($fields, $options, $exception_if_not_found);
   }
 
-
+  /**
+   * @return static[]
+   */
   public static function find_all_by($fields, $options = array(), $exception_if_not_found = false) {
     $options['take'] = self::ALL;
     return self::find_by($fields, $options, $exception_if_not_found);
