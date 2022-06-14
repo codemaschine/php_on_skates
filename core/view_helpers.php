@@ -4,24 +4,16 @@
 use SKATES\DateTime;
 
 function url_for($o, $params = array()) {
-  global $_FRAMEWORK, $log;
+  global $_FRAMEWORK, $router;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
-  	if (preg_match('/^\w+$/', $o))
-  		$o = $_FRAMEWORK['controller'].'?action='.$o;
-  	elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
+  	if (preg_match('/^\w+$/', $o)) {
+      $params['action'] = $o;
+  	} elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
   		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
-  		$o = $parts[0].'.php?action='.$parts[1];
+      $params['controller'] = $parts[0].'.php';
+      $params['action'] = $parts[1];
   	}
-  	
-    // -- add Site information
-    if ($_GET['site'] && strpos($o,'site=') === false) {
-       $o = strpos($o,'?') === false ? $o.'?' : $o.'&';
-       $o .= http_build_query(array('site' => $_GET['site']));
-    }
-    return $o;
-  }
-  
-  if ($o instanceof AbstractModel) {
+  } elseif ($o instanceof AbstractModel) {
     $params = array_merge(array('controller' => $o->get_class_label(), 'action' => 'show', 'id' => $o->get_id()), $params);
   }
   else
@@ -42,16 +34,28 @@ function url_for($o, $params = array()) {
     $params['action'] = $_GET['action'];
   if (strtolower(substr($params['controller'], -4)) != '.php')
     $params['controller'] = strtolowerunderscore($params['controller']).'.php';
+  if (!isset($params['route_name']))
+    $params['route_name'] = str_replace('.php', '', $params['controller']).'#'.$params['action'];
   
   $controller = $params['controller'];
-  unset($params['controller']); 
+  unset($params['controller']);
+  $route_name = $params['route_name'];
+  unset($params['route_name']);
   
   //--- add site  ---
   if ($_GET['site'] ?? null)
     $params['site'] = $_GET['site'];
   //---
-   
-  return $controller.'?'.http_build_query($params); 
+
+  if ($router instanceof SkatesRouter) {
+    $router_path = $router->get_url($route_name, $params);
+    if ($router_path) {
+      unset($params['action']);
+      $controller = $router_path;
+    }
+  }
+  
+  return $controller.($params ? '?'.http_build_query($params) : '');
 }
 
 function text_field_tag($name, $value, $html_options = array()) {

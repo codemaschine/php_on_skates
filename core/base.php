@@ -182,18 +182,7 @@ function saveFile($file_var, $upload_dir) {
 function redirect_to($target) {
   global $_FRAMEWORK;
   $_FRAMEWORK['redirect'] = true;
-
-  if (is_array($target)) {
-  	$target = url_for($target);
-  }
-  elseif (preg_match('/^\w+$/', $target))
-  	$target = $_FRAMEWORK['controller'].'?action='.$target;
-  elseif (preg_match('/^\w+(\/|#)\w+$/', $target)) {
-  	$parts = strpos($target, '/') !== false ? explode('/', $target) : explode('#', $target);
-  	$target = $parts[0].'.php?action='.$parts[1];
-  }
-
-  $_FRAMEWORK['redirect_to'] = $target;
+  $_FRAMEWORK['redirect_to'] = url_for($target);;
 }
 
 function forward_to($controller, $action = NULL, $layout = NULL, $status_code = NULL) {

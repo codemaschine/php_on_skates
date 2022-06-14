@@ -57,7 +57,16 @@ switch ($argv[2]) {
 	
 	$name = ucfirst($argv[3]);
 	controller_generator($name);
-	
+
+  if (file_exists(APP_DIR.'routes.php')) {
+    $routes = file_get_contents(APP_DIR.'routes.php');
+    $resources = "\$router->resources('".strtolower($name)."');";
+    if (mb_strpos($routes, $resources) === false) {
+      $routes = preg_replace('/(load_routes[^{]*{)/', "$1\n  $resources", $routes);
+      file_put_contents(APP_DIR.'routes.php', $routes);
+      echo "updated file app/routes.php\n";
+    }
+  }
 	
 	if ($argv[2] != 'scaffold')
 		break;

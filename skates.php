@@ -44,18 +44,24 @@ try {
   if (!$_FRAMEWORK['redirect']) {
     do {
       $_FRAMEWORK['forward'] = false;
-      // ---- Load Controller
-      if (!file_exists('controller/'.$_FRAMEWORK['controller'])) {
-        if (!file_exists('controller/404.php'))
-          die("Page {$_FRAMEWORK['controller']} not found!");
-        else
-          $_FRAMEWORK['controller'] = '404.php';
-      }
 
       require APP_DIR.'commons/pre_controller.php';
       if ($_FRAMEWORK['redirect'] || $_FRAMEWORK['render_type'])  // abort if redirect() or render() is called. Don't go into the controller
         break;
-      require APP_DIR.'controller/'.$_FRAMEWORK['controller'];  // execute controller-action
+      if (!(($_FRAMEWORK['allow_plain_routing'] ?? false) && file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller']))) {
+        require_once SKATES_DIR.'core/skates_router.php';
+        require_once APP_DIR.'routes.php';
+        $router = new SkatesRouter();
+        $router->set404(function() use ($router) {
+          die("Page {$router->getCurrentUri()} not found!");
+        });
+        load_routes($router);
+        $router->run();
+      }
+      if (!file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller'])) {
+        die('Controller "'.$_FRAMEWORK['controller'].'" not found!');
+      }
+      require APP_DIR.'controller/'.$_FRAMEWORK['controller']; // execute controller-action
       require APP_DIR.'commons/post_controller.php';
       if ($_FRAMEWORK['redirect'])
         break;

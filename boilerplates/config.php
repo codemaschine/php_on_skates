@@ -8,6 +8,8 @@ setlocale(LC_ALL, "de_DE.UTF-8");
 mb_internal_encoding('UTF-8'); // Available Encondings at http://php.net/manual/en/mbstring.supported-encodings.php
 
 $_FRAMEWORK['default_locale'] = 'de';
+$_FRAMEWORK['allow_plain_routing'] = false;
+$_FRAMEWORK['json_pass_http_status'] = false;
 
 
 // !!!!!!  Warning !!!!!!!!

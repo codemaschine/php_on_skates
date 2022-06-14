@@ -31,6 +31,14 @@ Available commands:
 
 
 switch ($argv[1]) {
+  case 'routes':
+  case 'r':
+    require_once CORE_DIR.'skates_router.php';
+    require_once APP_DIR.'routes.php';
+    $router = new SkatesRouter();
+    load_routes($router);
+    $router->print_routes();
+    break;
   case 'generate':
   case 'g':
   	require 'generate.php';
