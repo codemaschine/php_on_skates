@@ -28,7 +28,7 @@ function export_backtrace() {
   $first = true;
   foreach($bt as $caller) {
     if (!$first)
-      $str .= sprintf("   #%2d, line %3s, %s,    %s()\r\n", $i, $caller['line'], $caller['file'], $caller['class'].$caller['type'].$caller['function']);
+      $str .= sprintf("   #%2d, line %3s, %s,    %s()\r\n", $i, $caller['line'] ?? null, $caller['file'] ?? null, ($caller['class'] ?? '').($caller['type'] ?? '').$caller['function']);
     else
       $first = false;
     $i--;
@@ -65,7 +65,7 @@ function array_map_recursive($array, $callback) {
   $new = array();
   if( is_array($array) ) foreach ($array as $key => $val) {
     if (is_array($val)) {
-      $new[$key] = array_map_deep($val, $callback);
+      $new[$key] = array_map_recursive($val, $callback);
     } else {
       $new[$key] = call_user_func($callback, $val);
     }

@@ -63,7 +63,7 @@ function _get_translation($label, $locale) {
     
     if ($current === null || $i + 1 < sizeof($label_elems) && !is_array($current)) // if need to call a nested label, but there is none
       return false;
-    $current = $current[$e];
+    $current = $current[$e] ?? null;
   }
   
   return $current === null ? false : $current;

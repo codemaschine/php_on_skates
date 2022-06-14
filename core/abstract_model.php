@@ -58,7 +58,7 @@ abstract class AbstractModel {
   public function get_persisted_attr() { return $this->get_clean_attr(); }  // alias for get_clean_attr()
 
 
-  private $id;
+  private ?int $id = null;
   private $dirty; // set if the id is set manually! It can't be saved!!
 
 
@@ -113,10 +113,12 @@ abstract class AbstractModel {
    */
   protected function validate() {}
 
+  protected function before_construct(&$attr) {}
+  protected function after_construct() {}
 
 
-
-  public function __construct($attr = array(), $secure_merge = true) {
+  final public function __construct($attr = array(), $secure_merge = true) {
+    $this->before_construct($attr);
     $this->attr_defs = static::attribute_definitions();
     $this->configuration();
 
@@ -130,6 +132,7 @@ abstract class AbstractModel {
         $this->set($key, $value);
       }
     }
+    $this->after_construct();
   }
 
   protected function set_attr_default($name, $value) {
@@ -139,21 +142,21 @@ abstract class AbstractModel {
 
 
   protected function has_many($name, $options = array()) {
-    if (!$options['class_name'])
+    if (!($options['class_name'] ?? null))
       $options['class_name'] = is_plural($name) ? strtouppercamelcase(singularize($name)) : strtouppercamelcase($name);
 
     $this->relations[$name] = new RelationHasMany($name, $options['class_name'], $this, $options);
   }
 
   protected function belongs_to($name, $options = array()) {
-    if (!$options['class_name'])
+    if (!($options['class_name'] ?? null))
       $options['class_name'] = strtouppercamelcase($name);
 
     $this->relations[$name] = new RelationBelongsTo($name, $options['class_name'], $this, $options);
   }
 
   protected function has_one($name, $options = array()) {
-    if (!$options['class_name'])
+    if (!($options['class_name'] ?? null))
       $options['class_name'] = strtouppercamelcase($name);
 
     $this->relations[$name] = new RelationHasOne($name, $options['class_name'], $this, $options);
@@ -200,7 +203,7 @@ abstract class AbstractModel {
   public function set($name, $value) {
     if (array_key_exists($name, $this->relations))
       return ($this->relations[$name]->set($value));
-      elseif ($this->attr_defs[$name] == 'attachment' && $value == NULL) {
+      elseif (($this->attr_defs[$name] ?? null) == 'attachment' && $value == NULL) {
       	$this->attr[$name] = NULL;
       	$this->attr[$name.'_file_name'] = NULL;
       	$this->attr[$name.'_content_type'] = NULL;
@@ -235,7 +238,7 @@ abstract class AbstractModel {
     $this->cast_attributes();
 
     if (empty($this->attr))
-  	  throw new Exception("Define some fields in '$table'!", E_USER_ERROR);
+  	  throw new Exception("Define some fields in '".static::$table_name."'!", E_USER_ERROR);
 
   	if ($this->is_new())
   	  $this->attr['created_at'] = $this->attr_defs['created_at'] === 'datetime' ? new DateTime('now', DateTime::getUTCTimeZone()) : time();
@@ -561,7 +564,7 @@ abstract class AbstractModel {
 
   // private helper function
   private function add_new_validator($name, $attr_name, $default_message, $options) {
-    if (!isset($options['message']) || $options['message'] === null)
+    if (!isset($options['message']))
       $options['message'] = $default_message;
     global $log;
     //$log->debug("füge validator $name hinzu");
@@ -669,34 +672,34 @@ abstract class AbstractModel {
     $options =     array_merge($def_options, $options);
 
     $query = 'SELECT '.$options['select'].' FROM `'.$options['from'].'`';
-    if ($options['joins'])
+    if ($options['joins'] ?? null)
       $query .= ' '.$options['joins'];
 
     $query .= self::build_conditions_sql($fields, $options);
 
-    if ($options['group'])
+    if ($options['group'] ?? null)
       $query .= ' GROUP BY '.$options['group'];
 
 
-    if ($options['order'])
+    if ($options['order'] ?? null)
       $query .= ' ORDER BY '.$options['order'];
 
 
     if ($options['take'] == self::ALL) {
-      if ($options['per_page']) {  // paginate!!!
+      if ($options['per_page'] ?? null) {  // paginate!!!
         $page = intval($options['page']) < 2 ? 1 : intval($options['page']);
 
-        if ($options['limit'])
+        if ($options['limit'] ?? null)
           $query .= ' LIMIT '.intval($options['per_page']);
 
-        if ($options['offset'])
+        if ($options['offset'] ?? null)
           $query .= ' OFFSET '.(($page - 1) * intval($options['per_page']));
       }
       else {
-        if ($options['limit'])
+        if ($options['limit'] ?? null)
           $query .= ' LIMIT '.$options['limit'];
 
-        if ($options['offset'])
+        if ($options['offset'] ?? null)
           $query .= ' OFFSET '.$options['offset'];
       }
 
@@ -708,7 +711,7 @@ abstract class AbstractModel {
     $res = self::find_by_sql($query, $options['take'], $exception_if_not_found);    // now get the record(s)
 
 
-    if ($options['include'] && $res) { // process include findings only if we have a collection.
+    if ($options['include'] ?? null && $res) { // process include findings only if we have a collection.
       $records = is_array($res) ? $res : array($res);
       $rec_hash = array();
       foreach ($records as $rec)
@@ -810,7 +813,7 @@ abstract class AbstractModel {
       array_push($elements, self::build_conditions($fields, $options['from']));
 
 
-    if ($options['conditions']) {
+    if ($options['conditions'] ?? null) {
       if (is_string($options['conditions'])) {
         $elem = $options['conditions'];
       }
@@ -830,7 +833,9 @@ abstract class AbstractModel {
         if ($options['conditions']) { // gibt es noch zu ersetzende variablen?
           if (strpos($cond_stmt, '?') === false) {
             //$log->debug("Keine Fragezeichen in conditions-string gefunden");
-            $cond_stmt = vprintf($cond_stmt, array_map(create_function('$s','return mysqli_real_escape_string($db_link, $s);'), $options['conditions']));
+            $cond_stmt = vprintf($cond_stmt, array_map(function ($s) use ($db_link) {
+              return mysqli_real_escape_string($db_link, $s);
+            }, $options['conditions']));
           }
           else {
             $i = 0;
@@ -867,7 +872,7 @@ abstract class AbstractModel {
         throw new Exception("default scope is neither an array nor a string");
     }
 
-    if ($options['scope']) {
+    if ($options['scope'] ?? null) {
       if (is_string($options['scope']))
         array_push($elements, '('.$options['scope'].')');
       elseif (is_array($options['scope']))
@@ -1088,7 +1093,7 @@ abstract class AbstractModel {
 
   public function cast_attribute($key) {
     global $log;
-    if (!array_key_exists($key, $this->attr_defs) && $this->attr_defs[$key] !== 'attachment')
+    if (!array_key_exists($key, $this->attr_defs) && ($this->attr_defs[$key] ?? null) !== 'attachment')
 	    return;
 
     $default_type = $this->attr_defs[$key];
@@ -1153,7 +1158,7 @@ abstract class AbstractModel {
    *
    * Keep in mind that some attributes might be removed by restrictions of $this->public_fields and can be removed after the preprocessor by $options['only'] and $options['except']
    *
-   * @param attr $attr
+   * @param array $attr
    * @return void
    */
   protected function export_preprocessor(&$attr){
@@ -1198,7 +1203,8 @@ abstract class AbstractModel {
   	$attr = array_merge(array('id' => $this->id), $this->attr);
 
   	// Wenn einem User der Datensatz gehört, dann automatisch private_fields inkludieren, wenn diese Option nicht anders gesetzt ist.
-  	if ($options['include_private_fields'] === NULL && $this->attr['user_id'] && is_logged_in() && $this->attr['user_id'] == $current_user->get_id())
+    global $current_user;
+  	if ($options['include_private_fields'] === NULL && $this->attr['user_id'] && is_logged_in() && $this->attr['user_id'] == ($current_user instanceof AbstractModel ? $current_user->get_id() : null))
   	  $options['include_private_fields'] = true;
 
 
@@ -1232,7 +1238,7 @@ abstract class AbstractModel {
   /**
    * Use with care for security/safety reasons!!!
    *
-   * @param unknown_type $id
+   * @param int $id
    */
   public function _set_id($id) {
     $this->id = $id;
@@ -1256,7 +1262,7 @@ abstract class AbstractModel {
   protected static function get_from_cache($ids, $limit = 1) {
     global $log, $fwlog;
 
-    if (!self::$cache[get_called_class()])
+    if (!(self::$cache[get_called_class()] ?? null))
       return NULL;
 
     if (is_array($ids)) {
@@ -1283,7 +1289,7 @@ abstract class AbstractModel {
   }
 
   protected static function insert_into_cache(AbstractModel $record) {
-    if (!self::$cache[get_called_class()])
+    if (!(self::$cache[get_called_class()] ?? null))
       self::$cache[get_called_class()] = array();
 
     if ($record->is_new())

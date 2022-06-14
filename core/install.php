@@ -29,6 +29,7 @@ function copy_recursive($source, $dest) {
 			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
 			\RecursiveIteratorIterator::SELF_FIRST) as $item
 	) {
+		/** @var RecursiveDirectoryIterator $iterator */
 		if ($item->isDir()) {
 			if (mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0775)) {
 				$message .= "Created dir: ".$dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName()."<br>\n";
@@ -148,11 +149,17 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   copy(SKATES_DIR.'boilerplates/app/.htaccess',ROOT_DIR.'bin/.htaccess');
   chmod(ROOT_DIR.'bin/.htaccess', 0664);
   chdir(ROOT_DIR.'bin');
-  symlink('../skates/core/cli/cli.php', 'skates.php');
+  symlink('../skates/cli/cli.php', 'skates.php');
   //chmod('./skates.php', 0775);
   symlink('../skates/core/db/migrate.php', 'migrate.php');
   //chmod('./migrate.php', 0775);
 
+  mkdir(ROOT_DIR.'log');
+  touch(ROOT_DIR.'log/.keep');
+
+  chdir(ROOT_DIR);
+  symlink('skates/skates.php', 'skates.php');
+  unlink('install.php');
 
 
 

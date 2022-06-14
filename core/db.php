@@ -16,7 +16,7 @@ function on_database_do($inter_db_config, $func) {
  *
  * @param string $env_name key to get the connection-object out of the $site_configs. If not specified, the default $db_config is choosen.
  * @throws Exception
- * @return resource the mysql link identifier returned by mysqli_connect.
+ * @return mysqli|null the mysql link identifier returned by mysqli_connect.
  */
 function db_init($env_name = null) {
   global $site_configs, $db_config, $db_link, $fwlog;

@@ -24,7 +24,13 @@ exit();
 */
 
 // ---- Do init -----
-$_FRAMEWORK = array();
+$_FRAMEWORK = [
+  'controller' => null,
+  'redirect' => null,
+  'redirect_to' => null,
+  'render_type' => null,
+  'forward' => null,
+];
 if ($_GET['frameworkController']) {
   $_FRAMEWORK['controller'] = $_GET['frameworkController'];
   unset($_GET['frameworkController']);

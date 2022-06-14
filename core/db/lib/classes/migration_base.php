@@ -116,7 +116,7 @@ class MpmMigrationBase
 	public function remove_column($table, $column) {
 		$row = $this->query_with_first_row("show columns from `$table` like '$column'");
 		if (!$row) {
-			$rows = $this->query("show columns from `$table` LIKE '$column%'");
+			$rows = $this->exec("show columns from `$table` LIKE '$column%'");
 			$fields = array();
 			foreach ($rows as $r)
 				$fields[] = $r['Field'];
@@ -136,7 +136,7 @@ class MpmMigrationBase
 	public function rename_column($table, $column, $new_column) {
 		$row = $this->query_with_first_row("show columns from `$table` like '$column'");
 		if (!$row) {
-			$rows = $this->query("show columns from `$table` LIKE '$column%'");
+			$rows = $this->exec("show columns from `$table` LIKE '$column%'");
 			$fields = array();
 			foreach ($rows as $r)
 				$fields[] = $r['Field'];
@@ -154,18 +154,17 @@ class MpmMigrationBase
 
 	public function add_index($table, $columns, $options = array()) {
 	  if (is_array($columns)) {
-	    $columns = join(', ', $columns);
-	    $index_name = $options['name'] ? $options['name'] : substr(join('_', $columns), 0, 50);
+	    $index_name = ($options['name'] ?? null) ? $options['name'] : substr(join('_', $columns), 0, 50);
 	  }
 	  else
-	    $index_name = $options['name'] ? $options['name'] : $columns;
+	    $index_name = ($options['name'] ?? null) ? $options['name'] : $columns;
 
-	  $sql = "ALTER TABLE `$table` ADD ".($options['unique'] ? 'UNIQUE ' : '')."INDEX `$index_name` (".$this->bquotes($columns).")";
+	  $sql = "ALTER TABLE `$table` ADD ".(($options['unique'] ?? null) ? 'UNIQUE ' : '')."INDEX `$index_name` (".$this->bquotes($columns).")";
 	  $this->exec($sql);
 	}
 
 	public function remove_index($table, $columns, $options = array()) {
-	  if ($options['name'])
+	  if ($options['name'] ?? null)
 	    $index_name = $options['name'];
 	  elseif (is_array($columns)) {
 	    $index_name = substr(join('_', $columns), 0, 50);
@@ -229,13 +228,13 @@ class MpmMigrationBase
 	        case 5: case 6: case 7: case 8: $sql = 'BIGINT'; break;
 	        default: $sql = $options['name'].'(11)';
 	      }
-  	    if ($options['unsigned'])
+  	    if ($options['unsigned'] ?? null)
   	      $sql .= ' UNSIGNED';
   	    break;
 	    case 'double':
 	    case 'float':
-	      $sql .= $options['name'];
-	      if ($options['precision']) {
+	      $sql = $options['name'];
+	      if ($options['precision'] ?? null) {
 	        $sql .= '('.$options['precision'];
 	        if ($options['scale'])
 	          $sql .= ','.$options['scale'];
@@ -243,27 +242,27 @@ class MpmMigrationBase
 	      }
 	      break;
 	    case 'string':
-	      $sql .= $options['name'];
+	      $sql = $options['name'];
 	      if ($options['limit']) {
 	        $sql .= '('.$options['limit'].')';
 	      }
 	      break;
 	    case 'set':
-	      $sql .= $options['name']."(".(is_array($options['options']) ? join(', ',$this->quotes($options['options'])) : $options['options']).")";
+	      $sql = $options['name']."(".(is_array($options['options']) ? join(', ',$this->quotes($options['options'])) : $options['options']).")";
 	      break;
 	    default:
-	      $sql .= $options['name'];
+	      $sql = $options['name'];
 	  }
 
-	  $sql .= $options['null'] ? ' NULL' : ' NOT NULL';
-	  if ($options['default'] !== null) {
+	  $sql .= $options['null'] ?? null ? ' NULL' : ' NOT NULL';
+	  if ($options['default'] ?? null !== null) {
 	    $sql .= ' DEFAULT ';
 	    if ($type == 'string' || $type == 'text' || $type == 'set')
 	      $sql .= "'".addslashes($options['default'])."'";
 	    else
 	      $sql .= $options['default'] ? $options['default'] : 0;
 	  }
-	  if ($options['unique'])
+	  if ($options['unique'] ?? null)
 	    $sql .= ' UNIQUE';
 
 	  return $sql;

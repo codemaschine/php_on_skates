@@ -168,16 +168,9 @@ function validateFile($file_var, $label = "Datei", $allow_empty = false) {
 
 function saveFile($file_var, $upload_dir) {
   $filename = basename($_FILES[$file_var]['name']);
-  if (($sep_pos = strrpos($filename, '.')) && count($filename) - $sep_pos < 6) {
-    $filename_base = substr($filename, 0, $sep_pos); // no dot
-    $filename_ext = substr($filename, $sep_pos);     // with dot
-  }
-
-
-  $filename = str_replace($search, $replace, $filename);
   $filename = preg_replace("/[^a-zA-Z0-9\._-]*/", '', $filename);
 
-  if (!move_uploaded_file($_FILES[$file_var]['tmp_name'],$upload_dir.'/'.$filename))
+  if (!move_uploaded_file($_FILES[$file_var]['tmp_name'], $upload_dir.'/'.$filename))
     die ("Die hochgeladene Datei konnte intern nicht verschoben werden. Bitte benachrichtigen Sie den Administrator.");
   return $filename;
 }
@@ -227,30 +220,30 @@ function render($obj, $status_code = NULL) {
 
   // parse paramter $obj, prepare variables
   if (is_array($obj)) {
-    if ($obj['action']) {
+    if ($obj['action'] ?? null) {
       $view = $obj['action'];
-      if ($obj['controller'])
+      if ($obj['controller'] ?? null)
         $view = $obj['controller'].'/'.$view;
     }
-    elseif ($obj['partial']) {
+    elseif ($obj['partial'] ?? null) {
       $view = substr($obj['partial'], 0, 1) != '_' ? '_'.$obj['partial'] : $obj['partial'];
       $log->debug("Partial view ist $view");
 
-      if ($obj['controller'])
+      if ($obj['controller'] ?? null)
         $view = $obj['controller'].'/'.$view;
       $render_type = 'partial';
     }
-    elseif ($obj['text'] !== NULL) {
+    elseif ($obj['text'] ?? null !== NULL) {
       $render_type = 'text';
     }
-    elseif ($obj['json'])
+    elseif ($obj['json'] ?? null)
       $render_type = 'json';
 
 
-    if ($obj['locals'])
+    if ($obj['locals'] ?? null)
       $locals = $obj['locals'];
 
-    if ($obj['addJS'])
+    if ($obj['addJS'] ?? null)
       $addJS = $obj['addJS'];
   }
   elseif ($obj === NULL) {
@@ -258,12 +251,12 @@ function render($obj, $status_code = NULL) {
   }
   else {
     $view = $obj;
-    $addJS = $_FRAMEWORK['addJS'];
+    $addJS = $_FRAMEWORK['addJS'] ?? null;
   }
 
 
 
-  if ($_FRAMEWORK['is_rendering'] || $_FRAMEWORK['is_layouting']) {   // do rendering ...
+  if (($_FRAMEWORK['is_rendering'] ?? null) || ($_FRAMEWORK['is_layouting'] ?? null)) {   // do rendering ...
     extract($GLOBALS, EXTR_REFS);
     if ($render_type == 'text') {
       if ($obj['return_output'])
@@ -524,13 +517,11 @@ function show_flash($obj = NULL) {
       unset($_SESSION['flash']);
     }
     echo "</div>";
-    if (!$keep) {
-      echo "
-      <script>
-      ".(is_xhr() && $in ? "$('#$flash_message_temp_id').appendTo($('$in'));" : '')."
-      $('$in .alertbox').effect('highlight',1000).delay(5000).animate({opacity: 0}, 3000, function(){ $('$in .alertbox').slideUp(); });
-      </script>";
-    }
+    echo "
+    <script>
+    ".(is_xhr() && $in ? "$('#$flash_message_temp_id').appendTo($('$in'));" : '')."
+    $('$in .alertbox').effect('highlight',1000).delay(5000).animate({opacity: 0}, 3000, function(){ $('$in .alertbox').slideUp(); });
+    </script>";
   }
 }
 
@@ -618,7 +609,7 @@ function is_singular($str) {
     return true;
   elseif (in_array($str, $irregular))
     return false;
-  return substr($relations_name, -1) != 's';
+  return substr($str, -1) != 's';
 }
 
 function pluralize($str) {

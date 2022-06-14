@@ -59,7 +59,7 @@ class MpmDbHelper
 			PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
 		);
         $db_config = $GLOBALS['db_config'];
-		return new PDO("mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->name}".($db_config->mysqlsocket ? ";unix_socket={$db_config->mysqlsocket}" : ''), $db_config->user, $db_config->pass, $pdo_settings);
+		return new PDO("mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->name}".(isset($db_config->mysqlsocket) && $db_config->mysqlsocket ? ";unix_socket={$db_config->mysqlsocket}" : ''), $db_config->user, $db_config->pass, $pdo_settings);
     }
 
     /**

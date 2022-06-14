@@ -84,13 +84,13 @@ else {
 
 
 /* determine action */
-if ($_GET['action'])
+if ($_GET['action'] ?? null)
 	$_FRAMEWORK['action'] = $_GET['action'];
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['id'])
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['id'] ?? null))
 	$_FRAMEWORK['action'] = $_GET['action'] = 'show';
 elseif ($_SERVER['REQUEST_METHOD'] === 'GET')
 	$_FRAMEWORK['action'] = $_GET['action'] = 'index';
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['id'])
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['id'] ?? null))
 	$_FRAMEWORK['action'] = $_GET['action'] = 'update';
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
 	$_FRAMEWORK['action'] = $_GET['action'] = 'create';
@@ -112,7 +112,7 @@ $debug = 0;
 
 if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php then there is no $_SERVER variable
 	$c_host = $_SERVER['HTTP_HOST'];
-	$c_base_url = ($_SERVER['HTTPS'] ? 'https://' : 'http://').$c_host.substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+	$c_base_url = (($_SERVER['HTTPS'] ?? null) ? 'https://' : 'http://').$c_host.substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
 }
 
 
@@ -120,7 +120,7 @@ if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php
 require APP_DIR.'config.php';
 
 
-if ($_GET['l'])
+if ($_GET['l'] ?? null)
 	$_FRAMEWORK['locale'] = $_GET['l'];
 else
 	$_FRAMEWORK['locale'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
@@ -134,7 +134,7 @@ $_FRAMEWORK['status_code'] = 200;
 // load lib functions
 
 function is_xhr() {
-  return @$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+  return ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) == 'XMLHttpRequest';
 }
 
 require_once 'logger.php';
@@ -176,6 +176,7 @@ $log->debug("Error reporting level: ".error_reporting());
 
 
 function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
+  global $debug;
   $log = new Logger(ROOT_DIR.'/log/log.txt', $debug ? 0 : 1);
   $fwlog = new Logger(ROOT_DIR.'/log/fwlog.txt', $debug ? 0 : 1);
 

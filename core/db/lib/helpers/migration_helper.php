@@ -46,8 +46,10 @@ class MpmMigrationHelper
 	        echo "\n\t--- " . $e->getMessage();
 	        exit;
         }
-        $obj->commit();
-    }
+		if ($obj->inTransaction()) {
+			$obj->commit();
+		}
+	}
 
 
 	/**
@@ -135,7 +137,9 @@ class MpmMigrationHelper
 			    return;
 		    }
 		}
-		$dbObj->commit();
+		if ($dbObj->inTransaction()) {
+			$dbObj->commit();
+		}
 		echo "done.";
 	}
 

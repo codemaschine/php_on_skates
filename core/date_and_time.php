@@ -31,17 +31,13 @@ class DateTime extends \DateTime {
 		return $this->format($format);
 	}
 	
-	public function add($interval) {
-		if (is_integer($interval)) {
-			$interval = new \DateInterval('PT'.$interval.'S');
-		}
+	public function add_seconds(int $interval) {
+		$interval = new \DateInterval('PT'.$interval.'S');
 		return parent::add($interval);
 	}
 	
-	public function sub($interval) {
-		if (is_integer($interval)) {
-			$interval = new \DateInterval('PT'.$interval.'S');
-		}
+	public function sub_seconds(int $interval) {
+		$interval = new \DateInterval('PT'.$interval.'S');
 		return parent::sub($interval);
 	}
 	

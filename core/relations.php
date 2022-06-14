@@ -21,8 +21,8 @@ abstract class Relation {
     $this->model_classname = $model_classname;
     $this->base_model_instance = &$base_model_instance;
     $this->options = $options;
-    $this->validate = $options['validate'] === NULL ? true : $options['validate'];
-    $this->foreign_key = $options['foreign_key'] ? $options['foreign_key'] : strtolowerunderscore(get_class($base_model_instance)).'_id';
+    $this->validate = ($options['validate'] ?? null) === NULL ? true : $options['validate'];
+    $this->foreign_key = ($options['foreign_key'] ?? null) ? $options['foreign_key'] : strtolowerunderscore(get_class($base_model_instance)).'_id';
   }
 
   public function get_model_classname() {
@@ -118,13 +118,12 @@ abstract class Relation {
 
 class RelationBelongsTo extends Relation {
   public function __construct($relation_name, $model_classname, &$base_model_instance, $options = array()) {
-    if (!$options['foreign_key'])
+    if (!($options['foreign_key'] ?? null))
       $options['foreign_key'] = strtolowerunderscore($relation_name).'_id';
     parent::__construct($relation_name, $model_classname, $base_model_instance, $options);
   }
 
   public function get($force_reload = false) {
-    global $log;
     $this->cached == $this->cached && !$force_reload;
     $classname = $this->model_classname;
 
@@ -329,8 +328,8 @@ class RelationHasMany extends Relation {
         }
       }
     }
-    if ($key_of_elem !== NULL) {
-      unset($this->obj[$key_of_elem]);
+    if ($key_to_delete !== NULL) {
+      unset($this->obj[$key_to_delete]);
       return true;
     }
     else return false;
@@ -351,7 +350,7 @@ class RelationHasMany extends Relation {
 
     $classname = $this->model_classname;
 
-    if (!$force && $this-validate && !$this->is_valid()) {
+    if (!$force && $this->validate && !$this->is_valid()) {
       $this->base_model_instance->add_property_error($this->relation_name, ' enthält Fehler!');
       return false;
     }
@@ -583,7 +582,7 @@ class RelationHasOne extends Relation {
     else {
     	if ($classname::has_soft_delete()) {
     	  $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-    	  db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    	  db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     	}
     	else
         db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
@@ -600,7 +599,7 @@ class RelationHasOne extends Relation {
 
     if ($classname::has_soft_delete()) {
       $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
     else
       db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());

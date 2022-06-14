@@ -47,7 +47,7 @@ function url_for($o, $params = array()) {
   unset($params['controller']); 
   
   //--- add site  ---
-  if ($_GET['site'])
+  if ($_GET['site'] ?? null)
     $params['site'] = $_GET['site'];
   //---
    
@@ -140,7 +140,7 @@ function submit_tag($value, $html_options = array()) {
 
 
 function _input_tag($type, $name, $value, $attrs = array()) {
-  if (!$attrs['id'])
+  if (!($attrs['id'] ?? null))
     $attrs['id'] = _name_to_id($name);
   
   if ($value instanceof AbstractModel)
@@ -165,17 +165,17 @@ class Form {
     $this->name = $name;
     $this->model = &$model;
     
-    if (!$options['method']) {
-      $options['method']= $html_options['method'] ? $html_options['method'] : 'post';
-      if ($html_options['method'])
+    if (!($options['method'] ?? null)) {
+      $options['method'] = ($html_options['method'] ?? null) ? $html_options['method'] : 'post';
+      if ($html_options['method'] ?? null)
         unset($html_options['method']);
     }
-    if (!$html_options['id'])
+    if (!($html_options['id'] ?? null))
       $html_options['id'] = _name_to_id($name);
-    if (!$html_options['name'])
+    if (!($html_options['name'] ?? null))
       $html_options['name'] = _name_to_id($name);
     
-    if (!$options['method'])
+    if (!($options['method'] ?? null))
       $options['method'] = $html_options['method'];
       
     // output form-tag
@@ -284,7 +284,7 @@ function link_tag($name, $href, $options = array(), $html_options = NULL) {
     
   $result =  '<a href="'.$href.'"';
 
-  if ($options['remote'] == true) {
+  if ($options['remote'] ?? null == true) {
     $result .= ' onclick="';
     if ($html_options['onclick']) {
       $result .= 'if ((function(){'.$html_options['onclick'].'})() === false) return false;';
@@ -327,7 +327,7 @@ function form_tag($uri, $options = array(), $html_options = array()) {
     
   $result =  '<form method="post" action="'.$uri.'"';
 
-  if ($options['remote']) {
+  if ($options['remote'] ?? null) {
     $result .= ' onsubmit="';
     if ($html_options['onsubmit']) {
       $result .= 'if ((function(){'.$html_options['onsubmit'].'})() === false) return false;';
@@ -336,7 +336,7 @@ function form_tag($uri, $options = array(), $html_options = array()) {
     $result .= _jquery_ajax($uri, $options, true).'"';
   }
   
-  if ($options['multipart']) {
+  if ($options['multipart'] ?? null) {
   	$html_options['enctype'] = 'multipart/form-data';
   }
   
@@ -405,6 +405,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
 
 
 function pagination($default_per_page, $total, $options = array()) { // options: controller,arguments,firstlabel,prevlabel,nextlabel,lastlabel
+  global $_FRAMEWORK;
   $controller = $options['controller'] ? $options['controller'] : $_FRAMEWORK['controller'];
   $arguments = $_GET ? $_GET : array();
   if ($options['arguments'])
