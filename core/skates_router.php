@@ -37,15 +37,18 @@ class SkatesRouter extends \Bramus\Router\Router
   }
 
   protected function invoke($fn, $params = array()) {
-
+    global $_FRAMEWORK;
     $_FRAMEWORK['router_params'] = $params;
     if (is_string($fn)) {
       $matches = [];
       if (preg_match('/(?<controller>\w+)[#\/](?<action>\w+)/', $fn, $matches) !== false) {
-        global $_FRAMEWORK;
         $_FRAMEWORK['controller'] = $matches['controller'] . '.php';
         $_GET['action'] = $matches['action'];
         $_FRAMEWORK['view'] = $matches['action'];
+        $_FRAMEWORK['format'] = 'php';
+        foreach ($params as $key => $param) {
+          $params[$key] = urldecode($param);
+        }
         $_GET = array_merge($_GET, $params);
       }
     } else {
@@ -140,7 +143,7 @@ class SkatesRouter extends \Bramus\Router\Router
         $route = $this->process_optional($route, $params);
       }
       $route = $this->replace_vars($route, $params);
-      return rtrim($route, '/');
+      return trim($route, '/');
     }
     return false;
   }

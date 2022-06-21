@@ -58,6 +58,8 @@ try {
         load_routes($router);
         $router->run();
       }
+      if ($_FRAMEWORK['redirect'])
+        break;
       if (!file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller'])) {
         die('Controller "'.$_FRAMEWORK['controller'].'" not found!');
       }
@@ -160,7 +162,10 @@ try {
       $fwlog->info('Render Partial "'.$_FRAMEWORK['view'].'", Format: '.$_FRAMEWORK['format'].', Code '.$_FRAMEWORK['status_code']);
       if (!empty($_FRAMEWORK['view'])) {
         $_FRAMEWORK['is_rendering'] = true;
-        render($_FRAMEWORK['view']);
+        if ($_FRAMEWORK['render_type'] == 'partial')
+          render_partial($_FRAMEWORK['view'], is_array($_FRAMEWORK['render_options']) ? $_FRAMEWORK['render_options']['locals'] : '', $_FRAMEWORK['status_code']);
+        else
+          render($_FRAMEWORK['view']);
       }
       show_flash(); // dump the flash messages, if they aren't dumped yet. Usefull for bugfixing, but it can also be turned off
     }

@@ -1,16 +1,9 @@
 <?php
 
 function include_mail_body($filename, $data) {
-  global $c_base_url, $log;
-  //$log->debug('mail data: '.var_export($data,true));
-
-
-  
+  global $c_base_url;
   $data['base_url'] = $c_base_url;
-  
   extract($data);
-  $log->debug('mail vorname: '.var_export($vorname,true));
-    
   ob_start();
   require 'views/mailer/'.$filename;
   return ob_get_clean(); 

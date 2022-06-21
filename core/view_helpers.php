@@ -4,6 +4,11 @@
 use SKATES\DateTime;
 
 function url_for($o, $params = array()) {
+  if (is_array($o) && ($o[0] ?? null) && !$params) {
+    $params = $o;
+    $o = $o[0];
+    unset($params[0]);
+  }
   global $_FRAMEWORK, $router;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
   	if (preg_match('/^\w+$/', $o)) {
@@ -49,7 +54,7 @@ function url_for($o, $params = array()) {
 
   if ($router instanceof SkatesRouter) {
     $router_path = $router->get_url($route_name, $params);
-    if ($router_path) {
+    if ($router_path !== false) {
       unset($params['action']);
       $controller = $router_path;
     }
@@ -135,7 +140,13 @@ function options_for_select($ary, $selected_val = NULL) {
 }
 
 function option_tag($label, $value, $selected_val) {
-	return '<option value="'.h($value).'"'.($selected_val == $value && $selected_val !== NULL ? ' selected="selected"' : '').'>'.$label.'</option>';
+  $selected = false;
+  if (is_array($selected_val)) {
+    $selected = in_array($value, $selected_val);
+  } elseif ($selected_val !== null) {
+    $selected = $value == $selected_val;
+  }
+	return '<option value="'.h($value).'"'.($selected ? ' selected="selected"' : '').'>'.$label.'</option>';
 }
 
 function submit_tag($value, $html_options = array()) {
@@ -373,8 +384,14 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   }
   if ($options['update'] || $options['updateJS']) {
     $result.= ", success: function(data, textStatus, xhr) { ";
-    if ($options['update'])
-      $result.= "$('".$options['update']."').html(data);"; // wird wohl nicht benötigt, javascript wird schon ausgeführt: $('#".$options['update']."').find('script').each(function(i) {eval($(this).text());});
+    if ($options['update']) {
+      $result.= "$('".$options['update']."').";
+      switch ($options['updateType']) {
+        case 'append': $result.= "append(data);"; break;
+        case 'prepend': $result.= "prepend(data);"; break;
+        default: $result.= "html(data);";
+      }
+    }
     if ($options['updateJS'])
       $result.= $options['updateJS'];
     $result.= " }";
