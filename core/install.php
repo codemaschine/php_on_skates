@@ -142,6 +142,9 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   copy(SKATES_DIR.'boilerplates/development.txt',APP_DIR.'development.txt');
   chmod(APP_DIR.'development.txt', 0664);
 
+  copy(SKATES_DIR.'boilerplates/routes.php',APP_DIR.'routes.php');
+  chmod(APP_DIR.'routes.php', 0664);
+
 
   // create bin folder
   mkdir(ROOT_DIR.'bin');
