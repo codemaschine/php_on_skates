@@ -117,7 +117,10 @@ abstract class AbstractModel {
   protected function after_construct() {}
 
 
-  final public function __construct($attr = array(), $secure_merge = true) {
+  /**
+   * Use before_construct and after_construct to extent this function
+   */
+  public function __construct($attr = array(), $secure_merge = true) {
     $this->before_construct($attr);
     $this->attr_defs = static::attribute_definitions();
     $this->configuration();
