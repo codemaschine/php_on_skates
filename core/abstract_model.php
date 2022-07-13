@@ -1107,6 +1107,13 @@ abstract class AbstractModel {
 
     $default_type = $this->attr_defs[$key];
     $cur_type = gettype($value);
+    if ($cur_type == 'object') {
+      if ($value instanceof Date) {
+        $cur_type = 'date';
+      } elseif ($value instanceof \DateTime) {
+        $cur_type = 'datetime';
+      }
+    }
     if ($cur_type == 'double') $cur_type = 'float';
 
     switch ($default_type) {
