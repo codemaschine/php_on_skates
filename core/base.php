@@ -182,7 +182,7 @@ function saveFile($file_var, $upload_dir) {
 function redirect_to($target) {
   global $_FRAMEWORK;
   $_FRAMEWORK['redirect'] = true;
-  $_FRAMEWORK['redirect_to'] = url_for($target);;
+  $_FRAMEWORK['redirect_to'] = url_for($target);
 }
 
 function forward_to($controller, $action = NULL, $layout = NULL, $status_code = NULL) {

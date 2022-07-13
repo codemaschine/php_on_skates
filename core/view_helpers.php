@@ -11,13 +11,17 @@ function url_for($o, $params = array()) {
   }
   global $_FRAMEWORK, $router;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
-  	if (preg_match('/^\w+$/', $o)) {
+    if (preg_match('#^https?://#', $o)) {
+      return $o;
+    } elseif (preg_match('/^\w+$/', $o)) {
       $params['action'] = $o;
   	} elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
   		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
       $params['controller'] = $parts[0].'.php';
       $params['action'] = $parts[1];
-  	}
+    } elseif ($_FRAMEWORK['allow_plain_routing'] ?? null) {
+      return $o;
+    }
   } elseif ($o instanceof AbstractModel) {
     $params = array_merge(array('controller' => $o->get_class_label(), 'action' => 'show', 'id' => $o->get_id()), $params);
   }
