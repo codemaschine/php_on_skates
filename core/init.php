@@ -106,13 +106,15 @@ if ($_GET['action']) {
 }
 
 
+$c_protocol;
 $c_host;
 $c_base_url;
 $debug = 0;
 
 if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php then there is no $_SERVER variable
-	$c_host = $_SERVER['HTTP_HOST'];
-	$c_base_url = (($_SERVER['HTTPS'] ?? null) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) == 'https' ? 'https://' : 'http://').$c_host.substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+  $c_protocol = ($_SERVER['HTTPS'] ?? null) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) == 'https' ? 'https://' : 'http://';
+	$c_host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+	$c_base_url = $c_protocol.$c_host.substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
 }
 
 
