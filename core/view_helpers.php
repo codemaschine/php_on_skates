@@ -97,7 +97,7 @@ function password_field_tag($name, $value, $html_options = array()) {
 function check_box_tag($name, $value = 1, $checked = false, $html_options = array()) {
   if ($checked)
     $html_options['checked'] = 'checked';
-  return _input_tag('hidden', $name, 0)._input_tag('checkbox', $name, $value, $html_options);
+  return _input_tag('hidden', $name, 0, ['id' => _name_to_id($name).'_hidden'])._input_tag('checkbox', $name, $value, $html_options);
 }
 
 function radio_button_tag($name, $value, $checked = false, $html_options = array()) {
