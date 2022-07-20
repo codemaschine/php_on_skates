@@ -167,7 +167,7 @@ function _input_tag($type, $name, $value, $attrs = array()) {
   if ($value instanceof AbstractModel)
   	$value = $value->get_id();
   elseif ($value instanceof DateTime)
-    $value = $value->toDbFormat();
+    $value = $value->__toString();
   
   return '<input type="'.$type.'" name="'.$name.'" value="'.h($value).'"'._to_html_attributes($attrs).' />';
 }
