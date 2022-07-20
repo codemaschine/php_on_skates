@@ -1,22 +1,50 @@
 <?php
 
 namespace SKATES;
+use DateTimeZone;
 
 
 class DateTime extends \DateTime {
 	
+	public static function convert(\DateTime $d) {
+		$t = new DateTime();
+		$t->setTimestamp($d->getTimestamp());
+		return $t;
+	}
+
 	private static $utcTimeZone;
 	/**
 	 * Singleton of UTC Time Zone
 	 * 
-	 * @return \DateTimeZone
+	 * @return DateTimeZone
 	 */
 	public static function getUTCTimeZone() {
 		if (!self::$utcTimeZone)
-			self::$utcTimeZone = new \DateTimeZone('UTC');
+			self::$utcTimeZone = new DateTimeZone('UTC');
 		return self::$utcTimeZone;
 	}
 	
+	private static $defaultTimeZone;
+	/**
+	 * Singleton of Default Time Zone
+	 * 
+	 * @return DateTimeZone
+	 */
+	public static function getDefaultTimeZone() {
+		if (!self::$defaultTimeZone)
+			self::$defaultTimeZone = new DateTimeZone(date_default_timezone_get());
+		return self::$defaultTimeZone;
+	}
+
+	/**
+	 * Set DateTime to Default Time Zone
+	 * 
+	 * @return DateTime
+	 */
+	public function setToDefaultTimeZone() {
+		$this->setTimezone(self::getDefaultTimeZone());
+		return $this;
+	}
 	
 	public function toDbFormat() {
 		$tz = $this->getTimezone();
@@ -75,6 +103,18 @@ class DateTime extends \DateTime {
 
 
 class Date extends DateTime {
+	public function __construct($datetime = 'now', DateTimeZone $timezone = null) {
+		parent::__construct($datetime, self::getUTCTimeZone());
+	}
+
+	public function setToDefaultTimeZone() {
+		return $this;
+	}
+
+	public function setTimezone($timezone): self {
+		return $this;
+	}
+
 	public function toDbFormat() {
 		$tz = $this->getTimezone();
 		$this->setTimezone(self::getUTCTimeZone());
