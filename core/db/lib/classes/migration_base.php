@@ -159,7 +159,7 @@ class MpmMigrationBase
 	  else
 	    $index_name = ($options['name'] ?? null) ? $options['name'] : $columns;
 
-	  $sql = "ALTER TABLE `$table` ADD ".(($options['unique'] ?? null) ? 'UNIQUE ' : '')."INDEX `$index_name` (".$this->bquotes($columns).")";
+	  $sql = "ALTER TABLE `$table` ADD ".(($options['unique'] ?? null) ? 'UNIQUE ' : '')."INDEX `$index_name` (".(is_array($columns) ? join(',', $this->bquotes($columns)) : $columns).")";
 	  $this->exec($sql);
 	}
 
