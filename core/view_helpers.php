@@ -11,15 +11,17 @@ function url_for($o, $params = array()) {
   }
   global $_FRAMEWORK, $router;
   if (is_string($o)) { // if string, this might be a url or a short notation for action and controller
-    if (preg_match('#^https?://#', $o)) {
+    if (preg_match('#^https?://#', $o)) { // $o has full url: https://google.com/
       return $o;
-    } elseif (preg_match('/^\w+$/', $o)) {
+    } elseif ($router instanceof SkatesRouter && $router->has_route($o)) { // route with name $o exists
+      $params['route_name'] = $o;
+    } elseif (preg_match('/^\w+$/', $o)) { // $o contains only letters
       $params['action'] = $o;
-  	} elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) {
+  	} elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) { // $o contains controller and action separated with / or #: user/index or user#edit
   		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
       $params['controller'] = $parts[0].'.php';
       $params['action'] = $parts[1];
-    } elseif ($_FRAMEWORK['allow_plain_routing'] ?? null) {
+    } elseif ($_FRAMEWORK['allow_plain_routing'] ?? null) { // urls for plain routing: user.php
       return $o;
     }
   } elseif ($o instanceof AbstractModel) {

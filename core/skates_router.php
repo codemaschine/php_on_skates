@@ -148,6 +148,10 @@ class SkatesRouter extends \Bramus\Router\Router
     return false;
   }
 
+  public function has_route(string $route_name) {
+    return boolval($this->routes[$route_name] ?? null);
+  }
+
   protected function has_optional($pattern) {
     return preg_match('/(\[(?:[^\[\]]+|(?R))*\])/', $pattern) !== false;
   }
