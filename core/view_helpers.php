@@ -323,14 +323,28 @@ function link_tag($name, $href, $options = array(), $html_options = NULL) {
  * alias for link_tag
  */
 function link_to($name, $href, $options = array(), $html_options = NULL) {
-	return link_tag($name, $href, $options, $html_options);
+  if (is_callable($html_options)) { // is alterntive syntax with callalble: link_to($href, $options, $html_options, $name = function(){})
+    $name_result = $html_options();
+    $html_options = $options;
+    $options = $href;
+    $href = $name;
+    $name = $name_result;
+  }
+  return link_tag($name, $href, $options, $html_options);
 }
 
 /**
  * alias for remote_link_tag
  */
 function remote_link_to($name, $href, $options = array(), $html_options = array()) {
-	return remote_link_tag($name, $href, $options, $html_options);
+  if (is_callable($html_options)) { // is alterntive syntax with callalble: link_to($href, $options, $html_options, $name = function(){})
+    $name_result = $html_options();
+    $html_options = $options;
+    $options = $href;
+    $href = $name;
+    $name = $name_result;
+  }
+  return remote_link_tag($name, $href, $options, $html_options);
 }
 
 
