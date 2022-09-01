@@ -307,7 +307,7 @@ function link_tag($name, $href, $options = array(), $html_options = NULL) {
 
   if ($options['remote'] ?? null == true) {
     $result .= ' onclick="';
-    if ($html_options['onclick']) {
+    if ($html_options['onclick'] ?? null) {
       $result .= 'if ((function(){'.$html_options['onclick'].'})() === false) return false;';
       $html_options['onclick'] = NULL;
     }
@@ -382,23 +382,23 @@ function form_tag($uri, $options = array(), $html_options = array()) {
 function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   $result = '$.ajax({ url: \''.$uri.'\'';
   
-  if (!$options['dataType'])
+  if (!($options['dataType'] ?? null))
     $options['dataType'] = 'html';
     
-  if (!$options['method'])
+  if (!($options['method'] ?? null))
     $options['method'] = $sendAsFormPost ? 'POST' : 'GET';
   
-  if ($options['loadingText'] || $options['loading'] || $options['loadingJS']) {
+  if ($options['loadingText'] ?? $options['loading'] ?? $options['loadingJS'] ?? null) {
     $result.= ", beforeSend: function(xhr) { ";
-    if ($options['loadingText'])
+    if ($options['loadingText'] ?? null)
       $result .= "$('".($options['loading'] ? $options['loading'] : $options['update'])."').html('".str_replace("'", "\\'", $options['loadingText'])."'); ";
-    if ($options['loadingText'] || $options['loading'])
+    if ($options['loadingText'] ?? $options['loading'] ?? null)
       $result .= "$('".($options['loading'] ? $options['loading'] : $options['update'])."').show(); ";
-    if ($options['loadingJS'])
+    if ($options['loadingJS'] ?? null)
       $result .= $options['loadingJS'];
     $result .= ' }';
     
-    if ($options['loading'] && $options['loading'] != $options['update'])
+    if (isset($options['loading']) && $options['loading'] != ($options['update'] ?? null))
       $result.= ", complete: function(xhr) { $('#".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
       
   }
@@ -416,10 +416,10 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
       $result.= $options['updateJS'];
     $result.= " }";
   }
-  if ($options['update'] || $options['error'] || $options['errorJS']) {
+  if ($options['update'] ?? $options['error'] ?? $options['errorJS'] ?? null) {
     $result.= ", error: function(xhr, textStatus, errorThrown) { ";
-    if ($options['update'] && empty($options['errorJS']) || $options['error']) {
-      $elemId = $options['error'] ? $options['error'] : $options['update'];
+    if (isset($options['update']) && empty($options['errorJS']) || $options['error']) {
+      $elemId = $options['error'] ?? $options['update'];
       $result.= "$('$elemId').html(xhr.responseText); ";  /*
       anscheinend brauchen wir das gar nicht, da der Skriptblock automatisch augeführt wird.
       $('#$elemId').find('script').each(function(i) {
@@ -427,7 +427,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
                     catch(e){}
     });*/
     }
-    if ($options['errorJS'])
+    if ($options['errorJS'] ?? null)
       $result.= $options['errorJS'];
     $result.= " }";
   }
@@ -435,7 +435,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   
   if ($sendAsFormPost)
     $result.= ", data: $(".(is_string($sendAsFormPost) ? "'$sendAsFormPost'" : 'this').").serializeArray()";
-  elseif ($options['data'])
+  elseif ($options['data'] ?? null)
     $result.= ", data: ".$options['data'];
   
   $result .= ", dataType: '".$options['dataType']."' }); return false;";

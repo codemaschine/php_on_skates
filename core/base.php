@@ -318,7 +318,7 @@ function render($obj, $status_code = NULL) {
   }
   else {                                          // ... or save this for rendering later
     if (!$status_code)
-      $status_code = is_array($obj) && $obj['status_code']  ? $obj['status_code'] : 200;
+      $status_code = is_array($obj) && isset($obj['status_code']) ? $obj['status_code'] : 200;
     $log->debug("====> View die gerendert werden soll ist $view");
     $_FRAMEWORK['view'] = $view;
     $_FRAMEWORK['status_code'] = $status_code;
@@ -326,13 +326,13 @@ function render($obj, $status_code = NULL) {
     $_FRAMEWORK['render_content'] = '';
     $_FRAMEWORK['render_options'] = array();
     if (is_array($obj)) {
-      $_FRAMEWORK['render_content'] = $obj['json'] ? $obj['json'] : $obj['text'];
+      $_FRAMEWORK['render_content'] = $obj['json'] ?? $obj['text'] ?? null;
       // remove json and text from options, because of exponetiallity costs
       unset($obj['json']);
       unset($obj['text']);
       $_FRAMEWORK['render_options'] = $obj;
     }
-    $_FRAMEWORK['addJS'] = $addJS;
+    $_FRAMEWORK['addJS'] = $addJS ?? null;
   }
 }
 
