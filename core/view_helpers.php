@@ -69,6 +69,11 @@ function url_for($o, $params = array()) {
   return $controller.($params ? '?'.http_build_query($params) : '');
 }
 
+function full_url_for($o, $params = array()) {
+  global $c_base_url;
+  return $c_base_url.url_for($o, $params);
+}
+
 function text_field_tag($name, $value, $html_options = array()) {
   return _input_tag('text', $name, $value, $html_options);
 }

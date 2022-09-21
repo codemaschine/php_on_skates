@@ -30,6 +30,7 @@ $_FRAMEWORK = [
   'redirect_to' => null,
   'render_type' => null,
   'forward' => null,
+  'skip_controller' => false,
 ];
 if ($_GET['frameworkController']) {
   $_FRAMEWORK['controller'] = $_GET['frameworkController'];
@@ -60,10 +61,12 @@ try {
       }
       if ($_FRAMEWORK['redirect'])
         break;
-      if (!file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller'])) {
-        die('Controller "'.$_FRAMEWORK['controller'].'" not found!');
+      if (!$_FRAMEWORK['skip_controller']) {
+        if (!file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller'])) {
+          die('Controller "'.$_FRAMEWORK['controller'].'" not found!');
+        }
+        require APP_DIR.'controller/'.$_FRAMEWORK['controller']; // execute controller-action
       }
-      require APP_DIR.'controller/'.$_FRAMEWORK['controller']; // execute controller-action
       require APP_DIR.'commons/post_controller.php';
       if ($_FRAMEWORK['redirect'])
         break;

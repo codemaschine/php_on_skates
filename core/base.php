@@ -325,6 +325,7 @@ function render($obj, $status_code = NULL) {
     $_FRAMEWORK['render_type'] = $render_type;
     $_FRAMEWORK['render_content'] = '';
     $_FRAMEWORK['render_options'] = array();
+    $_FRAMEWORK['skip_controller'] = true;
     if (is_array($obj)) {
       $_FRAMEWORK['render_content'] = $obj['json'] ?? $obj['text'] ?? null;
       // remove json and text from options, because of exponetiallity costs
