@@ -222,7 +222,7 @@ function render($obj, $status_code = NULL) {
         $view = $obj['controller'].'/'.$view;
       $render_type = 'partial';
     }
-    elseif ($obj['text'] ?? null !== NULL) {
+    elseif (($obj['text'] ?? null) !== NULL) {
       $render_type = 'text';
     }
     elseif ($obj['json'] ?? null)
@@ -319,8 +319,10 @@ function render($obj, $status_code = NULL) {
   else {                                          // ... or save this for rendering later
     if (!$status_code)
       $status_code = is_array($obj) && isset($obj['status_code']) ? $obj['status_code'] : 200;
-    $log->debug("====> View die gerendert werden soll ist $view");
-    $_FRAMEWORK['view'] = $view;
+    if (isset($view)) {
+      $log->debug("====> View die gerendert werden soll ist $view");
+      $_FRAMEWORK['view'] = $view;
+    }
     $_FRAMEWORK['status_code'] = $status_code;
     $_FRAMEWORK['render_type'] = $render_type;
     $_FRAMEWORK['render_content'] = '';

@@ -125,7 +125,7 @@ require APP_DIR.'config.php';
 if ($_GET['l'] ?? null)
 	$_FRAMEWORK['locale'] = $_GET['l'];
 else
-	$_FRAMEWORK['locale'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
+	$_FRAMEWORK['locale'] = ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
 
 
 $_FRAMEWORK['is_rendering'] = false;
