@@ -18,7 +18,7 @@ if (file_exists(MPM_PATH . '/config/db_config.php'))
 
 if (!defined('MPM_DB_PATH'))
 {
-    if (isset($db_config->db_path) && strlen($db_config->db_path) > 0)
+    if (isset($db_config->db_path) && mb_strlen($db_config->db_path) > 0)
     {
         /**
          * Defines the MPM_DB_PATH if specified.  Allows this to be outside of the main migration script library.

@@ -18,7 +18,7 @@ function url_for($o, $params = array()) {
     } elseif (preg_match('/^\w+$/', $o)) { // $o contains only letters
       $params['action'] = $o;
   	} elseif (preg_match('/^\w+(\/|#)\w+$/', $o)) { // $o contains controller and action separated with / or #: user/index or user#edit
-  		$parts = strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
+  		$parts = mb_strpos($o, '/') !== false ? explode('/', $o) : explode('#', $o);
       $params['controller'] = $parts[0].'.php';
       $params['action'] = $parts[1];
     } elseif ($_FRAMEWORK['allow_plain_routing'] ?? null) { // urls for plain routing: user.php
@@ -43,7 +43,7 @@ function url_for($o, $params = array()) {
     $params['controller'] = $_FRAMEWORK['controller'];
   if (!isset($params['action']))
     $params['action'] = $_GET['action'];
-  if (strtolower(substr($params['controller'], -4)) != '.php')
+  if (mb_strtolower(mb_substr($params['controller'], -4)) != '.php')
     $params['controller'] = strtolowerunderscore($params['controller']).'.php';
   if (!isset($params['route_name']))
     $params['route_name'] = str_replace('.php', '', $params['controller']).'#'.$params['action'];
@@ -111,7 +111,7 @@ function radio_button_tag($name, $value, $checked = false, $html_options = array
   if ($checked)
     $html_options['checked'] = 'checked';
   if (!$html_options['id'])
-    $html_options['id'] = _name_to_id($name).'_'.strtolower(preg_replace('/[^a-zA-Z0-9_-]/', '', $value));
+    $html_options['id'] = _name_to_id($name).'_'.mb_strtolower(preg_replace('/[^a-zA-Z0-9_-]/', '', $value));
   return _input_tag('radio', $name, $value, $html_options);
 }
 
@@ -279,7 +279,7 @@ class Form {
   }
   
   private function w($name) {
-    return strpos($name, '[') === false ? $this->name."[$name]" : $this->name.'['.substr($name, 0, strpos($name, '[')).']'.substr($name, strpos($name, '['));  // e.g. if $this->name is 'person' and $name is 'age', it becomes 'person[age]'. If $name is 'phone[private]', it becomes 'person[phone][private]
+    return mb_strpos($name, '[') === false ? $this->name."[$name]" : $this->name.'['.mb_substr($name, 0, mb_strpos($name, '[')).']'.mb_substr($name, mb_strpos($name, '['));  // e.g. if $this->name is 'person' and $name is 'age', it becomes 'person[age]'. If $name is 'phone[private]', it becomes 'person[phone][private]
   }
 }
 
@@ -549,7 +549,7 @@ function cycle(array $values, $id = 'default') {
 
 
 function truncate($str, $max = 80) {
-  return strlen($str) > $max ? substr($str, 0, $max-3 ).'...' : $str;
+  return mb_strlen($str) > $max ? mb_substr($str, 0, $max-3 ).'...' : $str;
 }
 
 

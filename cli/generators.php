@@ -89,7 +89,7 @@ function migration_generator($migration_name, $fields){
     $field_defs_str .= "'$field' => '$type',
             ";
 
-    if (substr($field, -3) === '_id')
+    if (mb_substr($field, -3) === '_id')
       $indexes []= $field;
   }
 
@@ -114,7 +114,7 @@ function migration_generator($migration_name, $fields){
       break; // only use the first definition of field_name:type
     }
     $table_name = $matches[5];
-    $index_def = substr($field_name, -3) === '_id' ? "
+    $index_def = mb_substr($field_name, -3) === '_id' ? "
         \$this->add_index('$table_name', '$field_name');" :
       '';
 

@@ -42,9 +42,9 @@ class MpmAutoloadHelper
 
         // class name is coming to us in camel caps with (possibly) an Mpm prefix... remove prefix and turn into lowercase string with underscores
         $filename = MpmStringHelper::camelToLower($class_name);
-        if (substr($filename, 0, 4) == 'mpm_')
+        if (mb_substr($filename, 0, 4) == 'mpm_')
         {
-            $filename = substr($filename, 4, strlen($filename));
+            $filename = mb_substr($filename, 4, mb_strlen($filename));
         }
         $filename .= '.php';
         

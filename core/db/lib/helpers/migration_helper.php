@@ -79,7 +79,7 @@ class MpmMigrationHelper
 	    $files = scandir(MPM_DB_PATH, 1);
 	    $found = false;
 	    foreach ($files as $file) {
-	      if ($filename == substr($file, 0, 19).'.php') {
+	      if ($filename == mb_substr($file, 0, 19).'.php') {
 	        $filename = $file;
 	        $found = true;
 	        break;
@@ -93,7 +93,7 @@ class MpmMigrationHelper
 	    }
 
 	    // file exists -- run the migration
-		echo "\n\tPerforming " . strtoupper($method) . " migration " . $obj->timestamp . ' (ID '.$obj->id.')... ';
+		echo "\n\tPerforming " . mb_strtoupper($method) . " migration " . $obj->timestamp . ' (ID '.$obj->id.')... ';
 		require_once(MPM_DB_PATH . $filename);
 		$migration = new $classname();
 		    if ($migration instanceof MpmMigration) // need PDO object

@@ -215,7 +215,7 @@ function render($obj, $status_code = NULL) {
         $view = $obj['controller'].'/'.$view;
     }
     elseif ($obj['partial'] ?? null) {
-      $view = substr($obj['partial'], 0, 1) != '_' ? '_'.$obj['partial'] : $obj['partial'];
+      $view = mb_substr($obj['partial'], 0, 1) != '_' ? '_'.$obj['partial'] : $obj['partial'];
       $log->debug("Partial view ist $view");
 
       if ($obj['controller'] ?? null)
@@ -266,9 +266,9 @@ function render($obj, $status_code = NULL) {
 
 
     //  adapt according to format
-    if (strpos($view, '.') === false || !file_exists('views/'.$view)) {
-      if (strpos($view, '.') !== false)
-        $view = substr($view, 0, strrpos($view, '.'));
+    if (mb_strpos($view, '.') === false || !file_exists('views/'.$view)) {
+      if (mb_strpos($view, '.') !== false)
+        $view = mb_substr($view, 0, mb_strrpos($view, '.'));
 
       if ($_FRAMEWORK['format'] != 'php')
         $view .= '.'.$_FRAMEWORK['format'];
@@ -276,18 +276,18 @@ function render($obj, $status_code = NULL) {
       $view .= '.php';
     }
 
-    if (strpos($view, '/') === false) // add controller path if not specified
-      $view = ($_FRAMEWORK['is_layouting'] ? 'layout' : substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
+    if (mb_strpos($view, '/') === false) // add controller path if not specified
+      $view = ($_FRAMEWORK['is_layouting'] ? 'layout' : mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
 
 
     // security check: is it allowed and possible to render this file?
     $view = str_replace('../', '', $view);
 
     if ($site_config['view_prefix']) {
-      if (strpos($view, '/_') === false)
-        $site_specific_view = substr_replace($view, $site_config['view_prefix'], strpos($view, '/') + 1, 0);
+      if (mb_strpos($view, '/_') === false)
+        $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/') + 1, 0);
       else
-        $site_specific_view = substr_replace($view, $site_config['view_prefix'], strpos($view, '/_') + 2, 0);
+        $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/_') + 2, 0);
     }
 
     //$log->debug("--------==== existiert ".$site_specific_view);
@@ -377,12 +377,12 @@ function render_partial($view, $obj1 = NULL, $obj2 = NULL, $obj3 = NULL) {
     $return_output = $obj3;
 
 
-  $last_slash = strrpos($view, '/');
+  $last_slash = mb_strrpos($view, '/');
   if ($last_slash === false)
     $controller = '';
   else {
-    $controller = substr($view, 0, $last_slash);
-    $view = substr($view, $last_slash + 1);
+    $controller = mb_substr($view, 0, $last_slash);
+    $view = mb_substr($view, $last_slash + 1);
   }
 
   return render(array('partial' => $view, 'controller' => $controller, 'locals' => $locals, 'return_output' => $return_output), $status_code);
@@ -585,37 +585,37 @@ function date_to_readable($d) {
 
 
 function is_plural($str) {
-  $str = strtolower($str);
+  $str = mb_strtolower($str);
   $irregular = irregular_words_ary();
   if (in_array($str, $irregular))
     return true;
   elseif (array_key_exists($str, $irregular))
     return false;
-  return substr($str, -1) == 's';
+  return mb_substr($str, -1) == 's';
 }
 
 function is_singular($str) {
-  $str = strtolower($str);
+  $str = mb_strtolower($str);
   $irregular = irregular_words_ary();
   if (array_key_exists($str, $irregular))
     return true;
   elseif (in_array($str, $irregular))
     return false;
-  return substr($str, -1) != 's';
+  return mb_substr($str, -1) != 's';
 }
 
 function pluralize($str) {
   $irregular = irregular_words_ary();
-  if (array_key_exists(strtolower($str), $irregular))
-    return $irregular[strtolower($str)];
+  if (array_key_exists(mb_strtolower($str), $irregular))
+    return $irregular[mb_strtolower($str)];
   return $str.'s';
 }
 
 function singularize($str) {
   $irregular = array_flip(irregular_words_ary());
-  if (array_key_exists(strtolower($str), $irregular))
-    return $irregular[strtolower($str)];
-  return substr($str, 0, strlen($str) - 1);
+  if (array_key_exists(mb_strtolower($str), $irregular))
+    return $irregular[mb_strtolower($str)];
+  return mb_substr($str, 0, mb_strlen($str) - 1);
 }
 
 
@@ -629,9 +629,9 @@ function irregular_words_ary() {
 
 // code snippet from a comment from http://php.net/manual/de/ini.core.php
 function let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
-    $l = substr($v, -1);
-    $ret = substr($v, 0, -1);
-    switch(strtoupper($l)){
+    $l = mb_substr($v, -1);
+    $ret = mb_substr($v, 0, -1);
+    switch(mb_strtoupper($l)){
     case 'P':
         $ret *= 1024;
     case 'T':

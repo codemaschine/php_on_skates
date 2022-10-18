@@ -3,7 +3,7 @@
 if ($_FRAMEWORK['format'] == 'json') {						// allow Session-ID in URL if JSON-Request
 	ini_set('session.use_cookies', '0');
 	ini_set('session.use_only_cookies', '0');
-	session_set_cookie_params(null,null,null,null,false);
+	session_set_cookie_params(0,null,null,null,false);
 }
 
 session_name('session_id'); // for access in URL in JSON-Requests
@@ -83,7 +83,7 @@ function login_by_rmcode($rmcode, $userid) {
 function forgot($usermail){
     global $site_config;
     $user = User::find_first_by(array('email' => $usermail));
-    $code = substr(md5(mt_rand()), 0, 6);
+    $code = mb_substr(md5(mt_rand()), 0, 6);
     $mailconfigs=Config::find_first();
     if($user){
         if(send_mail('reset_code', $usermail, array('user' => $user, 'code' => $code, 'mail_configs' => $mailconfigs))){
@@ -139,7 +139,7 @@ function login(User $user, $remember_me = "off") {
         setcookie("user_rmcode", $user->get('rm_code'),time()+86400*365);
         $rm_code = $user->get('rm_code');
     }else{
-        $rm_code=substr(md5(mt_rand()), 0, 16);
+        $rm_code=mb_substr(md5(mt_rand()), 0, 16);
         setcookie("user_rmcode", $rm_code,time()+86400*365);
     }
   }

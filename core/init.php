@@ -70,13 +70,13 @@ function status_500_on_error() {
 $echoLock=1; // Verhindert ausgabe durch commons_display_message();
 $displayMessage = array();
 
-if (strrpos($_FRAMEWORK['controller'], '.') === false) {
+if (mb_strrpos($_FRAMEWORK['controller'], '.') === false) {
   $_FRAMEWORK['format'] = 'php';
   $_FRAMEWORK['controller'] .= 'php'; // TODO: Nicht '.php'
 }
 else {
-  $_FRAMEWORK['format'] = strtolower(substr($_FRAMEWORK['controller'], strrpos($_FRAMEWORK['controller'], '.') + 1));
-  $_FRAMEWORK['controller'] = substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '.')).'.php';
+  $_FRAMEWORK['format'] = mb_strtolower(mb_substr($_FRAMEWORK['controller'], mb_strrpos($_FRAMEWORK['controller'], '.') + 1));
+  $_FRAMEWORK['controller'] = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.')).'.php';
   if ($_FRAMEWORK['format'] == 'html' || $_FRAMEWORK['format'] == 'htm')
     $_FRAMEWORK['format'] = 'php';
 }
@@ -99,8 +99,8 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
 
 $_FRAMEWORK['view'] = $_FRAMEWORK['controller']; // Default view name is action name or controllers name
 if ($_GET['action']) {
-  if (strpos($_GET['action'], '/') !== false)
-    $_FRAMEWORK['view'] = substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '.')).'/'.$_GET['action'].($_FRAMEWORK['format'] == 'php' ? '.php' : ".{$_FRAMEWORK['format']}.php");
+  if (mb_strpos($_GET['action'], '/') !== false)
+    $_FRAMEWORK['view'] = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.')).'/'.$_GET['action'].($_FRAMEWORK['format'] == 'php' ? '.php' : ".{$_FRAMEWORK['format']}.php");
   else
     $_FRAMEWORK['view'] = $_GET['action'].'.php';
 }
@@ -114,7 +114,7 @@ $debug = 0;
 if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php then there is no $_SERVER variable
   $c_protocol = ($_SERVER['HTTPS'] ?? null) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) == 'https' ? 'https://' : 'http://';
 	$c_host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
-	$c_base_url = $c_protocol.$c_host.substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+	$c_base_url = $c_protocol.$c_host.mb_substr($_SERVER['PHP_SELF'], 0, mb_strrpos($_SERVER['PHP_SELF'], '/') + 1);
 }
 
 
@@ -125,7 +125,7 @@ require APP_DIR.'config.php';
 if ($_GET['l'] ?? null)
 	$_FRAMEWORK['locale'] = $_GET['l'];
 else
-	$_FRAMEWORK['locale'] = ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
+	$_FRAMEWORK['locale'] = ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null) ? mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $_FRAMEWORK['default_locale'];
 
 
 $_FRAMEWORK['is_rendering'] = false;
@@ -242,7 +242,7 @@ require_once 'functions.php';
 $model_files = scandir(APP_DIR.'model');
 foreach ($model_files as $file) {
 	// include app/model/*.php
-	if (substr($file, -4) === '.php')
+	if (mb_substr($file, -4) === '.php')
 		require_once APP_DIR.'model/'.$file;
 }
 

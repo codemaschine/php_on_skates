@@ -137,7 +137,7 @@
       public static function pluralize( $string ) 
       {
           // save some time in the case that singular and plural are the same
-          if ( in_array( strtolower( $string ), self::$uncountable ) )
+          if ( in_array( mb_strtolower( $string ), self::$uncountable ) )
               return $string;
               
       
@@ -147,7 +147,7 @@
               $pattern = '/' . $pattern . '$/i';
               
               if ( preg_match( $pattern, $string, $matches ) ) {
-              	  if (ctype_upper(substr($matches[count($matches) -1], 0, 1)))
+              	  if (ctype_upper(mb_substr($matches[count($matches) -1], 0, 1)))
               	  	return ucfirst(preg_replace( $pattern, $result, $string));
                   else
                     return preg_replace( $pattern, $result, $string);
@@ -167,7 +167,7 @@
       public static function singularize( $string )
       {
           // save some time in the case that singular and plural are the same
-          if ( in_array( strtolower( $string ), self::$uncountable ) )
+          if ( in_array( mb_strtolower( $string ), self::$uncountable ) )
               return $string;
   
           // check for irregular plural forms
@@ -176,7 +176,7 @@
               $pattern = '/' . $pattern . '$/i';
               
               if ( preg_match( $pattern, $string, $matches ) ) {
-              	  if (ctype_upper(substr($matches[count($matches) -1], 0, 1)))
+              	  if (ctype_upper(mb_substr($matches[count($matches) -1], 0, 1)))
                     return ucfirst(preg_replace( $pattern, $result, $string));
               	  else
               	  	return preg_replace( $pattern, $result, $string);

@@ -121,8 +121,8 @@ class SkatesRouter extends \Bramus\Router\Router
     $max_methods = 6;
     $max_name = 10;
     foreach ($this->all_routes as $route) {
-      $max_methods = strlen($route['methods']) > $max_methods ? strlen($route['methods']) : $max_methods;
-      $max_name = strlen($route['name']) > $max_name ? strlen($route['name']) : $max_name;
+      $max_methods = mb_strlen($route['methods']) > $max_methods ? mb_strlen($route['methods']) : $max_methods;
+      $max_name = mb_strlen($route['name']) > $max_name ? mb_strlen($route['name']) : $max_name;
     }
     $mask = "%-".$max_methods."s | %-".$max_name."s | %s\n";
     echo "\n";
@@ -158,7 +158,7 @@ class SkatesRouter extends \Bramus\Router\Router
 
   protected function process_optional($pattern, &$params) {
     return preg_replace_callback('/(\[(?:[^\[\]]+|(?R))*\])/', function ($matches) use (&$params) {
-      $match = substr($matches[1], 1, -1);
+      $match = mb_substr($matches[1], 1, -1);
       if ($this->has_optional($match)) {
         $match = $this->process_optional($match, $params);
       }

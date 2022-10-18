@@ -1,6 +1,6 @@
 <?php
 
-$abs_base_path = substr(dirname(__FILE__),0,strrpos(dirname(__FILE__),'/'));
+$abs_base_path = mb_substr(dirname(__FILE__),0,mb_strrpos(dirname(__FILE__),'/'));
 define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
 define('APP_DIR', $abs_base_path.'/app/');
@@ -80,7 +80,7 @@ try {
   if ($_FRAMEWORK['redirect']) {
     require APP_DIR.'commons/post_rendering.php';
 
-    $uri = substr($_FRAMEWORK['redirect_to'], 0, 4) == 'http' ? $_FRAMEWORK['redirect_to'] : $c_base_url.$_FRAMEWORK['redirect_to'];
+    $uri = mb_substr($_FRAMEWORK['redirect_to'], 0, 4) == 'http' ? $_FRAMEWORK['redirect_to'] : $c_base_url.$_FRAMEWORK['redirect_to'];
     if (is_json()) {
     	$_FRAMEWORK['is_rendering'] = true;
     	echo render_json_response(null, 302, 'redirect() called instead of render_json(). This indicates that JSON is not implemented for this request where a HTML-Request would lead to this redirect.', array('location' => $uri));
@@ -121,11 +121,11 @@ try {
 
     // security check: is it allowed and possible to render this file?
     if ($_FRAMEWORK['render_type'] != 'text') {
-      //if (strpos($_FRAMEWORK['view'], '.') === false)
+      //if (mb_strpos($_FRAMEWORK['view'], '.') === false)
       //  $_FRAMEWORK['view'] .= '.php';
 
-      if (strpos($_FRAMEWORK['view'], '/') === false) // add controller path if not specified
-        $_FRAMEWORK['view'] = substr($_FRAMEWORK['controller'], 0, strrpos($_FRAMEWORK['controller'], '.')).'/'.$_FRAMEWORK['view'];
+      if (mb_strpos($_FRAMEWORK['view'], '/') === false) // add controller path if not specified
+        $_FRAMEWORK['view'] = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.')).'/'.$_FRAMEWORK['view'];
 
       //$_FRAMEWORK['view'] = str_replace('../', '', $_FRAMEWORK['view']);
       //if (!file_exists('views/'.$_FRAMEWORK['view'])) {
@@ -135,8 +135,8 @@ try {
     //  ________________
 
     //  adapt layout and view according to format
-    if (substr($_FRAMEWORK['layout'], -4) == '.php')
-      $_FRAMEWORK['layout'] = substr($_FRAMEWORK['layout'], 0, -4);
+    if (mb_substr($_FRAMEWORK['layout'], -4) == '.php')
+      $_FRAMEWORK['layout'] = mb_substr($_FRAMEWORK['layout'], 0, -4);
 
     if ($_FRAMEWORK['format'] != 'php')
       $_FRAMEWORK['layout'] .= '.'.$_FRAMEWORK['format'];

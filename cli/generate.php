@@ -60,7 +60,7 @@ switch ($argv[2]) {
 
   if (file_exists(APP_DIR.'routes.php')) {
     $routes = file_get_contents(APP_DIR.'routes.php');
-    $resources = "\$router->resources('".strtolower($name)."');";
+    $resources = "\$router->resources('".mb_strtolower($name)."');";
     if (mb_strpos($routes, $resources) === false) {
       $routes = preg_replace('/(load_routes[^{]*{)/', "$1\n  $resources", $routes);
       file_put_contents(APP_DIR.'routes.php', $routes);

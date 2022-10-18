@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT);
 
-$abs_base_path = substr(dirname(__FILE__),0,strrpos(dirname(dirname(__FILE__)),'/'));
+$abs_base_path = mb_substr(dirname(__FILE__),0,mb_strrpos(dirname(dirname(__FILE__)),'/'));
 define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
 define('APP_DIR', $abs_base_path.'/app/');
@@ -16,8 +16,8 @@ $initialized = false;
 
 
 function copy_recursive($source, $dest) {
-	if (substr($dest,-1) == '/')
-		$dest = substr($dest,0,strlen($dest) - 1);
+	if (mb_substr($dest,-1) == '/')
+		$dest = mb_substr($dest,0,mb_strlen($dest) - 1);
 
 	global $message;
 	if (!file_exists($dest) && !mkdir($dest, 0775))
@@ -48,8 +48,8 @@ function copy_recursive($source, $dest) {
 
 // Here's a startsWith function
 function startsWith($haystack, $needle){
-  $length = strlen($needle);
-  return (substr($haystack, 0, $length) === $needle);
+  $length = mb_strlen($needle);
+  return (mb_substr($haystack, 0, $length) === $needle);
 }
 
 
@@ -118,7 +118,7 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   chdir(ROOT_DIR);
 
   /*
-  $skates_path = substr(dirname(__FILE__),strrpos(dirname(__FILE__),'/') + 1);
+  $skates_path = mb_substr(dirname(__FILE__),mb_strrpos(dirname(__FILE__),'/') + 1);
   if (!$skates_path != 'skates') { // in case that it's skates_[version]: create a symbolic link;
     if (!symlink($skates_path, 'skates'))
     	$message .= "WARNING: Could not create symbolic link to path to '$skates_path' with name 'skates'. You have to create this link manually or rename '$skates_path' to 'skates'";

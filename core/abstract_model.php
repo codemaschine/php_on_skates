@@ -501,9 +501,9 @@ abstract class AbstractModel {
           }
           break;
         case 'length_of':
-          if ($validator['is'] && strlen($attr) != $validator['is'] ||
-              $validator['minimum'] && strlen($attr) < $validator['minimum'] ||
-              $validator['maximum'] && strlen($attr) > $validator['maximum']) {
+          if ($validator['is'] && mb_strlen($attr) != $validator['is'] ||
+              $validator['minimum'] && mb_strlen($attr) < $validator['minimum'] ||
+              $validator['maximum'] && mb_strlen($attr) > $validator['maximum']) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
@@ -834,7 +834,7 @@ abstract class AbstractModel {
         //$log->debug('zu ersetztende vars: '.var_export($options['conditions'], true));
 
         if ($options['conditions']) { // gibt es noch zu ersetzende variablen?
-          if (strpos($cond_stmt, '?') === false) {
+          if (mb_strpos($cond_stmt, '?') === false) {
             //$log->debug("Keine Fragezeichen in conditions-string gefunden");
             $cond_stmt = vprintf($cond_stmt, array_map(function ($s) use ($db_link) {
               return mysqli_real_escape_string($db_link, $s);
@@ -1033,10 +1033,10 @@ abstract class AbstractModel {
       else
         $first = false;
 
-      if (strpos($key, '.') !== FALSE) {
-        $sep = strpos($key, '.');
-        $cur_table_name = substr($key, 0, $sep);
-        $field = substr($key, $sep + 1);
+      if (mb_strpos($key, '.') !== FALSE) {
+        $sep = mb_strpos($key, '.');
+        $cur_table_name = mb_substr($key, 0, $sep);
+        $field = mb_substr($key, $sep + 1);
         $sql .= "`$cur_table_name`.`$field` ";
       }
       elseif ($table_name)

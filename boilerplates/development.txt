@@ -9,7 +9,7 @@ If you want to use the production environment on your server
     not work with Command line skripts (e.g. when you want to migrate your 
     database).
     Use 
-    strpos(dirname(__FILE__), 'a_specific_folder_on_server_path') !== FALSE)
+    mb_strpos(dirname(__FILE__), 'a_specific_folder_on_server_path') !== FALSE)
     to determine the production environment instead.
   
   

@@ -154,7 +154,7 @@ class MpmMigrationBase
 
 	public function add_index($table, $columns, $options = array()) {
 	  if (is_array($columns)) {
-	    $index_name = ($options['name'] ?? null) ? $options['name'] : substr(join('_', $columns), 0, 50);
+	    $index_name = ($options['name'] ?? null) ? $options['name'] : mb_substr(join('_', $columns), 0, 50);
 	  }
 	  else
 	    $index_name = ($options['name'] ?? null) ? $options['name'] : $columns;
@@ -167,7 +167,7 @@ class MpmMigrationBase
 	  if ($options['name'] ?? null)
 	    $index_name = $options['name'];
 	  elseif (is_array($columns)) {
-	    $index_name = substr(join('_', $columns), 0, 50);
+	    $index_name = mb_substr(join('_', $columns), 0, 50);
 	  }
 	  else
 	    $index_name = $columns;

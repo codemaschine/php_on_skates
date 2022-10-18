@@ -13,11 +13,11 @@ function is_assoc($array) {
 
 
 function strtolowerunderscore($str) {
-  return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $str));
+  return mb_strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $str));
 }
 
 function strtouppercamelcase($str) {
-  return preg_replace_callback('/(?:^|_)(.?)/',function($matches){return strtoupper($matches[1]);},$str);
+  return preg_replace_callback('/(?:^|_)(.?)/',function($matches){return mb_strtoupper($matches[1]);},$str);
 }
 
 

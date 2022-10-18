@@ -54,7 +54,7 @@ abstract class Relation {
 
   protected function _write_include_log_message() {
     global $fwlog;
-    $relation_caller_name = strtolowerunderscore(substr(get_class($this), 8));
+    $relation_caller_name = strtolowerunderscore(mb_substr(get_class($this), 8));
 
     $relation_log_message = get_class($this->base_model_instance)." --($relation_caller_name)--> {$this->relation_name}";
     if (empty($recs_to_cache)) {

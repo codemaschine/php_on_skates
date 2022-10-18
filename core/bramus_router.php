@@ -206,8 +206,8 @@ class Router
 
         // Method getallheaders() not available or went wrong: manually extract 'm
         foreach ($_SERVER as $name => $value) {
-            if ((substr($name, 0, 5) == 'HTTP_') || ($name == 'CONTENT_TYPE') || ($name == 'CONTENT_LENGTH')) {
-                $headers[str_replace(array(' ', 'Http'), array('-', 'HTTP'), ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            if ((mb_substr($name, 0, 5) == 'HTTP_') || ($name == 'CONTENT_TYPE') || ($name == 'CONTENT_LENGTH')) {
+                $headers[str_replace(array(' ', 'Http'), array('-', 'HTTP'), ucwords(mb_strtolower(str_replace('_', ' ', mb_substr($name, 5)))))] = $value;
             }
         }
 
@@ -355,7 +355,7 @@ class Router
                   // We have a following parameter: take the substring from the current param position until the next one's position (thank you PREG_OFFSET_CAPTURE)
                   if (isset($matches[$index + 1]) && isset($matches[$index + 1][0]) && is_array($matches[$index + 1][0])) {
                     if ($matches[$index + 1][0][1] > -1) {
-                      return trim(substr($match[0][0], 0, $matches[$index + 1][0][1] - $match[0][1]), '/');
+                      return trim(mb_substr($match[0][0], 0, $matches[$index + 1][0][1] - $match[0][1]), '/');
                     }
                   } // We have no following parameters: return the whole lot
 
@@ -429,7 +429,7 @@ class Router
                     // We have a following parameter: take the substring from the current param position until the next one's position (thank you PREG_OFFSET_CAPTURE)
                     if (isset($matches[$index + 1]) && isset($matches[$index + 1][0]) && is_array($matches[$index + 1][0])) {
                         if ($matches[$index + 1][0][1] > -1) {
-                            return trim(substr($match[0][0], 0, $matches[$index + 1][0][1] - $match[0][1]), '/');
+                            return trim(mb_substr($match[0][0], 0, $matches[$index + 1][0][1] - $match[0][1]), '/');
                         }
                     } // We have no following parameters: return the whole lot
 
@@ -459,7 +459,7 @@ class Router
         }
 
         // If not, check the existence of special parameters
-        elseif (stripos($fn, '@') !== false) {
+        elseif (mb_stripos($fn, '@') !== false) {
             // Explode segments of given route
             list($controller, $method) = explode('@', $fn);
 
@@ -496,11 +496,11 @@ class Router
     public function getCurrentUri()
     {
         // Get the current Request URI and remove rewrite base path from it (= allows one to run the router in a sub folder)
-        $uri = substr(rawurldecode($_SERVER['REQUEST_URI']), strlen($this->getBasePath()));
+        $uri = mb_substr(rawurldecode($_SERVER['REQUEST_URI']), mb_strlen($this->getBasePath()));
 
         // Don't take query params into account on the URL
-        if (strstr($uri, '?')) {
-            $uri = substr($uri, 0, strpos($uri, '?'));
+        if (mb_strstr($uri, '?')) {
+            $uri = mb_substr($uri, 0, mb_strpos($uri, '?'));
         }
 
         // Remove trailing slash + enforce a slash at the start

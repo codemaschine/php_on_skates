@@ -32,7 +32,7 @@ class MpmControllerFactory
 		{
 			$controller_name = 'help';
 		}
-		$class_name = ucwords(MpmStringHelper::strToCamel('mpm_' . strtolower($controller_name) . '_controller'));
+		$class_name = ucwords(MpmStringHelper::strToCamel('mpm_' . mb_strtolower($controller_name) . '_controller'));
 		$obj = new $class_name($controller_name, $argv);
 		return $obj;
 	}

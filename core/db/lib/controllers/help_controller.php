@@ -35,7 +35,7 @@ class MpmHelpController extends MpmController
 		else
 		{
 			$controller_name = $this->arguments[0];
-			$class_name = ucwords(MpmStringHelper::strToCamel('mpm_' . strtolower($controller_name) . '_controller'));
+			$class_name = ucwords(MpmStringHelper::strToCamel('mpm_' . mb_strtolower($controller_name) . '_controller'));
 			try
 			{
 				MpmAutoloadHelper::load($class_name);

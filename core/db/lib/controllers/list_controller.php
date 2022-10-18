@@ -70,7 +70,7 @@ class MpmListController extends MpmController
 			$clw->addText("=========================================", 4);
 			foreach ($list as $obj)
 			{
-			    if (strlen($obj->id) > 1)
+			    if (mb_strlen($obj->id) > 1)
 			    {
 				    $clw->addText($obj->id . "\t" . $obj->timestamp, 6);
 			    }

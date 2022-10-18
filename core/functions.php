@@ -8,7 +8,7 @@ function commons_generate_random_hash($length = 10) {
   $characters = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';  // 0 und O entfernt. I und l entfernt.
   $randomString = '';
   for ($i = 0; $i < $length; $i++) {
-    $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
+    $randomString .= $characters[mt_rand(0, mb_strlen($characters) - 1)];
   }
   return $randomString;
 }

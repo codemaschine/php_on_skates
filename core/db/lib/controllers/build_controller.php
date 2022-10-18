@@ -121,8 +121,8 @@ class MpmBuildController extends MpmController
 		    echo "\nDO YOU WANT TO CONTINUE? [y/N] ";
 		    $answer = fgets(STDIN);
 		    $answer = trim($answer);
-		    $answer = strtolower($answer);
-		    if (empty($answer) || substr($answer, 0, 1) == 'n')
+		    $answer = mb_strtolower($answer);
+		    if (empty($answer) || mb_substr($answer, 0, 1) == 'n')
 		    {
 			    echo "\nABORTED!\n\n";
 			    $clw->writeFooter();

@@ -109,7 +109,7 @@ class MpmCommandLineWriter
 		for ($i = $start; $i >=0; $i--)
 		{
 			$line = $lines[$i];
-			$a = $this->maxWidth - strlen($line);
+			$a = $this->maxWidth - mb_strlen($line);
 			$indent = floor($a / 2);
 			$txt = (object) array();
 			$txt->text = $line;
@@ -187,7 +187,7 @@ class MpmCommandLineWriter
 		foreach ($all_lines as $line)
 		{
 		    $body .= $line;
-			for ($i = 0; $i < $max_line_len - strlen($line); $i++)
+			for ($i = 0; $i < $max_line_len - mb_strlen($line); $i++)
 			{
 				$body .= " ";
 			}
@@ -225,7 +225,7 @@ class MpmCommandLineWriter
 		foreach ($all_lines as $line)
 		{
 		    $body .= $line;
-			for ($i = 0; $i < $max_line_len - strlen($line); $i++)
+			for ($i = 0; $i < $max_line_len - mb_strlen($line); $i++)
 			{
 				$body .= " ";
 			}

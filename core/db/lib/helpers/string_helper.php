@@ -27,7 +27,7 @@ class MpmStringHelper
     static public function getTimestampFromFilename($file)
     {
 		// strip .php
-		$time = substr($file, 0, 19);
+		$time = mb_substr($file, 0, 19);
 		$t = explode('_', $time);
 		// Fix for problem when file doesn't exist and comes in as an empty string, then throws undefined offset errors
 		if (count($t) != 6)
@@ -70,11 +70,11 @@ class MpmStringHelper
     static public function strToCamel($no_camel)
     {
         // do not alter string if there are no underscores
-        if (stripos($no_camel, '_') == false)
+        if (mb_stripos($no_camel, '_') == false)
         {
             return $no_camel;
         }
-        $no_camel = strtolower($no_camel);
+        $no_camel = mb_strtolower($no_camel);
         $no_camel = str_replace('_', ' ', $no_camel);
         $no_camel = ucwords($no_camel);
         $array = explode(' ', $no_camel);
@@ -83,7 +83,7 @@ class MpmStringHelper
         {
             if ($key == 0)
             {
-                $camel .= strtolower($part);
+                $camel .= mb_strtolower($part);
             }
             else
             {
@@ -104,14 +104,14 @@ class MpmStringHelper
     {
         // split up the string into an array according to the uppercase characters
         $array = preg_split('/([A-Z][^A-Z]*)/', $camel, (-1), PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-        $array = array_map('strtolower', $array);
+        $array = array_map('mb_strtolower', $array);
         // create our string
         $lower = '';
         foreach ($array as $part)
         {
             $lower .= $part . '_';
         }
-        $lower = substr($lower, 0, strlen($lower) - 1);
+        $lower = mb_substr($lower, 0, mb_strlen($lower) - 1);
         return $lower;
     }
     

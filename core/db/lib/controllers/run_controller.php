@@ -47,7 +47,7 @@ class MpmRunController extends MpmController
         }
 
         // are we running the up or the down?
-		$type = strtolower($this->arguments[0]);
+		$type = mb_strtolower($this->arguments[0]);
 		
 		// what number do we want to run?
 		$num = $this->arguments[1];

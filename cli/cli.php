@@ -76,7 +76,7 @@ switch ($argv[1]) {
     $model_files = scandir(APP_DIR.'model');
     foreach ($model_files as $file) {
       // include app/model/*.php
-      if (substr($file, -4) === '.php')
+      if (mb_substr($file, -4) === '.php')
         require_once APP_DIR.'model/'.$file;
 
     }

@@ -55,8 +55,8 @@ class MpmInitController extends MpmController
 			echo "\nDO YOU WANT TO CONTINUE? [y/N] ";
 			$answer = fgets(STDIN);
 			$answer = trim($answer);
-			$answer = strtolower($answer);
-			if (empty($answer) || substr($answer, 0, 1) == 'n')
+			$answer = mb_strtolower($answer);
+			if (empty($answer) || mb_substr($answer, 0, 1) == 'n')
 			{
 				echo "\nABORTED!\n\n";
 				$clw->writeFooter();
@@ -232,7 +232,7 @@ class MpmInitController extends MpmController
 		{
 		    $db_path = MPM_PATH . '/db/';
 		}
-		if (substr($db_path, strlen($db_path) - 1, 1) != '/')
+		if (mb_substr($db_path, mb_strlen($db_path) - 1, 1) != '/')
 		{
 		    $db_path .= '/';
 		}
@@ -245,7 +245,7 @@ class MpmInitController extends MpmController
 		    $do_build = fgets(STDIN);
 		    $do_build = trim($do_build);
 		    $doBuild = false;
-            if (strcasecmp(substr($do_build, 0, 1), 'y') == 0)
+            if (strcasecmp(mb_substr($do_build, 0, 1), 'y') == 0)
             {
                 $doBuild = true;
             }

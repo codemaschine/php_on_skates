@@ -40,7 +40,7 @@ class MpmAddController extends MpmController
 		$date_stamp = date('Y_m_d_H_i_s');
 		$filename = $date_stamp;
     if (isset($this->arguments[0]))
-      $filename .= '_'.strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', preg_replace('/[^a-zA-Z0-9_]/', '_', $this->arguments[0]))); 
+      $filename .= '_'.mb_strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', preg_replace('/[^a-zA-Z0-9_]/', '_', $this->arguments[0]))); 
 		$filename .= '.php';
 		$vars = array ('timestamp' => $date_stamp);
 		//$classname = 'Migration_' . $date_stamp;
