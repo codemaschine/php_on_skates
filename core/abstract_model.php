@@ -200,7 +200,7 @@ abstract class AbstractModel {
       return $this->get_id();
     if (array_key_exists($name, $this->relations))
       return($this->relations[$name]->get());
-    else return $this->attr[$name];
+    else return $this->attr[$name] ?? null;
   }
 
   public function set($name, $value) {
@@ -243,10 +243,11 @@ abstract class AbstractModel {
     if (empty($this->attr))
   	  throw new Exception("Define some fields in '".static::$table_name."'!", E_USER_ERROR);
 
-  	if ($this->is_new())
+  	if (($this->attr_defs['created_at'] ?? null) && $this->is_new())
   	  $this->attr['created_at'] = $this->attr_defs['created_at'] === 'datetime' ? new DateTime() : time();
 
-  	$this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime() : time();
+    if ($this->attr_defs['updated_at'] ?? null)
+      $this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime() : time();
 
     $assignments = array();
 
@@ -458,14 +459,14 @@ abstract class AbstractModel {
 
     foreach ($this->validators as $validator) {
       $attr_name = $validator['attr_name'];
-      $attr = $this->attr[$attr_name];
+      $attr = $this->attr[$attr_name] ?? null;
 
       /*
       $log->debug('using validator: '.var_export($validator, true));
       $log->debug('validator attr_name: '.var_export($attr_name, true));
       $log->debug('validator attr: '.var_export($attr, true));
       */
-      if ($validator['name'] != 'presence_of' && $validator['allow_blank'] && empty($attr))
+      if ($validator['name'] != 'presence_of' && ($validator['allow_blank'] ?? null) && empty($attr))
         continue;
 
       if (isset($validator['if']) && !$validator['if']($this->attr))
@@ -478,11 +479,11 @@ abstract class AbstractModel {
           }
           break;
         case 'uniqueness_of':
-          $condition_str = $validator['case_sensitive'] ? "binary $attr_name = ?" : "$attr_name = ?";
+          $condition_str = ($validator['case_sensitive'] ?? null) ? "binary $attr_name = ?" : "$attr_name = ?";
           if ($this->get_id())
             $condition_str .= ' AND id != '.intval($this->get_id());
 
-          if ($validator['scope']) {
+          if ($validator['scope'] ?? null) {
             $fields = is_array($validator['scope']) ? $validator['scope'] : array($validator['scope']);
             $field_cond = array();
             foreach ($fields as $field)
@@ -509,12 +510,12 @@ abstract class AbstractModel {
           break;
         case 'format_of':
           if ($validator['with'] && !preg_match($validator['with'], $attr) ||
-              $validator['without'] && preg_match($validator['without'], $attr)) {
+              ($validator['without'] ?? null) && preg_match($validator['without'], $attr)) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
         case 'confirmation_of':
-          if ($attr != $this->attr[$validator['with']]) {
+          if ($attr != ($this->attr[$validator['with']] ?? null)) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
@@ -588,7 +589,7 @@ abstract class AbstractModel {
   }
 
   protected function validates_length_of($attr_name, $options = array()) {
-    $this->add_new_validator('length_of', $attr_name, $options['is'] ? ' muss genau '.$options['is'].' Zeichen lang sein.' : ' hat eine ungültige Länge.', $options);
+    $this->add_new_validator('length_of', $attr_name, ($options['is'] ?? null) ? ' muss genau '.$options['is'].' Zeichen lang sein.' : ' hat eine ungültige Länge.', $options);
   }
 
   protected function validates_format_of($attr_name, $options = array()) {
@@ -783,14 +784,14 @@ abstract class AbstractModel {
 
     $options = array_merge($def_options, $options);
 
-    $query = 'SELECT '.($options['group'] ? '1' : 'count(*) as total').' FROM `'.$options['from'].'`'; // if there is 'group by' in the query then count(*) would return counts for each group. So in that case we return 1 and count these result rows later.
-    if ($options['joins'])
+    $query = 'SELECT '.(($options['group'] ?? null) ? '1' : 'count(*) as total').' FROM `'.$options['from'].'`'; // if there is 'group by' in the query then count(*) would return counts for each group. So in that case we return 1 and count these result rows later.
+    if ($options['joins'] ?? null)
       $query .= ' '.$options['joins'];
 
 
     $query .= self::build_conditions_sql($fields, $options);
 
-    if ($options['group']) {
+    if ($options['group'] ?? null) {
       $query = "select count(*) as total from ($query group by {$options['group']}) as sq";
     }
 
@@ -857,7 +858,7 @@ abstract class AbstractModel {
       array_push($elements, '('.$elem.')');
     }  // conditions ende
 
-    if (static::$soft_delete && !$options['unscoped']) {
+    if (static::$soft_delete && !($options['unscoped'] ?? null)) {
       $attr_defs = static::attribute_definitions();
       $delete_col = is_string(static::$soft_delete) ? static::$soft_delete : 'deleted_at';
         if (static::$soft_delete_type == 'datetime' && $attr_defs[$delete_col] == 'datetime')
@@ -866,7 +867,7 @@ abstract class AbstractModel {
     	  array_push($elements, "($delete_col = 0 OR $delete_col IS NULL)");
     }
 
-    if ((static::default_scope()) && !$options['unscoped'] && !$options['escape_default_scope']) {
+    if ((static::default_scope()) && !($options['unscoped'] ?? null) && !($options['escape_default_scope'] ?? null)) {
       if (is_string(static::default_scope()))
         array_push($elements, '('.static::default_scope().')');
       elseif (is_array(static::default_scope()))

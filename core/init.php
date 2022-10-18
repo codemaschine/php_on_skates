@@ -7,7 +7,7 @@ use \SKATES\DateTime;
 use \SKATES\Date;
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_COMPILE_ERROR | E_COMPILE_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE );
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(E_ALL & ~E_NOTICE & ~E_USER_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 
 // ----------------------
@@ -178,11 +178,22 @@ $log->debug("Error reporting level: ".error_reporting());
 
 
 function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
-  global $debug;
+  global $_FRAMEWORK, $debug;
+  //PHP-8 compatibility and migration. https://github.com/php/php-src/issues/8906#issuecomment-1260303765
+  if ($_FRAMEWORK['ignore_undefined_array_key_warnings'] && version_compare(PHP_VERSION, '8') >= 0) {
+    if (str_starts_with($errstr, 'Undefined array key')) {
+      trigger_error($errstr, E_USER_NOTICE);
+      return true;
+    }
+    // elseif (str_starts_with($errstr, 'Trying to access array offset')) {
+    //   trigger_error($errstr, E_USER_NOTICE);
+    //   return true;
+    // }
+  }
+
   $log = new Logger(ROOT_DIR.'/log/log.txt', $debug ? 0 : 1);
   $fwlog = new Logger(ROOT_DIR.'/log/fwlog.txt', $debug ? 0 : 1);
 
-  $backtrace = debug_backtrace();
   $log->error("{$errstr} in {$errfile} on line {$errline}
 ".export_backtrace());
 
@@ -209,8 +220,6 @@ function fatal_handler($debug = 0) {
     $errstr  = $error["message"];
 
     if ($errno & error_reporting()) {
-
-      $backtrace = debug_backtrace();
 
       $log = new Logger(ROOT_DIR.'log/log.txt', $debug ? 0 : 1);
       $log->error("{$errstr} in {$errfile} on line {$errline}

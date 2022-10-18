@@ -11,6 +11,8 @@ $_FRAMEWORK['default_locale'] = 'de';
 $_FRAMEWORK['allow_plain_routing'] = false;
 $_FRAMEWORK['json_pass_http_status'] = false;
 
+// Since php8 undefined array keys trigger warnings, set this to true if you only want a notice of this error
+$_FRAMEWORK['ignore_undefined_array_key_warnings'] = false;
 
 // !!!!!!  Warning !!!!!!!!
 // Do not use $_SERVER to detect an environment here! It will not work for your database migrations!!!

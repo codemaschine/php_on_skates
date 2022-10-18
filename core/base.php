@@ -135,7 +135,7 @@ function sanitize($str) {
 }
 
 function h($str, $flags = ENT_COMPAT) {
-  return htmlentities($str, $flags, 'UTF-8');
+  return htmlentities($str ?? '', $flags, 'UTF-8');
 }
 
 
@@ -836,11 +836,23 @@ function is_request_of($req_set) {
 }
 
 
+function is_site($site) {
+  global $site_ident;
+  return $site_ident == $site;
+}
 
-function sitename($short = 0) {
-  global $site_config;
+
+function sitename($short = 0, $site = NULL) {
+  global $site_config, $site_configs;
+  
+  
+  // Wenn $site nicht angegeben wurde, aber $_GET['site'] als Platform angeben ist, dann dies in den E-Mails, die verschickt werden, berücksichtigen, aber nicht beim Admin im Frontend benutzen!
+  $bt = debug_backtrace();
+  if (!$site && ($_GET['site'] ?? null) && mb_strpos($bt[0]['file'], '/mailer') !== false) // Name aufrufenden Datei / Ordners durchsuchen, ob zum Mailer gehört. 
+    $site = $_GET['site'];
+  
   if($short)
-   	return $site_config['sitename_short'];
+   	return $site ? $site_configs[$site]['sitename_short'] : $site_config['sitename_short'];
   else
-  	return $site_config['sitename'];
+  	return $site ? $site_configs[$site]['sitename'] :  $site_config['sitename'];
 }

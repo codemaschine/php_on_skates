@@ -87,11 +87,11 @@ function file_field_tag($name, $value, $html_options = array()) {
 }
 
 function text_area_tag($name, $value, $html_options = array()) {
-  if (!$html_options['cols'])
+  if (!($html_options['cols'] ?? null))
     $html_options['cols'] = 40;
-  if (!$html_options['rows'])
+  if (!($html_options['rows'] ?? null))
     $html_options['rows'] = 5;
-  if (!$html_options['id'])
+  if (!($html_options['id'] ?? null))
     $html_options['id'] = _name_to_id($name);
   return '<textarea name="'.$name.'"'._to_html_attributes($html_options).'>'.h($value).'</textarea>';
 }
@@ -255,7 +255,7 @@ class Form {
     if (($this->closed)) throw new Exception("Form is already closed!");
     if (is_array($options_for_select))
       $options_for_select = options_for_select($options_for_select, $this->model->get($name));
-    if ($html_options['include_blank']) {
+    if ($html_options['include_blank'] ?? null) {
     	$options_for_select = '<option value="">'.(is_string($html_options['include_blank']) ? $html_options['include_blank'] : '').'</option>'.$options_for_select;
     	unset($html_options['include_blank']);
     }
@@ -369,7 +369,7 @@ function form_tag($uri, $options = array(), $html_options = array()) {
 
   if ($options['remote'] ?? null) {
     $result .= ' onsubmit="';
-    if ($html_options['onsubmit']) {
+    if ($html_options['onsubmit'] ?? null) {
       $result .= 'if ((function(){'.$html_options['onsubmit'].'})() === false) return false;';
       $html_options['onsubmit'] = NULL;
     }
@@ -411,13 +411,13 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     $result.= ", success: function(data, textStatus, xhr) { ";
     if ($options['update']) {
       $result.= "$('".$options['update']."').";
-      switch ($options['updateType']) {
+      switch ($options['updateType'] ?? null) {
         case 'append': $result.= "append(data);"; break;
         case 'prepend': $result.= "prepend(data);"; break;
         default: $result.= "html(data);";
       }
     }
-    if ($options['updateJS'])
+    if ($options['updateJS'] ?? null)
       $result.= $options['updateJS'];
     $result.= " }";
   }
