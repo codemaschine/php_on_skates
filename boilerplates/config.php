@@ -11,6 +11,9 @@ $_FRAMEWORK['default_locale'] = 'de';
 $_FRAMEWORK['allow_plain_routing'] = false;
 $_FRAMEWORK['json_pass_http_status'] = false;
 
+// Skates can set the action automatically, set this to false to deactivate it
+$_FRAMEWORK['automatically_determine_action'] = true;
+
 // Since php8 undefined array keys trigger warnings, set this to true if you only want a notice of this error
 $_FRAMEWORK['ignore_undefined_array_key_warnings'] = false;
 
@@ -38,6 +41,7 @@ $site_config['sitename_short'] = 'my_sitede';
 $site_config['view_prefix'] = '';
 $site_config['locale_prefix'] = '';
 $site_config['contact_email'] = "info@my_site.de";
+$site_config['noreply_email'] = 'noreply@my_site.de';
 $site_config['base_url'] = 'https://my_site.de';
 
 

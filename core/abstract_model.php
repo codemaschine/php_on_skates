@@ -107,6 +107,12 @@ abstract class AbstractModel {
    */
   protected function configuration() {}
 
+  /**
+   * Validate the object before the hooks:
+   * before_create, before_update and before_save will be called after is_valid.
+   * Older projects might want this
+   */
+  protected static $validate_before_hooks = false;
 
   /**
    * Write your custom validations here
@@ -116,6 +122,11 @@ abstract class AbstractModel {
   protected function before_construct(&$attr) {}
   protected function after_construct() {}
 
+  /**
+   * Should the values in attr initalized with null,
+   * Older projects might do not want this
+   */
+  protected static $init_attr_with_null = true;
 
   /**
    * Use before_construct and after_construct to extent this function
@@ -123,9 +134,12 @@ abstract class AbstractModel {
   public function __construct($attr = array(), $secure_merge = true) {
     $this->before_construct($attr);
     $this->attr_defs = static::attribute_definitions();
-    $this->configuration();
 
-    $this->attr = array_fill_keys(array_keys($this->attr_defs), null);  // initialize the attributes with empty values.
+    if (static::$init_attr_with_null) {
+      $this->attr = array_fill_keys(array_keys($this->attr_defs), null);  // initialize the attributes with empty values.
+    }
+
+    $this->configuration();
 
     if (is_array($attr)) {
     	if ($this->mass_assignable && $secure_merge)
@@ -233,8 +247,14 @@ abstract class AbstractModel {
     $files_to_save = array();
     $is_new = $this->is_new();
 
-    if ($this->dirty || $is_new && $this->before_create() === false || !$is_new && $this->before_update() === false || $this->before_save() === false || !$skip_validation && !$this->is_valid())
-      return false;
+    if (
+      $this->dirty ||
+      static::$validate_before_hooks && !$skip_validation && !$this->is_valid() ||
+      $is_new && $this->before_create() === false ||
+      !$is_new && $this->before_update() === false ||
+      $this->before_save() === false ||
+      !static::$validate_before_hooks && !$skip_validation && !$this->is_valid()
+    ) return false;
 
     //$log->debug('noch mal kurz in abstract_model gecheckt: '.$this);
 

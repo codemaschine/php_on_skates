@@ -82,18 +82,21 @@ else {
 }
 
 
+require APP_DIR.'config.php';
 
 /* determine action */
-if ($_GET['action'] ?? null)
-	$_FRAMEWORK['action'] = $_GET['action'];
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['id'] ?? null))
-	$_FRAMEWORK['action'] = $_GET['action'] = 'show';
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET')
-	$_FRAMEWORK['action'] = $_GET['action'] = 'index';
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['id'] ?? null))
-	$_FRAMEWORK['action'] = $_GET['action'] = 'update';
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
-	$_FRAMEWORK['action'] = $_GET['action'] = 'create';
+if ($_FRAMEWORK['automatically_determine_action'] ?? true) {
+  if ($_GET['action'] ?? null)
+    $_FRAMEWORK['action'] = $_GET['action'];
+  elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['id'] ?? null))
+    $_FRAMEWORK['action'] = $_GET['action'] = 'show';
+  elseif ($_SERVER['REQUEST_METHOD'] === 'GET')
+    $_FRAMEWORK['action'] = $_GET['action'] = 'index';
+  elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['id'] ?? null))
+    $_FRAMEWORK['action'] = $_GET['action'] = 'update';
+  elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
+    $_FRAMEWORK['action'] = $_GET['action'] = 'create';
+}
 
 
 
@@ -116,10 +119,6 @@ if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php
 	$c_host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
 	$c_base_url = $c_protocol.$c_host.mb_substr($_SERVER['PHP_SELF'], 0, mb_strrpos($_SERVER['PHP_SELF'], '/') + 1);
 }
-
-
-
-require APP_DIR.'config.php';
 
 
 if ($_GET['l'] ?? null)
@@ -180,7 +179,7 @@ $log->debug("Error reporting level: ".error_reporting());
 function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
   global $_FRAMEWORK, $debug;
   //PHP-8 compatibility and migration. https://github.com/php/php-src/issues/8906#issuecomment-1260303765
-  if ($_FRAMEWORK['ignore_undefined_array_key_warnings'] && version_compare(PHP_VERSION, '8') >= 0) {
+  if (($_FRAMEWORK['ignore_undefined_array_key_warnings'] ?? false) && version_compare(PHP_VERSION, '8') >= 0) {
     if (str_starts_with($errstr, 'Undefined array key')) {
       trigger_error($errstr, E_USER_NOTICE);
       return true;

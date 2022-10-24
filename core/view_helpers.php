@@ -310,7 +310,7 @@ function link_tag($name, $href, $options = array(), $html_options = NULL) {
     
   $result =  '<a href="'.$href.'"';
 
-  if ($options['remote'] ?? null == true) {
+  if (($options['remote'] ?? null) == true) {
     $result .= ' onclick="';
     if ($html_options['onclick'] ?? null) {
       $result .= 'if ((function(){'.$html_options['onclick'].'})() === false) return false;';
@@ -404,7 +404,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     $result .= ' }';
     
     if (isset($options['loading']) && $options['loading'] != ($options['update'] ?? null))
-      $result.= ", complete: function(xhr) { $('#".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
+      $result.= ", complete: function(xhr) { $('".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
       
   }
   if ($options['update'] || $options['updateJS']) {
