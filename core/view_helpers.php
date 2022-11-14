@@ -74,6 +74,30 @@ function full_url_for($o, $params = array()) {
   return $c_base_url.url_for($o, $params);
 }
 
+/**
+ * @param string $platform
+ * Possible values:
+ * - email (default)
+ * - facebook
+ * - twitter
+ */
+function generate_share_link(string $platform, $o, $params = array()) {
+  $url = urlencode(full_url_for($o, $params));
+  switch ($platform) {
+    case 'facebook':
+      $url = 'https://www.facebook.com/sharer/sharer.php?u='.$url;
+      break;
+    case 'twitter':
+      $url = 'https://twitter.com/intent/tweet?text='.$url;
+      break;
+    case 'email':
+    default:
+      $url = 'mailto:?body='.$url;
+      break;
+  }
+  return $url;
+}
+
 function text_field_tag($name, $value, $html_options = array()) {
   return _input_tag('text', $name, $value, $html_options);
 }

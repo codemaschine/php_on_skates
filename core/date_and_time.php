@@ -2,10 +2,45 @@
 
 namespace SKATES;
 use DateTimeZone;
-
+use IntlDateFormatter;
 
 class DateTime extends \DateTime {
-	
+
+	public static function __set_state($array) {
+		$d = parent::__set_state($array);
+		return static::convert($d);
+	}
+
+	/**
+	 * @var ?IntlDateFormatter
+	 */
+	private static $intl;
+
+	public static function get_intl() {
+		if (!self::$intl) {
+			// https://stackoverflow.com/a/33025911/10196790
+			$current_locale = setlocale(LC_ALL, 0);
+			self::$intl = new IntlDateFormatter($current_locale);
+		}
+		return self::$intl;
+	}
+
+	/**
+	 * @param string $format Documentation of pattern: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
+	 */
+	public function format_intl(string $format): string {
+		$intl = static::get_intl();
+		$intl->setPattern($format);
+		return $intl->format($this);
+	}
+
+	/**
+	 * @param string $format Documentation of pattern: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
+	 */
+	public function format_locale(string $format): string {
+		return $this->format_intl($format);
+	}
+
 	public static function convert(\DateTime $d) {
 		$t = new DateTime();
 		$t->setTimestamp($d->getTimestamp());
@@ -105,6 +140,14 @@ class DateTime extends \DateTime {
 class Date extends DateTime {
 	public function __construct($datetime = 'now', DateTimeZone $timezone = null) {
 		parent::__construct($datetime, self::getUTCTimeZone());
+		$this->setTime(0,0,0);
+	}
+
+	public static function convert(\DateTime $d) {
+		$t = new Date();
+		$t->setTimestamp($d->getTimestamp());
+		$t->setTime(0,0,0);
+		return $t;
 	}
 
 	public function setToDefaultTimeZone() {
