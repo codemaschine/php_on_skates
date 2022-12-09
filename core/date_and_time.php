@@ -94,11 +94,17 @@ class DateTime extends \DateTime {
 		return $this->format($format);
 	}
 	
+	/**
+	 * @return static
+	 */
 	public function add_seconds(int $interval) {
 		$interval = new \DateInterval('PT'.$interval.'S');
 		return parent::add($interval);
 	}
 	
+	/**
+	 * @return static
+	 */
 	public function sub_seconds(int $interval) {
 		$interval = new \DateInterval('PT'.$interval.'S');
 		return parent::sub($interval);

@@ -5,7 +5,7 @@ function include_mail_body($filename, $data) {
   $data['base_url'] = $c_base_url;
   extract($data);
   ob_start();
-  require 'views/mailer/'.$filename;
+  require APP_DIR.'views/mailer/'.$filename;
   return ob_get_clean();
 }
 
