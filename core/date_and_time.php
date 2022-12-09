@@ -20,7 +20,7 @@ class DateTime extends \DateTime {
 		if (!self::$intl) {
 			// https://stackoverflow.com/a/33025911/10196790
 			$current_locale = setlocale(LC_ALL, 0);
-			self::$intl = new IntlDateFormatter($current_locale);
+			self::$intl = new IntlDateFormatter($current_locale, IntlDateFormatter::FULL, IntlDateFormatter::FULL);
 		}
 		return self::$intl;
 	}
