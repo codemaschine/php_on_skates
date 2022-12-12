@@ -257,9 +257,9 @@ function render($obj, $status_code = NULL) {
     }
     elseif ($render_type == 'json') {
     	$json_render_options = $_FRAMEWORK['render_options'] ? $_FRAMEWORK['render_options'] : array();
-    	if ($obj['only'])
+    	if (isset($obj['only']) && $obj['only'])
     		$json_render_options['only'] = $obj['only'];
-    	if ($obj['inlcude'])
+    	if (isset($obj['inlcude']) && $obj['inlcude'])
     		$json_render_options['include'] = $obj['include'];
     	return skates_json_encode($obj['json'], $json_render_options);
     }
