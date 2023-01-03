@@ -51,7 +51,7 @@ if ($_POST && $_FILES) {
 //			$_POST[$model_name] = array_merge($_POST[$model_name], $_FILES[$model_name]['name']);
 //		}
 //	}
-	
+
 	_skates_files2post($_FILES, $_POST);
 }
 // ----
@@ -101,7 +101,7 @@ if ($_FRAMEWORK['automatically_determine_action'] ?? true) {
 
 
 $_FRAMEWORK['view'] = $_FRAMEWORK['controller']; // Default view name is action name or controllers name
-if ($_GET['action']) {
+if ($_GET['action'] ?? null) {
   if (mb_strpos($_GET['action'], '/') !== false)
     $_FRAMEWORK['view'] = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.')).'/'.$_GET['action'].($_FRAMEWORK['format'] == 'php' ? '.php' : ".{$_FRAMEWORK['format']}.php");
   else
