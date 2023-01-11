@@ -32,7 +32,7 @@ $_FRAMEWORK = [
   'forward' => null,
   'skip_controller' => false,
 ];
-if ($_GET['frameworkController']) {
+if ($_GET['frameworkController'] ?? false) {
   $_FRAMEWORK['controller'] = $_GET['frameworkController'];
   unset($_GET['frameworkController']);
 }
