@@ -495,7 +495,17 @@ function show_flash($obj = NULL) {
     if ($type) {
       if (isset($_SESSION['flash'][$type])) {
         foreach($_SESSION['flash'][$type] as $m){
-      		echo "<div class=\"$type\">".$m."</div>\r\n";
+          $csstype = 'primary';
+          switch ($type) {
+            case 'error': $csstype = 'danger'; break;
+            case 'warning':
+            case 'secondary':
+            case 'success':
+            case 'info':
+            case 'light':
+            case 'dark': $csstype = $type;
+          }
+      		echo "<div class=\"alert alert-$csstype\">".$m."</div>\r\n";
         }
       	unset($_SESSION['flash'][$type]);
       }
@@ -503,7 +513,7 @@ function show_flash($obj = NULL) {
     else {
       foreach ($_SESSION['flash'] as $type => $messages) {
         foreach($_SESSION['flash'][$type] as $m){
-      		echo "<div class=\"$type\">$m</div>\r\n";
+      		echo "<div class=\"alert alert-primary\">$m</div>\r\n";
         }
       }
       unset($_SESSION['flash']);
@@ -844,13 +854,13 @@ function is_site($site) {
 
 function sitename($short = 0, $site = NULL) {
   global $site_config, $site_configs;
-  
-  
+
+
   // Wenn $site nicht angegeben wurde, aber $_GET['site'] als Platform angeben ist, dann dies in den E-Mails, die verschickt werden, berücksichtigen, aber nicht beim Admin im Frontend benutzen!
   $bt = debug_backtrace();
-  if (!$site && ($_GET['site'] ?? null) && mb_strpos($bt[0]['file'], '/mailer') !== false) // Name aufrufenden Datei / Ordners durchsuchen, ob zum Mailer gehört. 
+  if (!$site && ($_GET['site'] ?? null) && mb_strpos($bt[0]['file'], '/mailer') !== false) // Name aufrufenden Datei / Ordners durchsuchen, ob zum Mailer gehört.
     $site = $_GET['site'];
-  
+
   if($short)
    	return $site ? $site_configs[$site]['sitename_short'] : $site_config['sitename_short'];
   else
