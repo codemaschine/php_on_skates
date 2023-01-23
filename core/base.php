@@ -522,7 +522,7 @@ function show_flash($obj = NULL) {
     echo "
     <script>
     ".(is_xhr() && $in ? "$('#$flash_message_temp_id').appendTo($('$in'));" : '')."
-    $('$in .alertbox').effect('highlight',1000).delay(5000).animate({opacity: 0}, 3000, function(){ $('$in .alertbox').slideUp(); });
+    $('$in .alertbox').highlight().delay(5000).animate({opacity: 0}, 3000, function(){ $('$in .alertbox').slideUp(); });
     </script>";
   }
 }
