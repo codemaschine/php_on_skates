@@ -513,7 +513,17 @@ function show_flash($obj = NULL) {
     else {
       foreach ($_SESSION['flash'] as $type => $messages) {
         foreach($_SESSION['flash'][$type] as $m){
-      		echo "<div class=\"alert alert-primary\">$m</div>\r\n";
+          $csstype = 'primary';
+          switch ($type) {
+            case 'error': $csstype = 'danger'; break;
+            case 'warning':
+            case 'secondary':
+            case 'success':
+            case 'info':
+            case 'light':
+            case 'dark': $csstype = $type;
+          }
+          echo "<div class=\"alert alert-$csstype\">$m</div>\r\n";
         }
       }
       unset($_SESSION['flash']);
