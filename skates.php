@@ -46,7 +46,7 @@ try {
     do {
       $_FRAMEWORK['forward'] = false;
 
-      require APP_DIR.'commons/pre_controller.php';
+      require APP_DIR.'commons/pre_routing.php';
       if ($_FRAMEWORK['redirect'] || $_FRAMEWORK['render_type'])  // abort if redirect() or render() is called. Don't go into the controller
         break;
       if (!(($_FRAMEWORK['allow_plain_routing'] ?? false) && file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller']))) {
@@ -59,7 +59,10 @@ try {
         load_routes($router);
         $router->run();
       }
-      if ($_FRAMEWORK['redirect'])
+      if ($_FRAMEWORK['redirect'] || $_FRAMEWORK['render_type'])  // abort if redirect() or render() is called. Don't go into the controller
+        break;
+      require APP_DIR.'commons/pre_controller.php';
+      if ($_FRAMEWORK['redirect'] || $_FRAMEWORK['render_type'])  // abort if redirect() or render() is called. Don't go into the controller
         break;
       if (!$_FRAMEWORK['skip_controller']) {
         if (!file_exists(APP_DIR.'controller/'.$_FRAMEWORK['controller'])) {
