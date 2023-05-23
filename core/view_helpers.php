@@ -29,16 +29,16 @@ function url_for($o, $params = array()) {
   }
   else
     $params = $o;
-  
+
   if (!is_array($params))
     throw new Exception('Wrong arguments. Must be a string containing the url, an object of type AbstactModel or an array with parameters');
-  
+
   foreach ($params as &$p) {
   	if ($p instanceof AbstractModel) {
   		$p = $p->get_id();
   	}
   }
-  
+
   if (!isset($params['controller']))
     $params['controller'] = $_FRAMEWORK['controller'];
   if (!isset($params['action']))
@@ -47,12 +47,12 @@ function url_for($o, $params = array()) {
     $params['controller'] = strtolowerunderscore($params['controller']).'.php';
   if (!isset($params['route_name']))
     $params['route_name'] = str_replace('.php', '', $params['controller']).'#'.$params['action'];
-  
+
   $controller = $params['controller'];
   unset($params['controller']);
   $route_name = $params['route_name'];
   unset($params['route_name']);
-  
+
   //--- add site  ---
   if ($_GET['site'] ?? null)
     $params['site'] = $_GET['site'];
@@ -65,7 +65,7 @@ function url_for($o, $params = array()) {
       $controller = $router_path;
     }
   }
-  
+
   return $controller.($params ? '?'.http_build_query($params) : '');
 }
 
@@ -151,7 +151,7 @@ function select_tag($name, $options_tags_str, $html_options = array()) {
 function options_for_select($ary, $selected_val = NULL) {
   if ($selected_val instanceof AbstractModel)
   	$selected_val = $selected_val->get_id();
-	
+
   $result = '';
   $is_assoc = is_assoc($ary);
   if (!$is_assoc && $ary && $ary[0] instanceof AbstractModel) {
@@ -162,7 +162,7 @@ function options_for_select($ary, $selected_val = NULL) {
   			$label = $o->attr['name'];
   		else
   			$label = $o->get_id();
-  		
+
   		$result .= option_tag($label, $o->get_id(), $selected_val);
   	}
   	return $result;
@@ -192,12 +192,12 @@ function submit_tag($value, $html_options = array()) {
 function _input_tag($type, $name, $value, $attrs = array()) {
   if (!($attrs['id'] ?? null))
     $attrs['id'] = _name_to_id($name);
-  
+
   if ($value instanceof AbstractModel)
   	$value = $value->get_id();
   elseif ($value instanceof DateTime)
     $value = $value->__toString();
-  
+
   return '<input type="'.$type.'" name="'.$name.'" value="'.h($value).'"'._to_html_attributes($attrs).' />';
 }
 
@@ -206,15 +206,15 @@ class Form {
   protected $name;
   protected $model;
   protected $closed = false;
-  
-  
+
+
   public function __construct($name, AbstractModel &$model, $uri, $options = array(), $html_options = array()) {
     if (!is_array($options))
       $options = array();
-    
+
     $this->name = $name;
     $this->model = &$model;
-    
+
     if (!($options['method'] ?? null)) {
       $options['method'] = ($html_options['method'] ?? null) ? $html_options['method'] : 'post';
       if ($html_options['method'] ?? null)
@@ -224,25 +224,25 @@ class Form {
       $html_options['id'] = _name_to_id($name);
     if (!($html_options['name'] ?? null))
       $html_options['name'] = _name_to_id($name);
-    
+
     if (!($options['method'] ?? null))
       $options['method'] = $html_options['method'];
-      
+
     // output form-tag
-    echo form_tag($uri, $options, $html_options); 
+    echo form_tag($uri, $options, $html_options);
   }
-  
-  
+
+
   public static function open($name, AbstractModel $model, $uri, $options = array(), $html_options = array()) {
     return new static($name, $model, $uri, $options, $html_options);
   }
-  
+
   public function close() {
     echo '</form>';
     $this->closed = true;
   }
-  
-  
+
+
   public function text_field($name, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return text_field_tag($this->w($name), $this->model->get($name), $html_options);
@@ -285,7 +285,7 @@ class Form {
     }
     return select_tag($this->w($name), $options_for_select, $html_options);
   }
-  
+
   public function label($for, $label = NULL, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     if (is_array($label)) {
@@ -296,12 +296,12 @@ class Form {
     	$label = __('models.attributes.'.$this->model->get_class_label().'.'.$for, null, true);
     return '<label for="'._name_to_id($this->w($for)).'"'._to_html_attributes($html_options).'>'.$label.'</label>';
   }
-  
+
   public function submit($value, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return submit_tag($value, $html_options);
   }
-  
+
   private function w($name) {
     return mb_strpos($name, '[') === false ? $this->name."[$name]" : $this->name.'['.mb_substr($name, 0, mb_strpos($name, '[')).']'.mb_substr($name, mb_strpos($name, '['));  // e.g. if $this->name is 'person' and $name is 'age', it becomes 'person[age]'. If $name is 'phone[private]', it becomes 'person[phone][private]
   }
@@ -319,32 +319,32 @@ function remote_link_tag($name, $href, $options = array(), $html_options = array
   if (!is_array($options))
     $options = array();
   $options['remote'] = true;
-  
+
   return link_tag($name, $href, $options, $html_options);
 }
 
 function link_tag($name, $href, $options = array(), $html_options = NULL) {
   if ($html_options === NULL)
     $html_options = $options;
-  
+
   $href = url_for($href);
-  
+
   if (!is_array($options))
       $options = array();
-    
+
   $result =  '<a href="'.$href.'"';
 
   if (($options['remote'] ?? null) == true) {
     $result .= ' onclick="';
     if ($html_options['onclick'] ?? null) {
-      $result .= 'if ((function(){'.$html_options['onclick'].'})() === false) return false;';
+      $result .= 'if ((function(){'.$html_options['onclick'].'}).call(this) === false) return false;';
       $html_options['onclick'] = NULL;
     }
     $result.= _jquery_ajax($href, $options).'"';
   }
-  
+
   $result .= _to_html_attributes($html_options).'>'.$name.'</a>';
-  
+
   return $result;
 }
 
@@ -385,10 +385,10 @@ function remote_form_tag($uri, $options = array(), $html_options = array()) {
 
 function form_tag($uri, $options = array(), $html_options = array()) {
   $uri = url_for($uri);
-  
+
   if (!is_array($options))
     $options = array();
-    
+
   $result =  '<form method="post" action="'.$uri.'"';
 
   if ($options['remote'] ?? null) {
@@ -399,24 +399,24 @@ function form_tag($uri, $options = array(), $html_options = array()) {
     }
     $result .= _jquery_ajax($uri, $options, true).'"';
   }
-  
+
   if ($options['multipart'] ?? null) {
   	$html_options['enctype'] = 'multipart/form-data';
   }
-  
+
   $result .= _to_html_attributes($html_options).'>';
   return $result;
 }
 
 function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   $result = '$.ajax({ url: \''.$uri.'\'';
-  
+
   if (!($options['dataType'] ?? null))
     $options['dataType'] = 'html';
-    
+
   if (!($options['method'] ?? null))
     $options['method'] = $sendAsFormPost ? 'POST' : 'GET';
-  
+
   if ($options['loadingText'] ?? $options['loading'] ?? $options['loadingJS'] ?? null) {
     $result.= ", beforeSend: function(xhr) { ";
     if ($options['loadingText'] ?? null)
@@ -426,10 +426,10 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     if ($options['loadingJS'] ?? null)
       $result .= $options['loadingJS'];
     $result .= ' }';
-    
+
     if (isset($options['loading']) && $options['loading'] != ($options['update'] ?? null))
       $result.= ", complete: function(xhr) { $('".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
-      
+
   }
   if ($options['update'] || $options['updateJS']) {
     $result.= ", success: function(data, textStatus, xhr) { ";
@@ -461,12 +461,12 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
     $result.= " }";
   }
   $result.= ", type: '".$options['method']."'";
-  
+
   if ($sendAsFormPost)
     $result.= ", data: $(".(is_string($sendAsFormPost) ? "'$sendAsFormPost'" : 'this').").serializeArray()";
   elseif ($options['data'] ?? null)
     $result.= ", data: ".$options['data'];
-  
+
   $result .= ", dataType: '".$options['dataType']."' }); return false;";
   return $result;
 }
@@ -480,62 +480,62 @@ function pagination($default_per_page, $total, $options = array()) { // options:
   $arguments = $_GET ? $_GET : array();
   if ($options['arguments'])
     $arguments = array_merge($arguments, $options['arguments']);
-  
+
   $per_page = $arguments['per_page'] ? $arguments['per_page'] : $default_per_page;
   if ($arguments['page'])
     $page = $arguments['page'];
   else
     $page = $_GET['page'] ? $_GET['page'] : 1;
-  
-  
+
+
   $total_pages = ceil($total / $per_page);
-  
+
   if ($total_pages == 1)
     return;
-  
-  
+
+
   if ($arguments['per_page'] == $default_per_page)
     unset($arguments['per_page']);
   unset($arguments['page']);
-  
-  
+
+
   $res = '';
-  
+
   // previous
   if ($page > 1) {
     if ($page > 2) {
       $arguments['page'] = $page - 1;
       $res .= '<a href="'.$controller.($arguments ? '?'.http_build_query($arguments) : '').'" class="pagelink">&lt;&lt;</a> ';
     }
-    
+
     if ($arguments['page'])
       unset($arguments['page']);
     $res .= '<a href="'.$controller.($arguments ? '?'.http_build_query($arguments) : '').'" class="pagelink">1</a> ';
-    
+
     if ($page > 2)
       $res .= ' &hellip; ';
-    
-    
+
+
   }
-  
+
   if (!$options['hide_current']) {
     $res .= ' <span class="pagelink currentpage">'.$page.'</span> ';
   }
-  
-  
+
+
   // next
   if ($page < $total_pages) {
     if ($total_pages - $page >= 2)
       $res .= ' &hellip; ';
-    
+
     $arguments['page'] = $total_pages;
     $res .= '<a href="'.$controller.($arguments ? '?'.http_build_query($arguments) : '').'" class="pagelink">'.$total_pages.'</a> ';
-    
+
     $arguments['page'] = $page + 1;
     $res .= '<a href="'.$controller.($arguments ? '?'.http_build_query($arguments) : '').'" class="pagelink">&gt;&gt;</a> ';
   }
-  
-  
+
+
   return $res;
 }
 
@@ -555,12 +555,12 @@ function _name_to_id($name) {
 
 function cycle(array $values, $id = 'default') {
   static $cycles = array();
-  
+
   if (empty($values))
     throw new ErrorException('No values to cylce!!!');
   if (empty($id))
     $id = '__default';
-  
+
   if ($cycles[$id] === NULL || $cycles[$id] >= sizeof($values)-1) { // not initialized or last value -> take first
     $cycles[$id] = 0;
     return $values[0];
@@ -593,12 +593,12 @@ function kw_year_to_time($v, $year = NULL) {
   }
   else
     $kw = $v;
-  
+
   //global $log;
   //$log->debug('---ooooo-- kw: '.$kw);
-    
+
   $firstday_of_year = strtotime("first thursday of January ".$year); // Der erste Donnerstag im Jahr fällt immer auf die erste Kalenderwoche.
-  
-  return $kw <= 1 ? $firstday_of_year : strtotime('+'.($kw - 1).' weeks', $firstday_of_year); 
+
+  return $kw <= 1 ? $firstday_of_year : strtotime('+'.($kw - 1).' weeks', $firstday_of_year);
 }
 
