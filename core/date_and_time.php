@@ -6,7 +6,7 @@ use IntlDateFormatter;
 
 class DateTime extends \DateTime {
 
-	public static function __set_state($array) {
+	public static function __set_state(array $array): DateTime {
 		$d = parent::__set_state($array);
 		return static::convert($d);
 	}

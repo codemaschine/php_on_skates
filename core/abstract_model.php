@@ -735,7 +735,7 @@ abstract class AbstractModel implements JsonSerializable {
     $res = self::find_by_sql($query, $options['take'], $exception_if_not_found);    // now get the record(s)
 
 
-    if ($options['include'] ?? null && $res) { // process include findings only if we have a collection.
+    if (!empty($options['include']) && $res) { // process include findings only if we have a collection.
       $records = is_array($res) ? $res : array($res);
       $rec_hash = array();
       foreach ($records as $rec)
@@ -837,7 +837,7 @@ abstract class AbstractModel implements JsonSerializable {
       array_push($elements, self::build_conditions($fields, $options['from']));
 
 
-    if ($options['conditions'] ?? null) {
+    if (!empty($options['conditions'])) {
       if (is_string($options['conditions'])) {
         $elem = $options['conditions'];
       }
@@ -846,7 +846,7 @@ abstract class AbstractModel implements JsonSerializable {
       elseif (is_assoc($options['conditions'])) {
         $elem = self::build_conditions($options['conditions'], $options['from']);
       }
-      else {
+      else {// ['field1 = ? AND field2 IN (?)', $field1, $field2]
 
 
         $cond_stmt = array_shift($options['conditions']);
@@ -862,7 +862,6 @@ abstract class AbstractModel implements JsonSerializable {
             }, $options['conditions']));
           }
           else {
-            $i = 0;
             foreach($options['conditions'] as $value) {
 
               $value =  self::sanitize_value($value);
@@ -972,7 +971,7 @@ abstract class AbstractModel implements JsonSerializable {
   }
 
   /**
-   * @return static
+   * @return static|null
    */
   public static function find_first_by($fields, $options = array(), $exception_if_not_found = false) {
     $options['take'] = self::FIRST;
@@ -980,7 +979,7 @@ abstract class AbstractModel implements JsonSerializable {
   }
 
   /**
-   * @return static[]
+   * @return static[]|null
    */
   public static function find_all_by($fields, $options = array(), $exception_if_not_found = false) {
     $options['take'] = self::ALL;
@@ -1024,7 +1023,7 @@ abstract class AbstractModel implements JsonSerializable {
     if ($value instanceof AbstractModel)
       $value = $value->get_id();
     elseif (is_array($value)) {
-      $value = array_map(array('AbstractModel','sanitize_value'), $value);  // WARNING: recursive call, but finally nested arrays will be flatten!!!
+      $value = array_map([AbstractModel::class, 'sanitize_value'], $value); // WARNING: recursive call, but finally nested arrays will be flatten
       $value = implode(',', $value);
     }
     elseif ($value === NULL)
@@ -1297,6 +1296,13 @@ abstract class AbstractModel implements JsonSerializable {
   // caching structure
 
   private static $cache = array();
+
+  /**
+   * Clear model cache: Only useful in memory intensive tasks
+   */
+  public static function clear_cache() {
+    self::$cache = [];
+  }
 
   protected static function get_from_cache($ids, $limit = 1) {
     global $log, $fwlog;
