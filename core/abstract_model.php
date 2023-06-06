@@ -270,6 +270,7 @@ abstract class AbstractModel implements JsonSerializable {
       $this->attr['updated_at'] = $this->attr_defs['updated_at'] === 'datetime' ? new DateTime() : time();
 
     $assignments = array();
+    $updated_at_assignment = null;
 
     foreach ($this->attr as $key => $value) {
       if (!array_key_exists($key, $this->attr_defs)) // || $update_fields && !in_array($key, $update_fields))   // this is a very bad idea to save only the the fields defined by $update_fields because it will discard changes of the before-filters!
@@ -328,6 +329,11 @@ abstract class AbstractModel implements JsonSerializable {
       	elseif (!is_numeric($value))
       	  $value = 'NULL'; // Default: drop other values
 
+        if (!$this->is_new() && $key == 'updated_at') {
+          $updated_at_assignment = "`$key` = $value"; // Do not put `updated_at` direcly in $assignments, it causes updates when no fields are dirty
+          continue;
+        }
+
         $assignments[] = "`$key` = $value";
 
         //$log->debug('attribut zum neu: '.var_inspect($this->attr_loaded[$key]).' !== '.var_inspect($value));
@@ -338,7 +344,9 @@ abstract class AbstractModel implements JsonSerializable {
 
     if (!empty($assignments)) {
 
-      //$log->debug("---- call update here: \r\n".export_backtrace());
+      if (!empty($updated_at_assignment)) {
+        $assignments[] = $updated_at_assignment;
+      }
 
       $query = ($this->is_new() ? 'INSERT INTO' : 'UPDATE').' `'.static::$table_name.'` SET '.implode(", ", $assignments);
       if (!$this->is_new())
