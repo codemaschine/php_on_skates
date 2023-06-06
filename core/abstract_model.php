@@ -1083,9 +1083,9 @@ abstract class AbstractModel implements JsonSerializable {
 
 
   public function secure_merge($attrs) {
-    if ($attrs['id']) {
+    if (!empty($attrs['id'])) {
       if ($this->id)
-        unset ($attrs['id']);
+        unset($attrs['id']);
       else {
         $this->id = $attrs['id'];  // when assigning id manually, the object is dirty and can't be saved anymore for security reasons. You should check permissions before mark it as clean!!!
         $this->dirty = true;
@@ -1097,7 +1097,7 @@ abstract class AbstractModel implements JsonSerializable {
 
       // assign nested objects
       foreach ($this->relations as $key => $v) {
-        if ($attrs[$key])
+        if (!empty($attrs[$key]))
           $this->relations[$key]->set($attrs[$key]);
         unset($attrs[$key]);
       }
