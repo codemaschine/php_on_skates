@@ -245,7 +245,7 @@ function render($obj, $status_code = NULL) {
 
 
 
-  if (($_FRAMEWORK['is_rendering'] ?? null) || ($_FRAMEWORK['is_layouting'] ?? null)) {   // do rendering ...
+  if (!empty($_FRAMEWORK['is_rendering']) || !empty($_FRAMEWORK['is_layouting'])) {   // do rendering ...
     extract($GLOBALS, EXTR_REFS);
     if ($render_type == 'text') {
       if ($obj['return_output'])
@@ -254,14 +254,10 @@ function render($obj, $status_code = NULL) {
         echo $obj['text'];
 
       return;
-    }
-    elseif ($render_type == 'json') {
-    	$json_render_options = $_FRAMEWORK['render_options'] ? $_FRAMEWORK['render_options'] : array();
-    	if (isset($obj['only']) && $obj['only'])
-    		$json_render_options['only'] = $obj['only'];
-    	if (isset($obj['inlcude']) && $obj['inlcude'])
-    		$json_render_options['include'] = $obj['include'];
-    	return skates_json_encode($obj['json'], $json_render_options);
+    } elseif ($render_type == 'json') {
+      if (!empty($obj['only'])) $_FRAMEWORK['render_options']['only'] = $obj['only'];
+      if (!empty($obj['inlcude'])) $_FRAMEWORK['render_options']['inlcude'] = $obj['inlcude'];
+    	return json_encode($obj['json']);
     }
 
 
@@ -764,27 +760,6 @@ function cron_mutex_unlock($mutex_name) {
 function is_json() {
 	global $_FRAMEWORK;
 	return $_FRAMEWORK['format'] == 'json';
-}
-
-function skates_json_encode($o, array $options = array()) {
-	if ($o instanceof AbstractModel) {
-		return $o->toJson($options);
-	}
-	elseif (is_array($o)) {
-		if (is_assoc($o)) {
-			$json_o = array();
-			foreach ($o as $key => $value)
-				array_push($json_o, "\"$key\":".skates_json_encode($value, $options));
-			return "{".join(',', $json_o)."}";
-		}
-		else {
-			$json_o = array();
-			foreach ($o as $key => $value)
-				array_push($json_o, skates_json_encode($value, $options));
-			return "[".join(',', $json_o)."]";
-		}
-	}
-	else return json_encode($o);
 }
 
 

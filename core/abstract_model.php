@@ -14,7 +14,7 @@ require_once 'base.php';
  * @author Jannes Dinse <jannes.dinse@codemaschine.de>
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-abstract class AbstractModel {
+abstract class AbstractModel implements JsonSerializable {
 
   // -- attributes
 
@@ -1176,10 +1176,7 @@ abstract class AbstractModel {
 
 
   public function toJson(array $options = array()) {
-  	global $log;
-  	//$log->debug('-----testttttttttttttt----');
-  	//$log->debug(var_export($this->toArray($options), true));
-  	return skates_json_encode($this->toArray($options));
+    return json_encode($this->toArray($options));
   }
 
 
@@ -1249,6 +1246,7 @@ abstract class AbstractModel {
   			$options['only'] = array($options['only']);
 
   		$attr = array_intersect_key($attr, array_flip($options['only']));
+      $associations = array_intersect_key($associations, array_flip($options['only']));
   	}
   	else {
   		if (is_string($options['except']))
@@ -1259,10 +1257,20 @@ abstract class AbstractModel {
       $options['except'] = array_merge(static::$default_to_array_except_option, $options['except']);
 
   		$attr = array_diff_key($attr, array_flip($options['except']));
+      $associations = array_diff_key($associations, array_flip($options['except']));
   	}
 
 
   	return array_merge($associations, $attr);  // ACHTUNG: Hier überschreiben entgegen dem normalen Verhalten die $attr die $associations, damit man mit export_processor die Associations überschreiben kann.
+  }
+
+  public function jsonSerialize() {
+    global $_FRAMEWORK;
+    $options = [];
+    if (!empty($_FRAMEWORK['is_rendering']) || !empty($_FRAMEWORK['is_layouting'])) { // only apply when rendering
+      $options = $_FRAMEWORK['render_options'] ?? [];
+    }
+    return $this->toArray($options);
   }
 
 
