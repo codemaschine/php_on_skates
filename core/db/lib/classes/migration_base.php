@@ -254,8 +254,8 @@ class MpmMigrationBase
 	      $sql = $options['name'];
 	  }
 
-	  $sql .= $options['null'] ?? null ? ' NULL' : ' NOT NULL';
-	  if ($options['default'] ?? null !== null) {
+	  $sql .= !empty($options['null']) ? ' NULL' : ' NOT NULL';
+	  if (($options['default'] ?? null) !== null) {
 	    $sql .= ' DEFAULT ';
 	    if ($type == 'string' || $type == 'text' || $type == 'set')
 	      $sql .= "'".addslashes($options['default'])."'";
