@@ -44,7 +44,7 @@ function db_init($env_name = null) {
       throw new Exception('Keine Datenbank-Verbindung m&ouml;glich: ' . mysqli_connect_error());
     }
 
-    mysqli_set_charset($db_link, 'utf8');
+    mysqli_set_charset($db_link, 'utf8mb4');
   }
 
   if (!mysqli_select_db($db_link, $new_db_config->name)) {

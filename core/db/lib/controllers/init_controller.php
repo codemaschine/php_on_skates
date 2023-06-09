@@ -310,7 +310,7 @@ class MpmInitController extends MpmController
 				echo "not found.\n";
 				echo "Creating migrations table... ";
 				$sql1 = "CREATE TABLE IF NOT EXISTS `{$migrations_table}` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `timestamp` DATETIME NOT NULL, `active` TINYINT(1) NOT NULL DEFAULT 0, `is_current` TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY ( `id` ) ) ENGINE=InnoDB";
-				$sql2 = "CREATE UNIQUE INDEX `TIMESTAMP_INDEX` ON `{$migrations_table}` ( `timestamp` )";
+				$sql2 = "ALTER TABLE `{$migrations_table}` ADD UNIQUE INDEX `TIMESTAMP_INDEX` ( `timestamp` )";
 
 				if (MpmDbHelper::getMethod() == MPM_METHOD_PDO)
 				{
