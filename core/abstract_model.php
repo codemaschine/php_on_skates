@@ -64,7 +64,11 @@ abstract class AbstractModel implements JsonSerializable {
 
   protected $validators = array();
   protected $errors = array();
-  protected $relations = array();
+
+  /**
+   * @var RelationBelongsTo[]|RelationHasMany[]|RelationHasOne[]
+   */
+  protected $relations = [];
 
 
   // filters;
@@ -1206,69 +1210,73 @@ abstract class AbstractModel implements JsonSerializable {
    * @param array $options Options: 'include' => (string|array) associated models to include, 'only' => (string|array) only include these attributes, 'except' => (string|array) exclude these attributes, 'include_private_fields' => (bool) include the private fields that should only be seen by the owner of the record and be hidden to the public
    * @return array
    */
-  public function toArray(array $options = array()) {
-  	$associations = array();
+  public function toArray(array $options = []) {
+    $associations = [];
 
-  	if ($options['include'] && (is_string($options['include']) || is_array($options['include']))) {
-  		if (is_string($options['include']))
-  			$options['include'] = array($options['include'] => array());
-
-  		foreach ($options['include'] as $i => $sub) {
-  			if ($this->relations[$i]) {
-  			    $sub_options = array('include' => $sub);
-
-  			    if (is_array($options['only']) && $options['only'][$i])
-  			      $sub_options['only'] = $options['only'][$i];
-
-  			    if (is_array($options['except']) && $options['except'][$i])
-  			      $sub_options['except'] = $options['except'][$i];
-
-  				$associations[$i] = $this->relations[$i]->toArray($sub_options);
-  			}
-  		}
-  	}
-  	else {  // Falls kein include-Parameter angegeben, werden einfach die assozierten Objekte mitgeliefert, die bereits geladen wurden. Dies sollte sich in der Regel damit decken, was durch $model->find_by() im include-Parameter angegeben wurde.
-  		foreach ($this->relations as $i => $sub) {
-  			if ($sub->is_cached()) {
-  				$associations[$i] = $this->relations[$i]->toArray();
-  			}
-  		}
-  	}
-
-  	$attr = array_merge(array('id' => $this->id), $this->attr);
-
-  	// Wenn einem User der Datensatz gehört, dann automatisch private_fields inkludieren, wenn diese Option nicht anders gesetzt ist.
-    global $current_user;
-  	if ($options['include_private_fields'] === NULL && $this->attr['user_id'] && is_logged_in() && $this->attr['user_id'] == ($current_user instanceof AbstractModel ? $current_user->get_id() : null))
-  	  $options['include_private_fields'] = true;
-
-
-  	if (!$options['only'] && $this->public_fields)
-  		$attr = array_intersect_key($attr, array_flip($options['include_private_fields'] ? array_merge($this->public_fields, $this->private_fields) : $this->public_fields));
-
-  	$this->export_preprocessor($attr);
-
-  	if ($options['only']) {
-  		if (is_string($options['only']))
-  			$options['only'] = array($options['only']);
-
-  		$attr = array_intersect_key($attr, array_flip($options['only']));
-      $associations = array_intersect_key($associations, array_flip($options['only']));
-  	}
-  	else {
-  		if (is_string($options['except']))
-  			$options['except'] = array($options['except']);
-      elseif (!$options['except'])
-        $options['except'] = array();
+    // Normalize options
+    if (!empty($options['only'])) {
+      if (is_string($options['only'])) $options['only'] = [$options['only']];
+    } else {
+      if (empty($options['except'])) $options['except'] = [];
+      if (is_string($options['except'])) $options['except'] = [$options['except']];
 
       $options['except'] = array_merge(static::$default_to_array_except_option, $options['except']);
+    }
 
-  		$attr = array_diff_key($attr, array_flip($options['except']));
+    if (!empty($options['include']) && (is_string($options['include']) || is_array($options['include']))) {
+      // Normalize include
+      if (is_string($options['include'])) $options['include'] = [$options['include'] => []];
+
+      // Include relations
+      foreach ($options['include'] as $i => $sub) {
+        if (!empty($this->relations[$i])) {
+          $sub_options = ['include' => $sub];
+          if (!empty($options['only'][$i])) $sub_options['only'] = $options['only'][$i];
+          if (!empty($options['except'][$i])) $sub_options['except'] = $options['except'][$i];
+
+          $associations[$i] = $this->relations[$i]->toArray($sub_options);
+        }
+      }
+    } else {
+      // If no include parameter is specified, simply the associated objects that have already been loaded will be supplied. This should usually match what was specified by $model->find_by() in the include parameter.
+      foreach ($this->relations as $i => $sub) {
+        if ($sub->is_cached() && (
+          (!empty($options['only']) && in_array($i, $options['only']) || ($options['except'] && !in_array($i, $options['except'])))
+        )) {
+          $associations[$i] = $this->relations[$i]->toArray();
+        }
+      }
+    }
+
+    // Include id in $attr
+    $attr = array_merge(['id' => $this->id], $this->attr);
+
+    // If a user owns the record, then automatically include private_fields if this option is not set otherwise.
+    if (!isset($options['include_private_fields']) && !empty($this->attr['user_id']) && is_logged_in()) {
+      global $current_user;
+      if ($current_user instanceof AbstractModel && $this->attr['user_id'] == $current_user->get_id()) {
+        $options['include_private_fields'] = true;
+      }
+    }
+
+    // Include private fields or remove them
+    if (empty($options['only']) && $this->public_fields)
+      $attr = array_intersect_key($attr, array_flip(!empty($options['include_private_fields']) ? array_merge($this->public_fields, $this->private_fields) : $this->public_fields));
+
+    // export_preprocessor hook
+    $this->export_preprocessor($attr);
+
+    // Remove fields according to the options only and except
+    if (!empty($options['only'])) {
+      $attr = array_intersect_key($attr, array_flip($options['only']));
+      $associations = array_intersect_key($associations, array_flip($options['only']));
+    } else {
+      $attr = array_diff_key($attr, array_flip($options['except']));
       $associations = array_diff_key($associations, array_flip($options['except']));
-  	}
+    }
 
-
-  	return array_merge($associations, $attr);  // ACHTUNG: Hier überschreiben entgegen dem normalen Verhalten die $attr die $associations, damit man mit export_processor die Associations überschreiben kann.
+    // ATTENTION: Here, contrary to normal behavior, the $attr overwrites the $associations so that you can use export_preprocessor to overwrite the associations.
+    return array_merge($associations, $attr);
   }
 
   public function jsonSerialize() {
