@@ -1,5 +1,5 @@
 <?php
- 
+
 // Set local configuration here
 
 date_default_timezone_set("Europe/Berlin");
@@ -69,6 +69,5 @@ $db_configs['development']->name = '__DEV_DB_NAME__';
 
 
 $db_config = $db_configs[$environment];
+$db_config->engine = 'MyISAM'; // Default is MyISAM, a change may result in a mixed engine database.
 $db_config->method = 1; // PDO
-
-?>

@@ -48,6 +48,7 @@ class MpmMigrationBase
 
 
 	public function create_table($table, $column_defs) {
+		global $db_config;
 
 	  if (!in_array('primary_key', $column_defs))
 	    $column_defs = array_merge(array('id' => 'primary_key'), $column_defs);
@@ -82,7 +83,9 @@ class MpmMigrationBase
 	    $columns_sql[]= $part;
 	  }
 
-	  $sql = "CREATE TABLE `$table` (".implode(', ', $columns_sql).") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+		$engine = !empty($db_config->engine) ? $db_config->engine : 'MyISAM';
+
+	  $sql = "CREATE TABLE `$table` (".implode(', ', $columns_sql).") ENGINE=$engine DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
 	  $this->exec($sql);
 	}
 
