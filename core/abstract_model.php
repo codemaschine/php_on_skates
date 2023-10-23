@@ -1279,7 +1279,7 @@ abstract class AbstractModel implements JsonSerializable {
     return array_merge($associations, $attr);
   }
 
-  public function jsonSerialize() {
+  public function jsonSerialize(): array {
     global $_FRAMEWORK;
     $options = [];
     if (!empty($_FRAMEWORK['is_rendering']) || !empty($_FRAMEWORK['is_layouting'])) { // only apply when rendering
@@ -1342,7 +1342,7 @@ abstract class AbstractModel implements JsonSerializable {
         return $recs;
       }
     }
-    elseif (self::$cache[get_called_class()][$ids]) {
+    elseif (!empty(self::$cache[get_called_class()][$ids])) {
       $fwlog->info('CACHE: '.get_called_class().' ('.$ids.')');
       //$log->debug('CACHE: FIRST of '.get_called_class().' ('.$id.') is: '.self::$cache[$id]);
       return clone self::$cache[get_called_class()][$ids];
