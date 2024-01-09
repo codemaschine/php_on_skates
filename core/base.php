@@ -342,7 +342,7 @@ function render($obj, $status_code = NULL) {
  * @param array|integer|bool $obj1 Can be array of arguments to export as variables inside the partial, a HTTP-Status-Code to set (if used in a controller) or a flag if the output should be returned instead of echoed.
  * @param array|integer|bool $obj2 like $obj1
  * @param array|integer|bool $obj3 like $obj1
- * @return Ambigous <void, unknown>
+ * @return void|string
  */
 function render_partial($view, $obj1 = NULL, $obj2 = NULL, $obj3 = NULL) {
   global $_FRAMEWORK, $log;
