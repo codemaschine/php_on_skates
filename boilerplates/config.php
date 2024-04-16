@@ -33,7 +33,15 @@ else {
 }
 
 
-
+// Replace sensitive parameter in logfiles with ***
+$_FRAMEWORK['sensitive_parameter'] = [
+  'user' => [
+    'password',
+    'password_confirm',
+  ],
+  'password',
+  'password_confirm',
+];
 
 
 $site_config = array();
@@ -50,7 +58,7 @@ $site_config['base_url'] = 'https://my_site.de';
 
 $db_configs = array(
 	'production' => (object) array(),
-	'development' => (object) array() 
+	'development' => (object) array()
 );
 
 

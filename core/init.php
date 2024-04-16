@@ -154,10 +154,32 @@ $_SERVER['PHP_SELF'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK['c
 $log->info("\r\n".(is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
 $fwlog->info("\r\n".(is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
 $fwlog->info("  Use Controller ".$_FRAMEWORK['controller']);
+
+function sanitize_sensitive_parameter($parameter, $sensitive_parameter = []) {
+  global $_FRAMEWORK;
+  if (empty($sensitive_parameter)) {
+    $sensitive_parameter = $_FRAMEWORK['sensitive_parameter'] ?? [];
+  }
+  if (!empty($sensitive_parameter) && is_array($sensitive_parameter)) {
+    foreach ($sensitive_parameter as $key => $value) {
+      if (is_array($value)) {
+        if (isset($parameter[$key])) {
+          $parameter[$key] = sanitize_sensitive_parameter($parameter[$key], $value);
+        }
+      } elseif (is_integer($key)) {
+        if (isset($parameter[$value])) {
+          $parameter[$value] = "***";
+        }
+      }
+    }
+  }
+  return $parameter;
+}
+
 if (!empty($_GET))
-  $fwlog->info("  GET Parameter: ".var_export($_GET, true));
+  $fwlog->info("  GET Parameter: ".var_export(sanitize_sensitive_parameter($_GET), true));
 if (!empty($_POST))
-  $fwlog->info("  POST Parameter: ".var_export($_POST, true));
+  $fwlog->info("  POST Parameter: ".var_export(sanitize_sensitive_parameter($_POST), true));
 
 
 
