@@ -1240,9 +1240,7 @@ abstract class AbstractModel implements JsonSerializable {
     } else {
       // If no include parameter is specified, simply the associated objects that have already been loaded will be supplied. This should usually match what was specified by $model->find_by() in the include parameter.
       foreach ($this->relations as $i => $sub) {
-        if ($sub->is_cached() && (
-          (!empty($options['only']) && in_array($i, $options['only']) || ($options['except'] && !in_array($i, $options['except'])))
-        )) {
+        if ($sub->is_cached() && (!empty($options['only']) && in_array($i, $options['only']) || empty($options['except']) || !in_array($i, $options['except']))) {
           $associations[$i] = $this->relations[$i]->toArray();
         }
       }
