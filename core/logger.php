@@ -31,6 +31,8 @@ class Logger {
   // ----
   
   private function log($level, $message = "") {
+    global $_FRAMEWORK;
+
     if ($level < $this->outputLevel)
       return;
     $msg = '';
@@ -59,6 +61,20 @@ class Logger {
     }
     else
       echo 'Logger Fehler: Keine Schreibrechte auf die Log-Datei '.$this->fileName.'!'.getcwd();
+
+    if ($this->fileName == ROOT_DIR.'log/log.txt' && !empty($_FRAMEWORK['docker'])) {
+      try {
+        if ($level >= 3) {
+          $std = fopen('php://stderr', 'w');
+        } else {
+          $std = fopen('php://stdout', 'w');
+        }
+        fwrite($std, $msg);
+        fclose($std);
+      } catch (\Throwable $th) {
+        // Ignore error
+      }
+    }
   }
 
 }

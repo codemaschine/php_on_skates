@@ -7,6 +7,9 @@ setlocale(LC_ALL, "de_DE.UTF-8");
 
 mb_internal_encoding('UTF-8'); // Available Encondings at http://php.net/manual/en/mbstring.supported-encodings.php
 
+// log.txt will be also be written in php://stdout and php://stderr
+$_FRAMEWORK['docker'] = false;
+
 $_FRAMEWORK['default_locale'] = 'de';
 // Set this variable to force a locale, it will be used for every request
 //$_FRAMEWORK['force_locale'] = "de";
