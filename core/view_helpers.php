@@ -174,6 +174,18 @@ function options_for_select($ary, $selected_val = NULL) {
   }
 }
 
+function options_from_collection_for_select($collection, $value_method, $text_method, $selected = []) {
+	if (!is_array($selected)) {
+		$selected = [$selected];
+	}
+	$selected = array_map(function($e) use ($value_method) { return $e instanceof AbstractModel ? $e->get($value_method) : $e; }, $selected);
+	$o = '';
+	foreach ($collection as $c) {
+		$o .= option_tag($c->get($text_method), $c->get($value_method), in_array($c->get($value_method), $selected));
+	}
+	return $o;
+}
+
 function option_tag($label, $value, $selected_val) {
   $selected = false;
   if (is_array($selected_val)) {
