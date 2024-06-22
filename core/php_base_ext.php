@@ -86,3 +86,12 @@ function array_record_ids(array &$records) {
   }
   return $keys;
 }
+
+/**
+ * Check if the variable $var is set and is not empty
+ * @var mixed $var the variable to check
+ * @return bool
+ */
+function present(&$var){
+  return !empty($var);
+}
