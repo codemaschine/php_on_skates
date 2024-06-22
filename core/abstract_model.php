@@ -553,7 +553,8 @@ abstract class AbstractModel implements JsonSerializable {
           break;
         case 'associated':
           if (!$this->relations[$attr_name]->is_valid()) {
-            $this->errors = array_merge($this->errors, $this->relations[$attr_name]->get_errors());
+            foreach ($this->relations[$attr_name]->get_errors() as $key => $msg)
+              $this->errors[$attr_name.'.'.$key] = $msg;
             if ($validator['message'])
               $this->errors[$attr_name] = $validator['message'];
 
@@ -617,7 +618,7 @@ abstract class AbstractModel implements JsonSerializable {
   }
 
   protected function validates_numericality_of($attr_name, $options = array()) {
-    $this->add_new_validator('numericality_of', $attr_name, $options['only_integer'] ? ' ist keine Ganzzahl.' : ' ist keine Zahl.', $options);
+    $this->add_new_validator('numericality_of', $attr_name, !empty($options['only_integer']) ? ' ist keine Ganzzahl.' : ' ist keine Zahl.', $options);
   }
 
   protected function validates_length_of($attr_name, $options = array()) {
@@ -1096,16 +1097,16 @@ abstract class AbstractModel implements JsonSerializable {
       }
     }
 
-
-    if ($this->mass_assignable) {
-
-      // assign nested objects
-      foreach ($this->relations as $key => $v) {
-        if (!empty($attrs[$key]))
+    // assign nested objects
+    foreach ($this->relations as $key => $v) {
+      if (!empty($attrs[$key])) {
+        if (empty($this->mass_assignable) || in_array($key, $this->mass_assignable))
           $this->relations[$key]->set($attrs[$key]);
         unset($attrs[$key]);
       }
+    }
 
+    if ($this->mass_assignable) {
       $attrs = array_intersect_key($attrs, array_flip($this->mass_assignable));
     }
     $this->attr = array_merge($this->attr, $attrs);

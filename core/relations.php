@@ -215,7 +215,7 @@ class RelationHasMany extends Relation {
 
     $classname = $this->model_classname;
 
-    if (!$this->cached) {
+    if (!$this->cached && !$this->modified) {
       $this->obj = $classname::find_all_by(array(strval($this->foreign_key) => $this->base_model_instance->get_id()), $this->options);
 
       $this->cached = true;
@@ -267,17 +267,41 @@ class RelationHasMany extends Relation {
 
 
 
-  public function set($obj) {
-  	if (!is_array($obj))
-      throw new Exception('Cannot set collection of '.$this->model_classname.' because $obj is not an array!');
-  	
-    foreach ($obj as &$e) {
-    	$classname = $this->model_classname;
-    	if (is_array($e))
-    		$e = new $classname($e);
+  public function set($params) {
+  	if (!is_array($params))
+      throw new Exception('Cannot set collection of '.$this->model_classname.' because $params is not an array!');
+
+    $old_obj_ids = [];
+    $old_obj_by_id = [];
+    foreach ($params as $id => &$e) {
+      if (is_int($id) || !(substr($id,0,5) == '_new_'))
+        $old_obj_ids[] = $id;
+    }
+    $classname = $this->model_classname;
+    if (!empty($old_obj_ids)) {
+      $old_obj = $classname::find_all_by(['id' => $old_obj_ids, strval($this->foreign_key) => $this->base_model_instance->get_id()]);
+      $old_obj_by_id = $this->createHashOf($old_obj);
     }
 
-    $this->obj = $obj;
+    foreach ($params as $id => &$e) {
+      if (is_array($e)) {   // check if this is really a valid parameter do create a model
+        if (isset($old_obj_by_id[$id])) { //  if it's an existing object ..
+          if (!empty($e['__destroy']))
+             unset($old_obj_by_id[$id]);             // and if it should be destroyed: mark it
+          else
+    		     $old_obj_by_id[$id]->secure_merge($e);  // and if it shoud get new attribute values: set it's attributes
+        }
+    		else
+    		  $old_obj_by_id[$id] = new $classname($e);  // ... else if it not an existing object, create a new one
+      }
+    }
+
+    if (empty($this->options['needs_explicit_destory'])) {   // if deletion is not forced by an epxlicit '__destory' parameter, remove all old objects that are not given in the new parameters
+      $old_obj_by_id = array_intersect_key($old_obj_by_id, $params);
+    }
+
+    $this->obj = $old_obj_by_id;
+    $this->cached = true;
     $this->modified = true;
   }
 

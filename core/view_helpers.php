@@ -214,46 +214,36 @@ function _input_tag($type, $name, $value, $attrs = array()) {
 }
 
 
-class Form {
+class FieldsBuilder {
   protected $name;
   protected $model;
   protected $closed = false;
+  protected $parent_builder;
+  static protected $object_index = 0;
 
-
-  public function __construct($name, AbstractModel &$model, $uri, $options = array(), $html_options = array()) {
-    if (!is_array($options))
-      $options = array();
-
-    $this->name = $name;
-    $this->model = &$model;
-
-    if (!($options['method'] ?? null)) {
-      $options['method'] = ($html_options['method'] ?? null) ? $html_options['method'] : 'post';
-      if ($html_options['method'] ?? null)
-        unset($html_options['method']);
+  public function __construct($name, AbstractModel &$model, $parent_builder = null) {
+    if (!empty($parent_builder)) { // && ) { // is relation on parent object?
+      $relations = $parent_builder->get_model()->get_relations();
+      if (in_array($name, array_keys($relations)) && !$relations[$name] instanceof RelationHasMany) {
+        $this->name = "[$name]";
+      }
+      else if ($model->get_id())
+        $this->name = "[$name][{$model->get_id()}]";
+      else {
+        $this->name = "[$name][_new_".static::$object_index."]";
+        static::$object_index++;
+      }
     }
-    if (!($html_options['id'] ?? null))
-      $html_options['id'] = _name_to_id($name);
-    if (!($html_options['name'] ?? null))
-      $html_options['name'] = _name_to_id($name);
+    else
+      $this->name = $name;
 
-    if (!($options['method'] ?? null))
-      $options['method'] = $html_options['method'];
-
-    // output form-tag
-    echo form_tag($uri, $options, $html_options);
+    $this->model = &$model;
+    $this->parent_builder = $parent_builder;
   }
 
-
-  public static function open($name, AbstractModel $model, $uri, $options = array(), $html_options = array()) {
-    return new static($name, $model, $uri, $options, $html_options);
+  public function fields_for($name, &$model = null) {
+    return new FieldsBuilder($name, $model, $this);
   }
-
-  public function close() {
-    echo '</form>';
-    $this->closed = true;
-  }
-
 
   public function text_field($name, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
@@ -309,15 +299,73 @@ class Form {
     return '<label for="'._name_to_id($this->w($for)).'"'._to_html_attributes($html_options).'>'.$label.'</label>';
   }
 
+
+  public function basename(){
+    if ($this->parent_builder()) {
+      return $this->parent_builder()->basename().$this->name;
+    }
+    else {
+      return $this->name;
+    }
+  }
+
+  public function parent_builder(){
+    return $this->parent_builder;
+  }
+
+  public function get_model(){
+    return $this->model;
+  }
+
+  private function w($name) {
+    return mb_strpos($name, '[') === false ? $this->basename()."[$name]" : $this->basename().'['.mb_substr($name, 0, mb_strpos($name, '[')).']'.mb_substr($name, mb_strpos($name, '['));  // e.g. if $this->name is 'person' and $name is 'age', it becomes 'person[age]'. If $name is 'phone[private]', it becomes 'person[phone][private]
+  }
+}
+
+
+class Form extends FieldsBuilder {
+  public function __construct($name, AbstractModel &$model, $uri, $options = array(), $html_options = array()) {
+    if (!is_array($options))
+      $options = array();
+
+    $this->name = $name;
+    $this->model = &$model;
+
+    if (!($options['method'] ?? null)) {
+      $options['method'] = ($html_options['method'] ?? null) ? $html_options['method'] : 'post';
+      if ($html_options['method'] ?? null)
+        unset($html_options['method']);
+    }
+    if (!($html_options['id'] ?? null))
+      $html_options['id'] = _name_to_id($name);
+    if (!($html_options['name'] ?? null))
+      $html_options['name'] = _name_to_id($name);
+
+    if (!($options['method'] ?? null))
+      $options['method'] = $html_options['method'];
+
+    // output form-tag
+    echo form_tag($uri, $options, $html_options);
+  }
+
+
+  public static function open($name, AbstractModel $model, $uri, $options = array(), $html_options = array()) {
+    return new static($name, $model, $uri, $options, $html_options);
+  }
+
+  public function close() {
+    echo '</form>';
+    $this->closed = true;
+  }
+
   public function submit($value, $html_options = array()) {
     if (($this->closed)) throw new Exception("Form is already closed!");
     return submit_tag($value, $html_options);
   }
-
-  private function w($name) {
-    return mb_strpos($name, '[') === false ? $this->name."[$name]" : $this->name.'['.mb_substr($name, 0, mb_strpos($name, '[')).']'.mb_substr($name, mb_strpos($name, '['));  // e.g. if $this->name is 'person' and $name is 'age', it becomes 'person[age]'. If $name is 'phone[private]', it becomes 'person[phone][private]
-  }
 }
+
+
+
 
 class RemoteForm extends Form {
   public function __construct($name, $model, $uri, $options = array(), $html_options = array()) {
