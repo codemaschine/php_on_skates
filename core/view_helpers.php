@@ -154,7 +154,7 @@ function options_for_select($ary, $selected_val = NULL) {
 
   $result = '';
   $is_assoc = is_assoc($ary);
-  if (!$is_assoc && $ary && $ary[0] instanceof AbstractModel) {
+  if (!$is_assoc && is_array($ary) && reset($ary) instanceof AbstractModel) { // reset() returns first value
   	foreach ($ary as $o) {
   		if (method_exists($o, 'option_name'))
   			$label = $o->option_name();
