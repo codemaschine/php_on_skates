@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 class Logger {
   
@@ -49,35 +49,42 @@ class Logger {
       $msg .= '] ';
     }
 
-    if (!is_string($message))
-      $message = var_inspect($message);
-    $msg .= $message."\r\n";
-    
-    if ($fp = fopen($this->fileName, "a+")) {
-      flock($fp, LOCK_EX);
-      fputs($fp, $msg);
-      flock($fp, LOCK_UN);
-      fclose($fp);
-    }
-    else
-      echo 'Logger Fehler: Keine Schreibrechte auf die Log-Datei '.$this->fileName.'!'.getcwd();
+    if (!is_string($message)) $message = var_inspect($message);
 
-    if ($this->fileName == ROOT_DIR.'log/log.txt' && !empty($_FRAMEWORK['docker'])) {
-      try {
-        if ($level >= 3) {
-          $std = fopen('php://stderr', 'w');
-        } else {
-          $std = fopen('php://stdout', 'w');
+    if (empty($_FRAMEWORK['docker'])) {
+      $msg .= $message."\r\n";
+
+      if ($fp = fopen($this->fileName, "a+")) {
+        flock($fp, LOCK_EX);
+        fputs($fp, $msg);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+      } else {
+        echo 'Logger Fehler: Keine Schreibrechte auf die Log-Datei '.$this->fileName.'!'.getcwd();
+      }
+    } else {
+      $logger_type = $this->fileName == ROOT_DIR.'log/fwlog.txt' ? 'FRAMEWORK' : 'APP';
+      $msg = "[$logger_type]".$msg.$message;
+      // Check if user is root - only root can write to /proc
+      if (exec('whoami') == 'root') {
+        $msg = preg_replace('/\\\\\'/', '\'', addslashes($msg));
+        $fd = $level >= 3 ? '2' : '1';
+        exec('echo "'.$msg.'" >> /proc/1/fd/'.$fd);
+      } else {
+        // user != root - write logs to stdout and stderr
+        try {
+          if ($level >= 3) {
+            $std = fopen('php://stderr', 'w');
+          } else {
+            $std = fopen('php://stdout', 'w');
+          }
+          fwrite($std, $msg);
+          fclose($std);
+        } catch (\Throwable $th) {
+          // Ignore error
         }
-        fwrite($std, $msg);
-        fclose($std);
-      } catch (\Throwable $th) {
-        // Ignore error
       }
     }
   }
 
 }
-
-
-?>

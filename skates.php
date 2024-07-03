@@ -197,7 +197,9 @@ try {
   }
 
 } catch (Throwable $e) {
-  $log->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}\n{$e->getTraceAsString()}");
+  if (empty($_FRAMEWORK['docker'])) {
+    $log->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}\n{$e->getTraceAsString()}");
+  }
   $fwlog->error("{$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}\n{$e->getTraceAsString()}");
   if (is_json()) {
   	$_FRAMEWORK['is_rendering'] = true;

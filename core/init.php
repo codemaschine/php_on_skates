@@ -143,7 +143,7 @@ function is_xhr() {
 
 require_once 'logger.php';
 $log = new Logger(ROOT_DIR.'log/log.txt', $debug ? 0 : 1);
-$fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1, false);
+$fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1);
 
 $_SERVER['SCRIPT_NAME'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK['controller'], $_SERVER['SCRIPT_NAME']);
 $_SERVER['SCRIPT_FILENAME'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK['controller'], $_SERVER['SCRIPT_FILENAME']);
