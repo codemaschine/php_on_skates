@@ -451,7 +451,7 @@ function form_tag($uri, $options = array(), $html_options = array()) {
 
   $result =  '<form method="post" action="'.$uri.'"';
 
-  if ($options['remote'] ?? null) {
+  if (present($options['remote'])) {
     $result .= ' onsubmit="';
     if ($html_options['onsubmit'] ?? null) {
       $result .= 'if ((function(){'.$html_options['onsubmit'].'})() === false) return false;';
@@ -471,10 +471,10 @@ function form_tag($uri, $options = array(), $html_options = array()) {
 function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
   $result = '$.ajax({ url: \''.$uri.'\'';
 
-  if (!($options['dataType'] ?? null))
+  if (empty($options['dataType']))
     $options['dataType'] = 'html';
 
-  if (!($options['method'] ?? null))
+  if (empty($options['method']))
     $options['method'] = $sendAsFormPost ? 'POST' : 'GET';
 
   if ($options['loadingText'] ?? $options['loading'] ?? $options['loadingJS'] ?? null) {
@@ -491,7 +491,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
       $result.= ", complete: function(xhr) { $('".($options['loading'] ? $options['loading'] : $options['update'])."').hide(); }";
 
   }
-  if ($options['update'] || $options['updateJS']) {
+  if (present($options['update']) || present($options['updateJS'])) {
     $result.= ", success: function(data, textStatus, xhr) { ";
     if ($options['update']) {
       $result.= "$('".$options['update']."').";
@@ -501,7 +501,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
         default: $result.= "html(data);";
       }
     }
-    if ($options['updateJS'] ?? null)
+    if (present($options['updateJS']))
       $result.= $options['updateJS'];
     $result.= " }";
   }
@@ -516,7 +516,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
                     catch(e){}
     });*/
     }
-    if ($options['errorJS'] ?? null)
+    if (present($options['errorJS']))
       $result.= $options['errorJS'];
     $result.= " }";
   }
@@ -524,7 +524,7 @@ function _jquery_ajax($uri, $options, $sendAsFormPost = false) {
 
   if ($sendAsFormPost)
     $result.= ", data: $(".(is_string($sendAsFormPost) ? "'$sendAsFormPost'" : 'this').").serializeArray()";
-  elseif ($options['data'] ?? null)
+  elseif (present($options['data']))
     $result.= ", data: ".$options['data'];
 
   $result .= ", dataType: '".$options['dataType']."' }); return false;";
