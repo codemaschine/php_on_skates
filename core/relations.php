@@ -58,7 +58,7 @@ abstract class Relation {
 
     $relation_log_message = get_class($this->base_model_instance)." --($relation_caller_name)--> {$this->relation_name}";
     if (empty($recs_to_cache)) {
-      $fwlog->info('CACHE: '.$relation_log_message);
+      $fwlog->debug('CACHE: '.$relation_log_message);
       return;
     }
     else
@@ -648,4 +648,3 @@ class RelationHasOne extends Relation {
   	return $this->get() ? $this->obj->toArray($options) : null;
   }
 }
-

@@ -1334,7 +1334,7 @@ abstract class AbstractModel implements JsonSerializable {
 
 
       if (count(array_diff($ids, self::$cache[get_called_class()])) == 0) {  // are all requested records in cache?
-        $fwlog->info('CACHE: Collection of '.get_called_class().' ('.join(', ', $ids).')');
+        $fwlog->debug('CACHE: Collection of '.get_called_class().' ('.join(', ', $ids).')');
         $recs = array();
         foreach ($ids as $id)
           $recs[$id] = clone self::$cache[get_called_class()][$id];
@@ -1342,7 +1342,7 @@ abstract class AbstractModel implements JsonSerializable {
       }
     }
     elseif (!empty(self::$cache[get_called_class()][$ids])) {
-      $fwlog->info('CACHE: '.get_called_class().' ('.$ids.')');
+      $fwlog->debug('CACHE: '.get_called_class().' ('.$ids.')');
       //$log->debug('CACHE: FIRST of '.get_called_class().' ('.$id.') is: '.self::$cache[$id]);
       return clone self::$cache[get_called_class()][$ids];
     }
@@ -1361,6 +1361,3 @@ abstract class AbstractModel implements JsonSerializable {
 
 
 }
-
-
-?>

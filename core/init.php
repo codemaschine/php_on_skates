@@ -70,18 +70,17 @@ function status_500_on_error() {
 $echoLock=1; // Verhindert ausgabe durch commons_display_message();
 $displayMessage = array();
 
-if (mb_strrpos($_FRAMEWORK['controller'], '.') === false) {
+if (mb_strrpos($_FRAMEWORK['controller'] ?? '', '.') === false) {
   $_FRAMEWORK['format'] = 'php';
   $_FRAMEWORK['controller'] .= 'php'; // TODO: Nicht '.php'
-}
-else {
+} else {
   $_FRAMEWORK['format'] = mb_strtolower(mb_substr($_FRAMEWORK['controller'], mb_strrpos($_FRAMEWORK['controller'], '.') + 1));
   $_FRAMEWORK['controller'] = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.')).'.php';
   if ($_FRAMEWORK['format'] == 'html' || $_FRAMEWORK['format'] == 'htm')
     $_FRAMEWORK['format'] = 'php';
 }
 
-
+$debug = 0;
 require APP_DIR.'config.php';
 
 /* determine action */
@@ -112,7 +111,6 @@ if ($_GET['action'] ?? null) {
 $c_protocol;
 $c_host;
 $c_base_url;
-$debug = 0;
 
 if ($_SERVER !== NULL) {     // if the config file is included by db/migrate.php then there is no $_SERVER variable
   $c_protocol = ($_SERVER['HTTPS'] ?? null) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) == 'https' ? 'https://' : 'http://';
@@ -149,9 +147,13 @@ $_SERVER['SCRIPT_NAME'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK
 $_SERVER['SCRIPT_FILENAME'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK['controller'], $_SERVER['SCRIPT_FILENAME']);
 $_SERVER['PHP_SELF'] = str_replace('framework.php', 'controller/'.$_FRAMEWORK['controller'], $_SERVER['PHP_SELF']);
 
-$log->info("\r\n".(is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
-$fwlog->info("\r\n".(is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
-$fwlog->info("  Use Controller ".$_FRAMEWORK['controller']);
+if (empty($_FRAMEWORK['docker'])) {
+  $log->info((is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
+}
+$fwlog->info((is_xhr() ? 'XmlHttpRequest' : 'HttpRequest').' '.$_SERVER['REQUEST_METHOD'].' "'.$_SERVER['REQUEST_URI'].'" at '.date("Y-m-d H:i:s O"));
+if (present($_FRAMEWORK['controller']) && $_FRAMEWORK['controller'] != 'php') {
+  $fwlog->info("Use Controller ".$_FRAMEWORK['controller']);
+}
 
 function sanitize_sensitive_parameter($parameter, $sensitive_parameter = []) {
   global $_FRAMEWORK;
@@ -174,10 +176,10 @@ function sanitize_sensitive_parameter($parameter, $sensitive_parameter = []) {
   return $parameter;
 }
 
-if (!empty($_GET))
-  $fwlog->info("  GET Parameter: ".var_export(sanitize_sensitive_parameter($_GET), true));
-if (!empty($_POST))
-  $fwlog->info("  POST Parameter: ".var_export(sanitize_sensitive_parameter($_POST), true));
+if (present($_GET))
+  $fwlog->info("GET Parameter: ".var_export(sanitize_sensitive_parameter($_GET), true));
+if (present($_POST))
+  $fwlog->info("POST Parameter: ".var_export(sanitize_sensitive_parameter($_POST), true));
 
 
 
@@ -199,10 +201,15 @@ set_exception_handler('framework_exception_wrapper');
 $log->debug("Error reporting level: ".error_reporting());
 
 
-
+$last_logged_error = [
+  'type' => null,
+  'message' => null,
+  'file' => null,
+  'line' => null
+];
 
 function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
-  global $_FRAMEWORK, $debug;
+  global $_FRAMEWORK, $debug, $last_logged_error;
   //PHP-8 compatibility and migration. https://github.com/php/php-src/issues/8906#issuecomment-1260303765
   if (($_FRAMEWORK['ignore_undefined_array_key_warnings'] ?? false) && version_compare(PHP_VERSION, '8') >= 0) {
     if (str_starts_with($errstr, 'Undefined array key')) {
@@ -215,21 +222,27 @@ function framework_error_wrapper($errno, $errstr, $errfile, $errline) {
     // }
   }
 
-  $log = new Logger(ROOT_DIR.'/log/log.txt', $debug ? 0 : 1);
-  $fwlog = new Logger(ROOT_DIR.'/log/fwlog.txt', $debug ? 0 : 1);
+  if (empty($_FRAMEWORK['docker'])) {
+    $log = new Logger(ROOT_DIR.'log/log.txt', $debug ? 0 : 1);
+    $log->error("{$errstr} in {$errfile} on line {$errline}".PHP_EOL.export_backtrace());
+  }
 
-  $log->error("{$errstr} in {$errfile} on line {$errline}
-".export_backtrace());
+  $fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1);
+  $fwlog->error("{$errstr} in {$errfile} on line {$errline}".PHP_EOL.export_backtrace());
 
-  $fwlog->error("{$errstr} in {$errfile} on line {$errline}
-".export_backtrace());
-
+  $last_logged_error = [
+    'type' => $errno,
+    'message' => $errstr,
+    'file' => $errfile,
+    'line' => $errline
+  ];
   return false; // continue with the normal error handler;
 }
 set_error_handler('framework_error_wrapper', error_reporting());
 
 
 function fatal_handler($debug = 0) {
+  global $_FRAMEWORK, $last_logged_error;
   $errfile = "unknown file";
   $errstr  = "shutdown";
   $errno   = E_CORE_ERROR;
@@ -237,7 +250,13 @@ function fatal_handler($debug = 0) {
 
   $error = error_get_last();
 
-  if( $error !== NULL) {
+  if (
+    $error !== NULL &&
+    $last_logged_error['type'] != $error['type'] &&
+    $last_logged_error['file'] != $error['file'] &&
+    $last_logged_error['line'] != $error['line'] &&
+    $last_logged_error['message'] != $error['message']
+  ) {
     $errno   = $error["type"];
     $errfile = $error["file"];
     $errline = $error["line"];
@@ -245,13 +264,14 @@ function fatal_handler($debug = 0) {
 
     if ($errno & error_reporting()) {
 
-      $log = new Logger(ROOT_DIR.'log/log.txt', $debug ? 0 : 1);
-      $log->error("{$errstr} in {$errfile} on line {$errline}
-      ".export_backtrace());
+      if (empty($_FRAMEWORK['docker'])) {
+        $log = new Logger(ROOT_DIR.'log/log.txt', $debug ? 0 : 1);
+        $log->error("{$errstr} in {$errfile} on line {$errline}".PHP_EOL.export_backtrace());
+      }
 
       $fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1);
-      $fwlog->error("{$errstr} in {$errfile} on line {$errline}
-      ".export_backtrace());
+      $fwlog->error("{$errstr} in {$errfile} on line {$errline}".PHP_EOL.export_backtrace());
+
     }
   }
 }
@@ -290,5 +310,3 @@ $additionalHeaderData = array();
 $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
 require_once APP_PATH.'application.php';
-
-?>

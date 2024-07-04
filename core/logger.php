@@ -67,9 +67,9 @@ class Logger {
       $msg = "[$logger_type]".$msg.$message;
       // Check if user is root - only root can write to /proc
       if (exec('whoami') == 'root') {
-        $msg = preg_replace('/\\\\\'/', '\'', addslashes($msg));
+        $msg = escapeshellarg($msg);
         $fd = $level >= 3 ? '2' : '1';
-        exec('echo "'.$msg.'" >> /proc/1/fd/'.$fd);
+        exec("echo $msg >> /proc/1/fd/$fd");
       } else {
         // user != root - write logs to stdout and stderr
         try {
@@ -78,7 +78,7 @@ class Logger {
           } else {
             $std = fopen('php://stdout', 'w');
           }
-          fwrite($std, $msg);
+          fwrite($std, $msg.PHP_EOL);
           fclose($std);
         } catch (\Throwable $th) {
           // Ignore error

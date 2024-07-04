@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('MAX_TODAYS_AMOUNT', 3);
 
@@ -36,8 +36,5 @@ function response_with($content = null, $status_code = 200, $message = null, $ad
 }
 
 function render_json_response($data = null, $status_code = 200, $message = null, array $options = array()) {
-	return render_json(response_with($data, $status_code, $message, $options['additional_params']), ($status_code >= 300 && $status_code < 400 ? 501 : $status_code), $options);
+	return render_json(response_with($data, $status_code, $message, $options['additional_params'] ?? []), ($status_code >= 300 && $status_code < 400 ? 501 : $status_code), $options);
 }
-
-
-?>
