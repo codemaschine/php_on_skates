@@ -103,7 +103,7 @@ class MpmMigrationBase
 	  }
 	  $options = array_merge($this->default_types[$type], $options);
 	  $sql = "ALTER TABLE `$table` ADD `$column` ".$this->getTypeSql($type, $options);
-	  if ($options['after'])
+	  if (present($options['after']))
 	    $sql .= " AFTER `{$options['after']}`";
 	  $this->exec($sql);
 	}
