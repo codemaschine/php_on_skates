@@ -280,7 +280,7 @@ foreach ($model_files as $file) {
 		require_once APP_DIR.'model/'.$file;
 }
 
-require_once 'mailer.php';
+require_once 'mail_delivery.php';
 require_once 'view_helpers.php';
 
 require_once 'class.chip_password_generator.php';

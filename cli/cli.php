@@ -80,7 +80,7 @@ switch ($argv[1]) {
         require_once APP_DIR.'model/'.$file;
 
     }
-    require_once CORE_DIR.'mailer.php';
+    require_once CORE_DIR.'mail_delivery.php';
     require_once CORE_DIR.'view_helpers.php';
     require_once CORE_DIR.'class.chip_password_generator.php';
     require_once APP_DIR.'application.php';
