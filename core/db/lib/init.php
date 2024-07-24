@@ -8,6 +8,8 @@
  * @link       http://code.google.com/p/mysql-php-migrations/
  */
 
+require_once dirname(MPM_PATH).'/php_base_ext.php';
+
 if (file_exists(MPM_PATH . '/config/db_config.php'))
 {
 	/**

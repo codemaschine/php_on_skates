@@ -553,7 +553,8 @@ abstract class AbstractModel implements JsonSerializable {
           break;
         case 'associated':
           if (!$this->relations[$attr_name]->is_valid()) {
-            $this->errors = array_merge($this->errors, $this->relations[$attr_name]->get_errors());
+            foreach ($this->relations[$attr_name]->get_errors() as $key => $msg)
+              $this->errors[$attr_name.'.'.$key] = $msg;
             if ($validator['message'])
               $this->errors[$attr_name] = $validator['message'];
 
@@ -617,7 +618,7 @@ abstract class AbstractModel implements JsonSerializable {
   }
 
   protected function validates_numericality_of($attr_name, $options = array()) {
-    $this->add_new_validator('numericality_of', $attr_name, $options['only_integer'] ? ' ist keine Ganzzahl.' : ' ist keine Zahl.', $options);
+    $this->add_new_validator('numericality_of', $attr_name, !empty($options['only_integer']) ? ' ist keine Ganzzahl.' : ' ist keine Zahl.', $options);
   }
 
   protected function validates_length_of($attr_name, $options = array()) {
@@ -1096,16 +1097,16 @@ abstract class AbstractModel implements JsonSerializable {
       }
     }
 
-
-    if ($this->mass_assignable) {
-
-      // assign nested objects
-      foreach ($this->relations as $key => $v) {
-        if (!empty($attrs[$key]))
+    // assign nested objects
+    foreach ($this->relations as $key => $v) {
+      if (!empty($attrs[$key])) {
+        if (empty($this->mass_assignable) || in_array($key, $this->mass_assignable))
           $this->relations[$key]->set($attrs[$key]);
         unset($attrs[$key]);
       }
+    }
 
+    if ($this->mass_assignable) {
       $attrs = array_intersect_key($attrs, array_flip($this->mass_assignable));
     }
     $this->attr = array_merge($this->attr, $attrs);
@@ -1333,7 +1334,7 @@ abstract class AbstractModel implements JsonSerializable {
 
 
       if (count(array_diff($ids, self::$cache[get_called_class()])) == 0) {  // are all requested records in cache?
-        $fwlog->info('CACHE: Collection of '.get_called_class().' ('.join(', ', $ids).')');
+        $fwlog->debug('CACHE: Collection of '.get_called_class().' ('.join(', ', $ids).')');
         $recs = array();
         foreach ($ids as $id)
           $recs[$id] = clone self::$cache[get_called_class()][$id];
@@ -1341,7 +1342,7 @@ abstract class AbstractModel implements JsonSerializable {
       }
     }
     elseif (!empty(self::$cache[get_called_class()][$ids])) {
-      $fwlog->info('CACHE: '.get_called_class().' ('.$ids.')');
+      $fwlog->debug('CACHE: '.get_called_class().' ('.$ids.')');
       //$log->debug('CACHE: FIRST of '.get_called_class().' ('.$id.') is: '.self::$cache[$id]);
       return clone self::$cache[get_called_class()][$ids];
     }
@@ -1360,6 +1361,3 @@ abstract class AbstractModel implements JsonSerializable {
 
 
 }
-
-
-?>

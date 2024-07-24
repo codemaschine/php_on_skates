@@ -60,9 +60,9 @@ switch ($argv[1]) {
       include_once ROOT_DIR.'vendor/autoload.php';
     }
     require_once CORE_DIR.'date_and_time.php';
+    $debug = 0;
     require APP_DIR.'config.php';
     require_once CORE_DIR.'logger.php';
-    $debug = false;
     $log = new Logger(ROOT_DIR.'log/clilog.txt', $debug ? 0 : 1);
     $fwlog = new Logger(ROOT_DIR.'log/fwlog.txt', $debug ? 0 : 1);
     require_once CORE_DIR.'locale.php';
