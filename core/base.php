@@ -273,7 +273,7 @@ function render($obj, $status_code = NULL) {
     }
 
     if (mb_strpos($view, '/') === false) // add controller path if not specified
-      $view = ($_FRAMEWORK['is_layouting'] ? 'layout' : mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
+      $view = (present($_FRAMEWORK['is_layouting']) ? 'layout' : mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
 
 
     // security check: is it allowed and possible to render this file?

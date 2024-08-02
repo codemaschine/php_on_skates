@@ -893,10 +893,11 @@ abstract class AbstractModel implements JsonSerializable {
     if (static::$soft_delete && !($options['unscoped'] ?? null)) {
       $attr_defs = static::attribute_definitions();
       $delete_col = is_string(static::$soft_delete) ? static::$soft_delete : 'deleted_at';
+      $delete_col_sql = static::$table_name.'.'.$delete_col;
         if (static::$soft_delete_type == 'datetime' && $attr_defs[$delete_col] == 'datetime')
-          array_push($elements, "$delete_col IS NULL");
+          array_push($elements, "$delete_col_sql IS NULL");
         else
-    	  array_push($elements, "($delete_col = 0 OR $delete_col IS NULL)");
+    	    array_push($elements, "($delete_col_sql = 0 OR $delete_col_sql IS NULL)");
     }
 
     if ((static::default_scope()) && !($options['unscoped'] ?? null) && !($options['escape_default_scope'] ?? null)) {
