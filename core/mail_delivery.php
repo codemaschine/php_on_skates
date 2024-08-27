@@ -91,7 +91,7 @@ function send_mail($mail_name, $to, $data = array(), $subject = "") {
     */
       // Achtung: Wenn mb_internal_encoding('UTF-8') ist, dann funktioniert das Senden von E-Mails mit mb_send_mail() mit ISO-8859-1 nicht!
       // --> Solange ISO-8859-1 E-Mails vesendet werden, nur mail() verwenden statt mb_send_mail()
-      $res = mb_send_mail($to,  $subject, $text, "Return-Path: ".$site_config['contact_email']."\nFrom: \"".$site_config['sitename']."\" <".$site_config['noreply_email'].">\nContent-Type: text/plain; charset=\"utf-8\"");
+      $res = mb_send_mail($to,  $subject, $text, "Return-Path: ".$site_config['contact_email']."\nFrom: \"".$site_config['sitename']."\" <".$site_config['noreply_email'].">\nContent-Type: text/html; charset=\"utf-8\"");
 
     }
     $after_send_mail($mail_name, $to, $data, $res);
