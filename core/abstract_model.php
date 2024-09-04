@@ -412,7 +412,7 @@ abstract class AbstractModel implements JsonSerializable {
     $this->before_destroy();
     foreach ($this->relations as &$relation) {
       $relation_options = $relation->_get_options();
-      switch ($relation_options['dependent']) {
+      switch ($relation_options['dependent'] ?? null) {
         case 'delete': $relation->delete(); break;
         case 'destroy': $relation->destroy(); break;
       }
