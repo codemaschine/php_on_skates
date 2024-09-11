@@ -42,6 +42,7 @@ class SkatesRouter extends \Bramus\Router\Router
     if (is_string($fn)) {
       $matches = [];
       if (preg_match('/(?<controller>\w+)[#\/](?<action>[\w_-]+)/', $fn, $matches) !== false) {
+        $_FRAMEWORK['route'] = $fn;
         $_FRAMEWORK['controller'] = $matches['controller'] . '.php';
         $_GET['action'] = $matches['action'];
         $_FRAMEWORK['view'] = $matches['action'];

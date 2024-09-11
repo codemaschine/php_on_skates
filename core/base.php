@@ -762,6 +762,9 @@ function is_json() {
 	return $_FRAMEWORK['format'] == 'json';
 }
 
+function is_routed() {
+  return class_exists(SkatesRouter::class, false);
+}
 
 function authenticated(array $actions = array(), $exclude = false) {
 	if (empty($actions))
