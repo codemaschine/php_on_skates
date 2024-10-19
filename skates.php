@@ -26,6 +26,7 @@ exit();
 // ---- Do init -----
 $_FRAMEWORK = [
   'controller' => null,
+  'route' => null,
   'redirect' => null,
   'redirect_to' => null,
   'render_type' => null,
