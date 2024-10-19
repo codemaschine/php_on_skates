@@ -149,6 +149,20 @@ function select_tag($name, $options_tags_str, $html_options = array()) {
 }
 
 function options_for_select($ary, $selected_val = NULL) {
+  $options = [];
+  if (is_array($selected_val)) {
+    $options = $selected_val;
+    $selected_val = $options['selected'] ?? null;
+
+    if (present($options['disabled']) && !is_array($options['disabled']))
+      $options['disabled'] = [$options['disabled']];
+
+    if (present($options['disabled']) && reset($options['disabled']) instanceof AbstractModel) {
+      $options['disabled'] = array_map(function($e) { return $e instanceof AbstractModel ? $e->get_id() : $e; }, $options['disabled']);
+    }
+  }
+
+
   if ($selected_val instanceof AbstractModel)
   	$selected_val = $selected_val->get_id();
 
@@ -163,13 +177,13 @@ function options_for_select($ary, $selected_val = NULL) {
   		else
   			$label = $o->get_id();
 
-  		$result .= option_tag($label, $o->get_id(), $selected_val);
+  		$result .= option_tag($label, $o->get_id(), $selected_val, present($options['disabled']) && in_array($o->get_id(), $options['disabled']) ? ['disabled' => 'disabled'] : []);
   	}
   	return $result;
   }
   else {
 	  foreach ($ary as $label => $value)
-	    $result .= option_tag($is_assoc ? $label : $value, $value, $selected_val);
+	    $result .= option_tag($is_assoc ? $label : $value, $value, $selected_val, present($options['disabled']) && in_array($value, $options['disabled']) ? ['disabled' => 'disabled'] : []);
 	  return $result;
   }
 }
@@ -186,14 +200,14 @@ function options_from_collection_for_select($collection, $value_method, $text_me
 	return $o;
 }
 
-function option_tag($label, $value, $selected_val) {
+function option_tag($label, $value, $selected_val, $html_options = []) {
   $selected = false;
   if (is_array($selected_val)) {
     $selected = in_array($value, $selected_val);
   } elseif ($selected_val !== null) {
     $selected = $value == $selected_val;
   }
-	return '<option value="'.h($value).'"'.($selected ? ' selected="selected"' : '').'>'.$label.'</option>';
+	return '<option value="'.h($value).'"'.($selected ? ' selected="selected"' : '')._to_html_attributes($html_options).'>'.$label.'</option>';
 }
 
 function submit_tag($value, $html_options = array()) {

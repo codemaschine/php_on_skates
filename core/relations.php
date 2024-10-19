@@ -391,7 +391,7 @@ class RelationHasMany extends Relation {
       $element->attr[$this->foreign_key] = $this->base_model_instance->get_id();
       $element->save(true);
 
-      if ($old_obj_hash[strval($element->get_id())])
+      if ($old_obj_hash[strval($element->get_id()) ?? null])
         unset($old_obj_hash[strval($element->get_id())]);
     }
 

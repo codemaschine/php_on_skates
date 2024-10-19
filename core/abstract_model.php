@@ -511,11 +511,11 @@ abstract class AbstractModel implements JsonSerializable {
           }
           break;
         case 'uniqueness_of':
-          $condition_str = ($validator['case_sensitive'] ?? null) ? "binary $attr_name = ?" : "$attr_name = ?";
+          $condition_str = present($validator['case_sensitive']) ? "binary $attr_name = ?" : "$attr_name = ?";
           if ($this->get_id())
             $condition_str .= ' AND id != '.intval($this->get_id());
 
-          if ($validator['scope'] ?? null) {
+          if (present($validator['scope'])) {
             $fields = is_array($validator['scope']) ? $validator['scope'] : array($validator['scope']);
             $field_cond = array();
             foreach ($fields as $field)
@@ -529,20 +529,20 @@ abstract class AbstractModel implements JsonSerializable {
           }
           break;
         case 'numericality_of':
-          if ($attr && (!is_numeric($attr) || $validator['only_integer'] && !is_integer($attr))) {
+          if ($attr && (!is_numeric($attr) || present($validator['only_integer']) && !is_integer($attr))) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
         case 'length_of':
-          if ($validator['is'] && mb_strlen($attr) != $validator['is'] ||
-              $validator['minimum'] && mb_strlen($attr) < $validator['minimum'] ||
-              $validator['maximum'] && mb_strlen($attr) > $validator['maximum']) {
+          if (present($validator['is']) && mb_strlen($attr) != $validator['is'] ||
+              present($validator['minimum']) && mb_strlen($attr) < $validator['minimum'] ||
+              present($validator['maximum']) && mb_strlen($attr) > $validator['maximum']) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
         case 'format_of':
-          if ($validator['with'] && !preg_match($validator['with'], $attr) ||
-              ($validator['without'] ?? null) && preg_match($validator['without'], $attr)) {
+          if (present($validator['with']) && !preg_match($validator['with'], $attr) ||
+              present($validator['without']) && preg_match($validator['without'], $attr)) {
             $this->errors[$attr_name] = $validator['message'];
           }
           break;
@@ -555,7 +555,7 @@ abstract class AbstractModel implements JsonSerializable {
           if (!$this->relations[$attr_name]->is_valid()) {
             foreach ($this->relations[$attr_name]->get_errors() as $key => $msg)
               $this->errors[$attr_name.'.'.$key] = $msg;
-            if ($validator['message'])
+            if (present($validator['message']))
               $this->errors[$attr_name] = $validator['message'];
 
           }
