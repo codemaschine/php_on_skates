@@ -24,16 +24,19 @@ exit();
 */
 
 // ---- Do init -----
+/**
+ * @var array{controller: ?string, route: ?string, redirect: bool, redirect_to: ?string, render_type: ?string, forward: bool, skip_controller: bool}
+ */
 $_FRAMEWORK = [
   'controller' => null,
   'route' => null,
-  'redirect' => null,
+  'redirect' => false,
   'redirect_to' => null,
   'render_type' => null,
-  'forward' => null,
+  'forward' => false,
   'skip_controller' => false,
 ];
-if ($_GET['frameworkController'] ?? false) {
+if (!empty($_GET['frameworkController'])) {
   $_FRAMEWORK['controller'] = $_GET['frameworkController'];
   unset($_GET['frameworkController']);
 }
