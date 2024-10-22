@@ -202,119 +202,53 @@ function forward_to($controller, $action = NULL, $layout = NULL, $status_code = 
 }
 
 
-function render($obj, $status_code = NULL) {
-  global $_FRAMEWORK, $fwlog, $log, $site_config;
-  $locals = array();
+function render($obj, $status_code = null) {
+  global $_FRAMEWORK, $log, $site_config;
+  $locals = [];
   $render_type = 'view';
 
   // parse paramter $obj, prepare variables
   if (is_array($obj)) {
-    if ($obj['action'] ?? null) {
+
+    if (present($obj['action'])) {
       $view = $obj['action'];
       if ($obj['controller'] ?? null)
         $view = $obj['controller'].'/'.$view;
-    }
-    elseif ($obj['partial'] ?? null) {
+    } elseif (present($obj['partial'])) {
       $view = mb_substr($obj['partial'], 0, 1) != '_' ? '_'.$obj['partial'] : $obj['partial'];
       $log->debug("Partial view ist $view");
 
-      if ($obj['controller'] ?? null)
+      if (present($obj['controller'])) {
         $view = $obj['controller'].'/'.$view;
+      }
       $render_type = 'partial';
-    }
-    elseif (($obj['text'] ?? null) !== NULL) {
+    } elseif (isset($obj['text'])) {
       $render_type = 'text';
-    }
-    elseif ($obj['json'] ?? null)
+    } elseif (isset($obj['json'])) {
       $render_type = 'json';
+    }
 
 
-    if ($obj['locals'] ?? null)
+    if (present($obj['locals'])) {
       $locals = $obj['locals'];
+    }
 
-    if ($obj['addJS'] ?? null)
+    if (present($obj['addJS'])) {
       $addJS = $obj['addJS'];
-  }
-  elseif ($obj === NULL) {
+    }
+  } elseif ($obj === null) {
     $render_type = 'text';
-  }
-  else {
+  } else {
     $view = $obj;
     $addJS = $_FRAMEWORK['addJS'] ?? null;
   }
 
+  if (empty($_FRAMEWORK['is_rendering']) && empty($_FRAMEWORK['is_layouting'])) {
+    // Save for rendering later
 
-
-  if (!empty($_FRAMEWORK['is_rendering']) || !empty($_FRAMEWORK['is_layouting'])) {   // do rendering ...
-    extract($GLOBALS, EXTR_REFS);
-    if ($render_type == 'text') {
-      if ($obj['return_output'])
-        return $obj['text'];
-      else
-        echo $obj['text'];
-
-      return;
-    } elseif ($render_type == 'json') {
-      if (!empty($obj['only'])) $_FRAMEWORK['render_options']['only'] = $obj['only'];
-      if (!empty($obj['inlcude'])) $_FRAMEWORK['render_options']['inlcude'] = $obj['inlcude'];
-    	return json_encode($obj['json']);
-    }
-
-
-    //  adapt according to format
-    if (mb_strpos($view, '.') === false || !file_exists('views/'.$view)) {
-      if (mb_strpos($view, '.') !== false)
-        $view = mb_substr($view, 0, mb_strrpos($view, '.'));
-
-      if ($_FRAMEWORK['format'] != 'php')
-        $view .= '.'.$_FRAMEWORK['format'];
-
-      $view .= '.php';
-    }
-
-    if (mb_strpos($view, '/') === false) // add controller path if not specified
-      $view = (present($_FRAMEWORK['is_layouting']) ? 'layout' : mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'))).'/'.$view;
-
-
-    // security check: is it allowed and possible to render this file?
-    $view = str_replace('../', '', $view);
-
-    if ($site_config['view_prefix']) {
-      if (mb_strpos($view, '/_') === false)
-        $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/') + 1, 0);
-      else
-        $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/_') + 2, 0);
-    }
-
-    //$log->debug("--------==== existiert ".$site_specific_view);
-    if ($site_config['view_prefix'] && file_exists('views/'.$site_specific_view))   // hinzufügen des Prefix bei Praybox, wenn spezielle view dafür vorhanden ist
-      $view = $site_specific_view;
-    elseif (!file_exists('views/'.$view)) {
-      throw new ErrorException("View $view does not exist!");
-    }
-
-
-    foreach ($locals as $key => $value) {
-      $$key = $value;
-    }
-
-    //$log->debug('$obj: '.var_export($obj, true));
-    if (is_array($obj) && $obj['return_output'])
-      ob_start();
-
-    require 'views/'.$view;
-    if (isset($addJS) && $addJS) {
-      echo '<script type="text/javascript">'.$addJS.'</script>';
-    }
-
-    if (is_array($obj) && $obj['return_output']) {
-      $buffer = ob_get_clean();
-      return $buffer;
-    }
-  }
-  else {                                          // ... or save this for rendering later
-    if (!$status_code)
+    if (!$status_code) {
       $status_code = is_array($obj) && isset($obj['status_code']) ? $obj['status_code'] : 200;
+    }
     if (isset($view)) {
       $log->debug("====> View die gerendert werden soll ist $view");
       $_FRAMEWORK['view'] = $view;
@@ -322,7 +256,7 @@ function render($obj, $status_code = NULL) {
     $_FRAMEWORK['status_code'] = $status_code;
     $_FRAMEWORK['render_type'] = $render_type;
     $_FRAMEWORK['render_content'] = '';
-    $_FRAMEWORK['render_options'] = array();
+    $_FRAMEWORK['render_options'] = [];
     $_FRAMEWORK['skip_controller'] = true;
     if (is_array($obj)) {
       $_FRAMEWORK['render_content'] = $obj['json'] ?? $obj['text'] ?? null;
@@ -332,7 +266,95 @@ function render($obj, $status_code = NULL) {
       $_FRAMEWORK['render_options'] = $obj;
     }
     $_FRAMEWORK['addJS'] = $addJS ?? null;
+    return;
   }
+
+
+  // Actually rendering
+
+  extract($GLOBALS, EXTR_REFS);
+  if ($render_type == 'text') {
+    if ($obj['return_output']) {
+      return $obj['text'];
+    }
+
+    echo $obj['text'];
+    return;
+  } elseif ($render_type == 'json') {
+    if (present($obj['only'])) {
+      $_FRAMEWORK['render_options']['only'] = $obj['only'];
+    }
+    if (present($obj['inlcude'])) {
+      $_FRAMEWORK['render_options']['inlcude'] = $obj['inlcude'];
+    }
+    return json_encode($obj['json']);
+  }
+
+
+  //  adapt according to format
+  if (mb_strpos($view, '.') === false || !file_exists('views/'.$view)) {
+    if (mb_strpos($view, '.') !== false) {
+      $view = mb_substr($view, 0, mb_strrpos($view, '.'));
+    }
+
+    if ($_FRAMEWORK['format'] != 'php') {
+      $view .= '.'.$_FRAMEWORK['format'];
+    }
+
+    $view .= '.php';
+  }
+
+  if (mb_strpos($view, '/') === false) {
+    // add controller path if not specified
+
+    if (present($_FRAMEWORK['is_layouting'])) {
+      $view_folder = 'layout';
+    } else {
+      $view_folder = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'));
+    }
+    $view = "$view_folder/$view";
+  }
+
+
+  // security check: is it allowed and possible to render this file?
+  $view = str_replace('../', '', $view);
+
+  if ($site_config['view_prefix']) {
+    if (mb_strpos($view, '/_') === false) {
+      $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/') + 1, 0);
+    } else {
+      $site_specific_view = substr_replace($view, $site_config['view_prefix'], mb_strpos($view, '/_') + 2, 0);
+    }
+  }
+
+  if ($site_config['view_prefix'] && file_exists('views/'.$site_specific_view)) {
+    // Add prefix if there is a special view for it
+
+    $view = $site_specific_view;
+  } elseif (!file_exists('views/'.$view)) {
+    throw new ErrorException("View $view does not exist!");
+  }
+
+
+  foreach ($locals as $key => $value) {
+    $$key = $value;
+  }
+
+  if (is_array($obj) && $obj['return_output']) {
+    ob_start();
+  }
+
+  require 'views/'.$view;
+
+  if (isset($addJS) && $addJS) {
+    echo '<script type="text/javascript">'.$addJS.'</script>';
+  }
+
+  if (is_array($obj) && $obj['return_output']) {
+    $buffer = ob_get_clean();
+    return $buffer;
+  }
+
 }
 
 
