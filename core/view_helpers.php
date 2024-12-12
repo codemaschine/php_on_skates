@@ -150,7 +150,7 @@ function select_tag($name, $options_tags_str, $html_options = array()) {
 
 function options_for_select($ary, $selected_val = NULL) {
   $options = [];
-  if (is_array($selected_val)) {
+  if (is_array($selected_val) && (present($selected_val['selected']) || present($selected_val['disabled']))) {
     $options = $selected_val;
     $selected_val = $options['selected'] ?? null;
 
