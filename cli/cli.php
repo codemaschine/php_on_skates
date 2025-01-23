@@ -3,7 +3,6 @@
 
 define('SKATES', 1);
 
-
 $abs_base_path = dirname(dirname(dirname(__FILE__)));
 define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
@@ -15,20 +14,16 @@ date_default_timezone_set('UTC');
 require_once SKATES_DIR.'core/php_base_ext.php';
 require_once SKATES_DIR.'core/inflect.php';
 
-
 php_sapi_name() === 'cli' or die('Access denied! You must run this script from Command Line!');
 
-
-if ($argv <= 1)
-	echo "ERROR: missing command
+if ($argv <= 1) {
+  echo 'ERROR: missing command
 
 Available commands:
 		generate,g    Generate a model / Controller / ...
 
-			";
-
-
-
+			';
+}
 
 switch ($argv[1]) {
   case 'routes':
@@ -41,16 +36,14 @@ switch ($argv[1]) {
     break;
   case 'generate':
   case 'g':
-  	require 'generate.php';
-	break;
-
+    require 'generate.php';
+    break;
 
   case 'migrate':
   case 'm':
-  	$argv = array_unshift(array_splice($argv, 2), 'migrate.php');
-  	require SKATES_DIR.'core/db/migrate.php';
-  	break;
-
+    $argv = array_unshift(array_splice($argv, 2), 'migrate.php');
+    require SKATES_DIR.'core/db/migrate.php';
+    break;
 
   case 'cli':
   case 'c':
@@ -76,9 +69,9 @@ switch ($argv[1]) {
     $model_files = scandir(APP_DIR.'model');
     foreach ($model_files as $file) {
       // include app/model/*.php
-      if (mb_substr($file, -4) === '.php')
+      if (mb_substr($file, -4) === '.php') {
         require_once APP_DIR.'model/'.$file;
-
+      }
     }
     require_once CORE_DIR.'mail_delivery.php';
     require_once CORE_DIR.'view_helpers.php';
@@ -86,18 +79,17 @@ switch ($argv[1]) {
     require_once APP_DIR.'application.php';
     $controller = $argv[2];
     if (!preg_match("/.*\.php/", $controller)) {
-      $controller .= ".php";
+      $controller .= '.php';
     }
     $controller_argv = $argv;
     array_shift($controller_argv);
     array_shift($controller_argv);
     array_shift($controller_argv);
-    require APP_DIR."controller/".$controller;
+    require APP_DIR.'controller/'.$controller;
     break;
   default:
-  	echo "ERROR: Unknown command {$argv[1]}";
-
+    echo "ERROR: Unknown command {$argv[1]}";
 }
 
-echo "
-";
+echo '
+';

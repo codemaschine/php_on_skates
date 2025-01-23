@@ -14,9 +14,5 @@
  * @package    mysql_php_migrations
  * @subpackage Exceptions
  */
-class MpmMalformedQueryException extends Exception
-{
-	
+class MpmMalformedQueryException extends Exception {
 }
-
-?>

@@ -14,9 +14,5 @@
  * @package    mysql_php_migrations
  * @subpackage Exceptions
  */
-class MpmClassUndefinedException extends Exception
-{
-	
+class MpmClassUndefinedException extends Exception {
 }
-
-?>

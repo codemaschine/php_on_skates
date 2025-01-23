@@ -1,17 +1,16 @@
 <?php
 
 class Logger {
-  
   private $fileName;
   private $outputLevel;
   private $printLevel;
-  
-  function __construct($fileName = "log.txt", $outputLevel = 0, $printLevel = true) {
+
+  function __construct($fileName = 'log.txt', $outputLevel = 0, $printLevel = true) {
     $this->fileName = $fileName;
     $this->outputLevel = $outputLevel;
     $this->printLevel = $printLevel;
   }
-  
+
   public function setLevel($level) {
     $this->outputLevel = $level;
   }
@@ -27,34 +26,42 @@ class Logger {
   public function error($message) {
     $this->log(3,$message);
   }
-  
+
   // ----
-  
-  private function log($level, $message = "") {
+
+  private function log($level, $message = '') {
     global $_FRAMEWORK;
 
-    if ($level < $this->outputLevel)
+    if ($level < $this->outputLevel) {
       return;
+    }
     $msg = '';
-      
+
     if ($this->printLevel) {
       $msg .= '[';
       switch ($level) {
-        case 0: $msg .= 'DEBUG'; break;
-        case 1: $msg .= 'INFO'; break;
-        case 2: $msg .= 'WARNING'; break;
-        case 3: $msg .= 'ERROR'; break;
-        default: $msg .= 'INFO'; break;
+        case 0: $msg .= 'DEBUG';
+          break;
+        case 1: $msg .= 'INFO';
+          break;
+        case 2: $msg .= 'WARNING';
+          break;
+        case 3: $msg .= 'ERROR';
+          break;
+        default: $msg .= 'INFO';
+          break;
       }
       $msg .= '] ';
     }
 
-    if (!is_string($message)) $message = var_inspect($message);
+    if (!is_string($message)) {
+      $message = var_inspect($message);
+    }
 
     if (empty($_FRAMEWORK['docker'])) {
       $msg .= $message."\r\n";
 
-      if ($fp = fopen($this->fileName, "a+")) {
+      if ($fp = fopen($this->fileName, 'a+')) {
         flock($fp, LOCK_EX);
         fputs($fp, $msg);
         flock($fp, LOCK_UN);
@@ -86,5 +93,4 @@ class Logger {
       }
     }
   }
-
 }

@@ -1,7 +1,6 @@
 <?php
 
 abstract class Relation {
-
   protected $cached = false;
   protected $modified = false;
 
@@ -14,15 +13,13 @@ abstract class Relation {
 
   protected $obj;
 
-
-
-  public function __construct($relation_name, $model_classname, &$base_model_instance, $options = array()) {
+  public function __construct($relation_name, $model_classname, &$base_model_instance, $options = []) {
     $this->relation_name = $relation_name;
     $this->model_classname = $model_classname;
     $this->base_model_instance = &$base_model_instance;
     $this->options = $options;
     $this->validate = ($options['validate'] ?? null) === NULL ? true : $options['validate'];
-    $this->foreign_key = ($options['foreign_key'] ?? null) ? $options['foreign_key'] : strtolowerunderscore(get_class($base_model_instance)).'_id';
+    $this->foreign_key = !empty($options['foreign_key']) ? $options['foreign_key'] : strtolowerunderscore(get_class($base_model_instance)).'_id';
   }
 
   public function get_model_classname() {
@@ -32,14 +29,11 @@ abstract class Relation {
     return $this->options;
   }
 
-
   /**
    * helper to set cache, used for the include-option. ONLY FOR INTERNAL USE!!! Don't use this function unless you're exactly know what you are doing
    * @param mixed $obj
    */
   public function _set_cache(&$obj) {
-    //global $log;
-    //$log->debug('put into rel cache: '.(is_array($obj) ? 'array' : $obj));
     $this->obj = $obj;
     $this->cached = true;
   }
@@ -60,12 +54,10 @@ abstract class Relation {
     if (empty($recs_to_cache)) {
       $fwlog->debug('CACHE: '.$relation_log_message);
       return;
-    }
-    else
+    } else {
       $fwlog->info('INCLUDE: '.$relation_log_message);
+    }
   }
-
-
 
   abstract public function get();
 
@@ -75,51 +67,47 @@ abstract class Relation {
 
   abstract public function is_valid();
 
-  abstract public function toArray($options = array());
-
+  abstract public function toArray($options = []);
 
   public function set($obj) {
     $this->obj = $obj;
     $this->modified = true;
   }
 
-
-
   protected function createHashOf(&$ary) {
-    $hash = array();
-    foreach ($ary as $element)
+    $hash = [];
+    foreach ($ary as $element) {
       $hash[strval($element->get_id())] = $element;
+    }
 
     return $hash;
   }
 
   public function delete() {
-    throw new Exception("Not implemented!");
+    throw new Exception('Not implemented!');
   }
 
   public function destroy() {
-    throw new Exception("Not implemented!");
+    throw new Exception('Not implemented!');
   }
 
   public function has_dependency() {
-    return $this->options['dependent'];
+    return $this->options['dependent'] ?? null;
   }
 
   public function _get_options() {
     return $this->options;
   }
-
 }
-
-
 
 // =========================================
 // -----------------------------------------
 
 class RelationBelongsTo extends Relation {
-  public function __construct($relation_name, $model_classname, &$base_model_instance, $options = array()) {
-    if (!($options['foreign_key'] ?? null))
+  public function __construct($relation_name, $model_classname, &$base_model_instance, $options = []) {
+    if (empty($options['foreign_key'])) {
       $options['foreign_key'] = strtolowerunderscore($relation_name).'_id';
+    }
     parent::__construct($relation_name, $model_classname, $base_model_instance, $options);
   }
 
@@ -129,10 +117,10 @@ class RelationBelongsTo extends Relation {
 
     if (!$this->cached) {
       if ($this->base_model_instance->attr[$this->foreign_key]) {  // currently bound to a parent object? Or is foreign_id == 0?
-        //$log->debug('get belongs_to object '.$this->base_model_instance->attr[$this->foreign_key].' of: '.$this->base_model_instance);
         $this->obj = $classname::find($this->base_model_instance->attr[$this->foreign_key], NULL, false);
+      } else {
+        $this->obj = NULL;
       }
-      else $this->obj = NULL;
       $this->cached = true;
     }
     return $this->obj;
@@ -145,9 +133,9 @@ class RelationBelongsTo extends Relation {
    * @param unknown $records
    */
   public function _get_for_all_of(&$records, $subinclude = NULL) {
-    $ids = array();
-    $subrec_hash = array();
-    $recs_to_cache = array();
+    $ids = [];
+    $subrec_hash = [];
+    $recs_to_cache = [];
     foreach ($records as $rec) {
       if (!$rec->get_relation($this->relation_name)->is_cached()) {
         $ids[] = $rec->get($this->foreign_key);
@@ -155,8 +143,9 @@ class RelationBelongsTo extends Relation {
       }
     }
     $this->_write_include_log_message();
-    if (empty($recs_to_cache))
+    if (empty($recs_to_cache)) {
       return;
+    }
 
     $ids = array_unique($ids);
     $options = $this->options;
@@ -166,8 +155,9 @@ class RelationBelongsTo extends Relation {
     $all_subrecords = $classname::find($ids, $options, false);
 
     // now dispatch to subrecord-hash-cache
-    foreach ($all_subrecords as $subrecord)
+    foreach ($all_subrecords as $subrecord) {
       $subrec_hash[$subrecord->get_id()] = $subrecord;
+    }
 
     // ... and then fill caches of all record's relations
     foreach ($records as $rec) {
@@ -175,20 +165,19 @@ class RelationBelongsTo extends Relation {
     }
   }
 
-
   public function set($element) {
     $classname = $this->model_classname;
     if ($element instanceof $classname && !$element->is_new()) {
       $this->base_model_instance->attr[$this->foreign_key] = $element->get_id();
       $this->obj = $element;
       return true;
-    }
-    elseif(!$element) {
+    } elseif (!$element) {
       $this->base_model_instance->attr[$this->foreign_key] = 0;
       $this->obj = NULL;
       return true;
+    } else {
+      return false;
     }
-    else return false;
   }
 
   public function is_valid() {
@@ -196,15 +185,13 @@ class RelationBelongsTo extends Relation {
   }
 
   public function get_errors() {
-    return $this->get() ? $this->get()->get_errors() : array();
+    return $this->get() ? $this->get()->get_errors() : [];
   }
 
-  public function toArray($options = array()){
-  	return $this->get() ? $this->obj->toArray($options) : null;
+  public function toArray($options = []) {
+    return $this->get() ? $this->obj->toArray($options) : null;
   }
 }
-
-
 
 // =========================================
 // -----------------------------------------
@@ -216,13 +203,12 @@ class RelationHasMany extends Relation {
     $classname = $this->model_classname;
 
     if (!$this->cached && !$this->modified) {
-      $this->obj = $classname::find_all_by(array(strval($this->foreign_key) => $this->base_model_instance->get_id()), $this->options);
+      $this->obj = $classname::find_all_by([strval($this->foreign_key) => $this->base_model_instance->get_id()], $this->options);
 
       $this->cached = true;
     }
     return $this->obj;
   }
-
 
   /**
    * ONLY FOR INTERNAL USE!!
@@ -233,30 +219,31 @@ class RelationHasMany extends Relation {
     global $log;
     $log->debug('__ '.$this->relation_name);
 
-    $ids = array();
-    $subrec_hash = array();
-    $recs_to_cache = array();
+    $ids = [];
+    $subrec_hash = [];
+    $recs_to_cache = [];
     foreach ($records as $rec) {
       if (!$rec->get_relation($this->relation_name)->is_cached()) {
         $ids[] = $rec->get_id();
-        $subrec_hash[$rec->get_id()] = array();
+        $subrec_hash[$rec->get_id()] = [];
         $recs_to_cache[] = $rec;
       }
     }
     $this->_write_include_log_message();
-    if (empty($recs_to_cache))
+    if (empty($recs_to_cache)) {
       return;
-
+    }
 
     $options = $this->options;
     $options['include'] = $subinclude;
 
     $classname = $this->model_classname;
-    $all_subrecords = $classname::find_all_by(array(strval($this->foreign_key) => $ids), $options, false);
+    $all_subrecords = $classname::find_all_by([strval($this->foreign_key) => $ids], $options, false);
 
     // now dispatch to subrecord-hash-cache
-    foreach ($all_subrecords as $subrecord)
+    foreach ($all_subrecords as $subrecord) {
       $subrec_hash[$subrecord->get(strval($this->foreign_key))][] = $subrecord;
+    }
 
     // ... and then fill caches of all record's relations
     foreach ($recs_to_cache as $rec) {
@@ -264,18 +251,17 @@ class RelationHasMany extends Relation {
     }
   }
 
-
-
-
   public function set($params) {
-  	if (!is_array($params))
+    if (!is_array($params)) {
       throw new Exception('Cannot set collection of '.$this->model_classname.' because $params is not an array!');
+    }
 
     $old_obj_ids = [];
     $old_obj_by_id = [];
     foreach ($params as $id => &$e) {
-      if (is_int($id) || !(substr($id,0,5) == '_new_'))
+      if (is_int($id) || !(substr($id,0,5) == '_new_')) {
         $old_obj_ids[] = $id;
+      }
     }
     $classname = $this->model_classname;
     if (!empty($old_obj_ids)) {
@@ -286,13 +272,15 @@ class RelationHasMany extends Relation {
     foreach ($params as $id => &$e) {
       if (is_array($e)) {   // check if this is really a valid parameter do create a model
         if (isset($old_obj_by_id[$id])) { //  if it's an existing object ..
-          if (!empty($e['__destroy']))
-             unset($old_obj_by_id[$id]);             // and if it should be destroyed: mark it
-          else
-    		     $old_obj_by_id[$id]->secure_merge($e);  // and if it shoud get new attribute values: set it's attributes
-        }
-    		else
-    		  $old_obj_by_id[$id] = new $classname($e);  // ... else if it not an existing object, create a new one
+          if (!empty($e['__destroy'])) {
+            unset($old_obj_by_id[$id]);
+          }             // and if it should be destroyed: mark it
+          else {
+            $old_obj_by_id[$id]->secure_merge($e);
+          }  // and if it shoud get new attribute values: set it's attributes
+        } else {
+          $old_obj_by_id[$id] = new $classname($e);
+        }  // ... else if it not an existing object, create a new one
       }
     }
 
@@ -305,29 +293,29 @@ class RelationHasMany extends Relation {
     $this->modified = true;
   }
 
-
   /**
    * Adds an Element to the collection AND SAVES IT immediately. You don't need to call save() after that!
-   * @param AbstractModel $element
+   * @param  AbstractModel $element
    * @throws Exception
    */
   public function add(&$element) {
-    if (!($element instanceof $this->model_classname))
+    if (!($element instanceof $this->model_classname)) {
       throw new Exception('Cannot add '.get_class($element).' to collection of '.$this->model_classname);
+    }
     $element->attr[$this->foreign_key] = $this->base_model_instance->get_id();
     $this->obj[]= &$element;
     return $element->save(!$this->validate);
   }
 
-
   /**
    * Removes an Element from the collection AND ALSO FROM THE DATABASE immediately. You don't need to call save() after that!
-   * @param unknown_type $element
+   * @param  unknown_type $element
    * @throws Exception
    */
   public function remove(&$element, $destroy = true) {
-    if (!($element instanceof $this->model_classname))
+    if (!($element instanceof $this->model_classname)) {
       throw new Exception('Cannot add '.get_class($element).' to collection of '.$this->model_classname);
+    }
 
     $key_to_delete = NULL;
 
@@ -338,16 +326,15 @@ class RelationHasMany extends Relation {
           break;
         }
       }
-
-    }
-    else {
+    } else {
       foreach ($this->obj as $key => $e) {
         if ($e->get_id() == $element->get_id()) {
           $key_to_delete = $key;
-          if ($destroy)
+          if ($destroy) {
             $e->destroy();
-          else
+          } else {
             $e->delete();
+          }
           break;
         }
       }
@@ -355,22 +342,23 @@ class RelationHasMany extends Relation {
     if ($key_to_delete !== NULL) {
       unset($this->obj[$key_to_delete]);
       return true;
+    } else {
+      return false;
     }
-    else return false;
   }
 
   public function removeAll($destroy = true) {
-    if ($destroy)
+    if ($destroy) {
       $this->destroy();
-    else
+    } else {
       $this->delete();
+    }
   }
 
-
-
   public function save($force = false) {
-    if (!$this->modified)
+    if (!$this->modified) {
       return true;
+    }
 
     $classname = $this->model_classname;
 
@@ -379,26 +367,27 @@ class RelationHasMany extends Relation {
       return false;
     }
 
-
-    $old_obj = $classname::find_all_by(array(strval($this->foreign_key) => $this->base_model_instance->get_id()));
+    $old_obj = $classname::find_all_by([strval($this->foreign_key) => $this->base_model_instance->get_id()]);
     $old_obj_hash = $this->createHashOf($old_obj);
 
     // save
     foreach ($this->obj as $element) {
-      if (!($element instanceof $this->model_classname))
+      if (!($element instanceof $this->model_classname)) {
         throw new Exception('Cannot save '.get_class($element).' in collection of '.$this->model_classname);
+      }
 
       $element->attr[$this->foreign_key] = $this->base_model_instance->get_id();
       $element->save(true);
 
-      if ($old_obj_hash[strval($element->get_id()) ?? null])
+      if ($old_obj_hash[strval($element->get_id()) ?? null]) {
         unset($old_obj_hash[strval($element->get_id())]);
+      }
     }
 
     // old_obj_hash now contains only elements that are not in the collection anymore and have to be delete
-    foreach ($old_obj_hash as $key => $element)
+    foreach ($old_obj_hash as $key => $element) {
       $element->delete();
-
+    }
 
     $this->modified = false;
     return true;
@@ -407,19 +396,20 @@ class RelationHasMany extends Relation {
   public function is_valid() {
     $this->get();
     foreach ($this->obj as $element) {
-      if (!($element instanceof $this->model_classname))
+      if (!($element instanceof $this->model_classname)) {
         throw new Exception('Cannot validate '.get_class($element).' in collection of '.$this->model_classname);
+      }
 
-      if (!$element->is_valid())
+      if (!$element->is_valid()) {
         return false;
+      }
     }
     return true;
   }
 
-
   public function get_errors() {
     $this->get();
-    $errors = array();
+    $errors = [];
 
     foreach ($this->obj as $element) {
       $errors = array_merge($errors, $element->get_errors());
@@ -428,25 +418,25 @@ class RelationHasMany extends Relation {
   }
 
   public function delete() {
-    $this->obj = array();
+    $this->obj = [];
     $this->cached = true;
     $classname = $this->model_classname;
 
     if ($classname::has_soft_delete()) {
       $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($classname::get_soft_delete_type() == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      db_query('UPDATE '.$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($classname::get_soft_delete_type() == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    } else {
+      db_query('DELETE FROM '.$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
-    else
-      db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
   }
 
   public function destroy() {
     $this->get();
 
     // check if we can use delete() instead if there are no sub-relations with destroy/delete-dependency
-    if (empty($this->obj))
+    if (empty($this->obj)) {
       return;
-    else {
+    } else {
       $has_subdependency = false;
       foreach ($this->obj[0]->get_relations() as $relation) {
         if ($relation->has_dependency()) {
@@ -454,38 +444,32 @@ class RelationHasMany extends Relation {
           break;
         }
       }
-      if (!$has_subdependency)
-        return $this->delete();  // no sub-relations with destroy/delete-dependency, so we can use delete(). It's much quicker!
+      if (!$has_subdependency) {
+        return $this->delete();
+      }  // no sub-relations with destroy/delete-dependency, so we can use delete(). It's much quicker!
     }
 
     foreach ($this->obj as &$o) {
       $o->destroy();
     }
-    $this->obj = array();
+    $this->obj = [];
   }
 
-  public function toArray($options = array()) {
+  public function toArray($options = []) {
+    $jsonObjects = $this->get();
+    foreach ($jsonObjects as $obj) {
+      $obj = $obj->toArray($options);
+    }
 
-  	$jsonObjects = $this->get();
-  	foreach ($jsonObjects as $obj) {
-  		$obj = $obj->toArray($options);
-  	}
-
-  	return $jsonObjects;
-  	//return '['.join(',',$jsonObjects).']';  // no, this is for JSON, not for array
+    return $jsonObjects;
+    //return '['.join(',',$jsonObjects).']';  // no, this is for JSON, not for array
   }
-
 }
-
-
-
-
 
 // =========================================
 // -----------------------------------------
 
 class RelationHasOne extends Relation {
-
   public $objId;
 
   public function get($attr = NULL, $force_reload = false) {
@@ -494,19 +478,19 @@ class RelationHasOne extends Relation {
 
     if (!$this->cached) {
       if (!$this->base_model_instance->is_new()) {
-        $this->obj = $classname::find_first_by(array(strval($this->foreign_key) => $this->base_model_instance->get_id()));
-        if ($this->obj)
+        $this->obj = $classname::find_first_by([strval($this->foreign_key) => $this->base_model_instance->get_id()]);
+        if ($this->obj) {
           $this->objId = $this->obj->get_id();
+        }
       }
       $this->cached = true;
     }
-    if (!is_string($attr) || $this->obj == NULL )
+    if (!is_string($attr) || $this->obj == NULL ) {
       return $this->obj;
-    else
+    } else {
       return $this->obj->get($attr);
-
+    }
   }
-
 
   /**
    * ONLY FOR INTERNAL USE!!
@@ -514,9 +498,9 @@ class RelationHasOne extends Relation {
    * @param unknown $records
    */
   public function _get_for_all_of(&$records, $subinclude = NULL) {
-    $ids = array();
-    $subrec_hash = array();
-    $recs_to_cache = array();
+    $ids = [];
+    $subrec_hash = [];
+    $recs_to_cache = [];
     foreach ($records as $rec) {
       if (!$rec->get_relation($this->relation_name)->is_cached()) {
         $ids[] = $rec->get_id();
@@ -524,19 +508,20 @@ class RelationHasOne extends Relation {
       }
     }
     $this->_write_include_log_message();
-    if (empty($recs_to_cache))
+    if (empty($recs_to_cache)) {
       return;
-
+    }
 
     $options = $this->options;
     $options['include'] = $subinclude;
 
     $classname = $this->model_classname;
-    $all_subrecords = $classname::find_all_by(array(strval($this->foreign_key) => $ids), $options);
+    $all_subrecords = $classname::find_all_by([strval($this->foreign_key) => $ids], $options);
 
     // now dispatch to subrecord-hash-cache
-    foreach ($all_subrecords as $subrecord)
-      $subrec_hash[$subrecord->get(strval($this->foreign_key))] = $subrecord;  // only one record for key. record with same foreign key overwrites the previous one.
+    foreach ($all_subrecords as $subrecord) {
+      $subrec_hash[$subrecord->get(strval($this->foreign_key))] = $subrecord;
+    }  // only one record for key. record with same foreign key overwrites the previous one.
 
     // ... and then fill caches of all record's relations
     foreach ($recs_to_cache as $rec) {
@@ -544,52 +529,48 @@ class RelationHasOne extends Relation {
     }
   }
 
-
   public function set($element) {
     //if (!$this->cached)
     //  $this->get();
     $this->get();
 
     if (is_array($element)) {
-      if ($this->obj)
+      if ($this->obj) {
         $this->obj->secure_merge($element);
-      else {
+      } else {
         $element = new $this->model_classname($element);
         $this->obj = $element;
       }
       $this->obj->attr[$this->foreign_key] = $this->base_model_instance->get_id();
-    }
-    elseif ($element != NULL && !($element instanceof $this->model_classname))
+    } elseif ($element != NULL && !($element instanceof $this->model_classname)) {
       throw new Exception('Element is not an instance of '.$this->model_classname);
-    else
-      $this->obj = $element; // TODO: correct???
-
+    } else {
+      $this->obj = $element;
+    } // TODO: correct???
 
     $this->modified = true;
   }
 
-
-
-
-
   public function save($force = false) {
     //global $log;
 
-    if (!$this->modified)
+    if (!$this->modified) {
       return true;
+    }
 
     $classname = $this->model_classname;
 
     if ($this->obj) {
       if ($this->obj->_is_dirty()) {
-        if ($this->cached && $this->obj->get_id() != $this->objId)
+        if ($this->cached && $this->obj->get_id() != $this->objId) {
           throw new Exception("Security violation! Cannot update a nested object that doesn't belong this object!");
-        elseif (!$this->cached) {
-          $current = $classname::find_first_by(array(strval($this->foreign_key) => $this->base_model_instance->get_id()));
-          if (!$current)
-            throw new Exception("Security violation! There is no nested object of ".$this->model_classname." with ID ".$this->obj->get_id());
-          elseif ($this->obj->get_id() != $current->get_id())
+        } elseif (!$this->cached) {
+          $current = $classname::find_first_by([strval($this->foreign_key) => $this->base_model_instance->get_id()]);
+          if (!$current) {
+            throw new Exception('Security violation! There is no nested object of '.$this->model_classname.' with ID '.$this->obj->get_id());
+          } elseif ($this->obj->get_id() != $current->get_id()) {
             throw new Exception("Security violation! Cannot update a nested object that doesn't belong this object!");
+          }
         }
 
         $this->obj->_set_clean();
@@ -600,20 +581,19 @@ class RelationHasOne extends Relation {
       if ($this->obj->save(!$this->validate || $force)) {
         //$this->modified = false;
         return true;
+      } else {
+        return false;
       }
-      else return false;
-    }
-    else {
-    	if ($classname::has_soft_delete()) {
-    	  $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-    	  db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
-    	}
-    	else
-        db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    } else {
+      if ($classname::has_soft_delete()) {
+        $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
+        db_query('UPDATE '.$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      } else {
+        db_query('DELETE FROM '.$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      }
       $this->modified = false;
       return true;
     }
-
   }
 
   public function delete() {
@@ -623,16 +603,17 @@ class RelationHasOne extends Relation {
 
     if ($classname::has_soft_delete()) {
       $deleted_column = is_string($classname::get_soft_delete()) ? $classname::get_soft_delete() : 'deleted_at';
-      db_query("UPDATE ".$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+      db_query('UPDATE '.$classname::get_table_name().' SET '.$deleted_column.' = '.($classname::get_soft_delete_type() == 'datetime' || $classname::get_soft_delete_type() == 'time' ? ($this->base_model_instance->attr_defs[$deleted_column] == 'datetime' ? 'NOW()' : time()) : 1).' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
+    } else {
+      db_query('DELETE FROM '.$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
     }
-    else
-      db_query("DELETE FROM ".$classname::get_table_name().' WHERE `'.$this->foreign_key.'` = '.$this->base_model_instance->get_id());
   }
 
   public function destroy() {
     $this->get();
-    if ($this->obj)
+    if ($this->obj) {
       $this->obj->destroy();
+    }
     $this->obj = NULL;
   }
 
@@ -641,10 +622,10 @@ class RelationHasOne extends Relation {
   }
 
   public function get_errors() {
-    return $this->get() ? $this->get()->get_errors() : array();
+    return $this->get() ? $this->get()->get_errors() : [];
   }
 
-  public function toArray($options = array()){
-  	return $this->get() ? $this->obj->toArray($options) : null;
+  public function toArray($options = []) {
+    return $this->get() ? $this->obj->toArray($options) : null;
   }
 }

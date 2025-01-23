@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__.'/bramus_router.php';
 
-
-class SkatesRouter extends \Bramus\Router\Router
-{
-
+class SkatesRouter extends \Bramus\Router\Router {
   public function resources($name, $fn = null, $path = null, $only = ['index', 'new', 'create', 'show', 'edit', 'update', 'destroy']) {
     $this->mount($path ?? "/$name", function() use ($name, $only, $fn) {
       if (is_callable($fn)) {
@@ -36,14 +33,14 @@ class SkatesRouter extends \Bramus\Router\Router
     });
   }
 
-  protected function invoke($fn, $params = array()) {
+  protected function invoke($fn, $params = []) {
     global $_FRAMEWORK;
     $_FRAMEWORK['router_params'] = $params;
     if (is_string($fn)) {
       $matches = [];
       if (preg_match('/(?<controller>\w+)[#\/](?<action>[\w_-]+)/', $fn, $matches) !== false) {
         $_FRAMEWORK['route'] = $fn;
-        $_FRAMEWORK['controller'] = $matches['controller'] . '.php';
+        $_FRAMEWORK['controller'] = $matches['controller'].'.php';
         $_GET['action'] = $matches['action'];
         $_FRAMEWORK['view'] = $matches['action'];
         $_FRAMEWORK['format'] = 'php';
@@ -58,13 +55,12 @@ class SkatesRouter extends \Bramus\Router\Router
   }
 
   protected function patternMatches($pattern, $uri, &$matches, $flags = 0) {
-
     $pattern = str_replace(['[', ']'], ['(?:', ')?'], $pattern);
 
     // Replace all curly braces matches {} into word patterns (like Laravel)
     $pattern = preg_replace('/\/{([^\/]*?)}/', '/(?<$1>[^/]*?)', $pattern);
 
-    return boolval(preg_match('#^' . $pattern . '$#', $uri, $matches));
+    return boolval(preg_match('#^'.$pattern.'$#', $uri, $matches));
   }
 
   protected function handle($routes, $quitAfterRun = false) {
@@ -76,13 +72,11 @@ class SkatesRouter extends \Bramus\Router\Router
 
     // Loop all routes
     foreach ($routes as $route) {
-
       // get routing matches
       $is_match = $this->patternMatches($route['pattern'], $uri, $matches);
 
       // is there a valid match?
       if ($is_match) {
-
         // Rework matches to only contain the matches, not the orig string
         $matches = array_slice($matches, 1);
 
@@ -110,11 +104,6 @@ class SkatesRouter extends \Bramus\Router\Router
     return $numHandled;
   }
 
-
-
-
-
-
   protected $routes = [];
   protected $all_routes = [];
 
@@ -125,7 +114,7 @@ class SkatesRouter extends \Bramus\Router\Router
       $max_methods = mb_strlen($route['methods']) > $max_methods ? mb_strlen($route['methods']) : $max_methods;
       $max_name = mb_strlen($route['name']) > $max_name ? mb_strlen($route['name']) : $max_name;
     }
-    $mask = "%-".$max_methods."s | %-".$max_name."s | %s\n";
+    $mask = '%-'.$max_methods.'s | %-'.$max_name."s | %s\n";
     echo "\n";
     printf($mask, 'Method', 'Route Name', 'Route');
     echo "\n";
@@ -138,7 +127,7 @@ class SkatesRouter extends \Bramus\Router\Router
    * @return false|string
    */
   public function get_url(string $route_name, &$params = []) {
-    if ($this->routes[$route_name] ?? null) {
+    if (!empty($this->routes[$route_name])) {
       $route = $this->routes[$route_name];
       if ($this->has_optional($route)) {
         $route = $this->process_optional($route, $params);
@@ -150,7 +139,7 @@ class SkatesRouter extends \Bramus\Router\Router
   }
 
   public function has_route(string $route_name) {
-    return boolval($this->routes[$route_name] ?? null);
+    return !empty($this->routes[$route_name]);
   }
 
   protected function has_optional($pattern) {
@@ -191,7 +180,7 @@ class SkatesRouter extends \Bramus\Router\Router
     }
     parent::match($methods, $pattern, $fn);
     if ($route_name) {
-      $pattern = $this->baseRoute . '/' . trim($pattern, '/');
+      $pattern = $this->baseRoute.'/'.trim($pattern, '/');
       $pattern = $this->baseRoute ? rtrim($pattern, '/') : $pattern;
 
       $this->routes[$route_name] = $pattern;

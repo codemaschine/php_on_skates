@@ -11,8 +11,8 @@
     <?php foreach ($___model_var_name_pl___ as $___model_var_name___): ?>
     <tr>___listing_body_rows___
       <td><?= link_to('Show', $___model_var_name___); ?></td>
-      <td><?= link_to('Edit', array('action' => 'edit', 'id' => $___model_var_name___->get_id())); ?></td>
-      <td><?= link_to('Destroy', array('action' => 'destroy', 'id' => $___model_var_name___->get_id()), array('onclick' => "return confirm('Are you sure?');")); ?></td>
+      <td><?= link_to('Edit', ['action' => 'edit', 'id' => $___model_var_name___->get_id()]); ?></td>
+      <td><?= link_to('Destroy', ['action' => 'destroy', 'id' => $___model_var_name___->get_id()], ['onclick' => "return confirm('Are you sure?');"]); ?></td>
     </tr>
     <?php endforeach; ?>
   </tbody>

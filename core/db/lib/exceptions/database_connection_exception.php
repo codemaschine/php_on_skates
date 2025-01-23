@@ -14,9 +14,5 @@
  * @package    mysql_php_migrations
  * @subpackage Exceptions
  */
-class MpmDatabaseConnectionException extends Exception
-{
-	
+class MpmDatabaseConnectionException extends Exception {
 }
-
-?>

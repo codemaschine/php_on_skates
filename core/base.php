@@ -45,61 +45,59 @@ define('ONE_YEAR', 31536000);
 define('DB_DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DB_DATE_FORMAT', 'Y-m-d');
 
-
 class HttpStatusCode {
-	const SWITCHING_PROTOCOLS = 101;
-	const OK = 200;
-	const CREATED = 201;
-	const ACCEPTED = 202;
-	const NONAUTHORITATIVE_INFORMATION = 203;
-	const NO_CONTENT = 204;
-	const RESET_CONTENT = 205;
-	const PARTIAL_CONTENT = 206;
-	const MULTIPLE_CHOICES = 300;
-	const MOVED_PERMANENTLY = 301;
-	const MOVED_TEMPORARILY = 302;
-	const SEE_OTHER = 303;
-	const NOT_MODIFIED = 304;
-	const USE_PROXY = 305;
-	const BAD_REQUEST = 400;
-	const UNAUTHORIZED = 401;
-	const PAYMENT_REQUIRED = 402;
-	const FORBIDDEN = 403;
-	const NOT_FOUND = 404;
-	const METHOD_NOT_ALLOWED = 405;
-	const NOT_ACCEPTABLE = 406;
-	const PROXY_AUTHENTICATION_REQUIRED = 407;
-	const REQUEST_TIMEOUT = 408;
-	const CONFLICT = 408;
-	const GONE = 410;
-	const LENGTH_REQUIRED = 411;
-	const PRECONDITION_FAILED = 412;
-	const REQUEST_ENTITY_TOO_LARGE = 413;
-	const REQUESTURI_TOO_LARGE = 414;
-	const UNSUPPORTED_MEDIA_TYPE = 415;
-	const REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-	const EXPECTATION_FAILED = 417;
-	const IM_A_TEAPOT = 418;
-	const UNPROCESSABLE_ENTITY = 422;
-	const LOCKED = 423;
-	const FAILED_DEPENDENCY = 424;
-	const UPGRADE_REQUIRED = 426;
-	const PRECONDITION_REQUIRED = 428;
-	const TOO_MANY_REQUESTS = 429;
-	const REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
-	const INTERNAL_SERVER_ERROR = 500;
-	const NOT_IMPLEMENTED = 501;
-	const BAD_GATEWAY = 502;
-	const SERVICE_UNAVAILABLE = 503;
-	const GATEWAY_TIMEOUT = 504;
-	const HTTP_VERSION_NOT_SUPPORTED = 505;
+  const SWITCHING_PROTOCOLS = 101;
+  const OK = 200;
+  const CREATED = 201;
+  const ACCEPTED = 202;
+  const NONAUTHORITATIVE_INFORMATION = 203;
+  const NO_CONTENT = 204;
+  const RESET_CONTENT = 205;
+  const PARTIAL_CONTENT = 206;
+  const MULTIPLE_CHOICES = 300;
+  const MOVED_PERMANENTLY = 301;
+  const MOVED_TEMPORARILY = 302;
+  const SEE_OTHER = 303;
+  const NOT_MODIFIED = 304;
+  const USE_PROXY = 305;
+  const BAD_REQUEST = 400;
+  const UNAUTHORIZED = 401;
+  const PAYMENT_REQUIRED = 402;
+  const FORBIDDEN = 403;
+  const NOT_FOUND = 404;
+  const METHOD_NOT_ALLOWED = 405;
+  const NOT_ACCEPTABLE = 406;
+  const PROXY_AUTHENTICATION_REQUIRED = 407;
+  const REQUEST_TIMEOUT = 408;
+  const CONFLICT = 408;
+  const GONE = 410;
+  const LENGTH_REQUIRED = 411;
+  const PRECONDITION_FAILED = 412;
+  const REQUEST_ENTITY_TOO_LARGE = 413;
+  const REQUESTURI_TOO_LARGE = 414;
+  const UNSUPPORTED_MEDIA_TYPE = 415;
+  const REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+  const EXPECTATION_FAILED = 417;
+  const IM_A_TEAPOT = 418;
+  const UNPROCESSABLE_ENTITY = 422;
+  const LOCKED = 423;
+  const FAILED_DEPENDENCY = 424;
+  const UPGRADE_REQUIRED = 426;
+  const PRECONDITION_REQUIRED = 428;
+  const TOO_MANY_REQUESTS = 429;
+  const REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
+  const INTERNAL_SERVER_ERROR = 500;
+  const NOT_IMPLEMENTED = 501;
+  const BAD_GATEWAY = 502;
+  const SERVICE_UNAVAILABLE = 503;
+  const GATEWAY_TIMEOUT = 504;
+  const HTTP_VERSION_NOT_SUPPORTED = 505;
 }
 
 function time_zone_offset() {
-  $dt = new DateTime("now");
+  $dt = new DateTime('now');
   return $dt->getOffset();
 }
-
 
 function now() {
   return time();
@@ -114,20 +112,20 @@ function time_forward_to($interval) {
 }
 
 function beginning_of_day($time = NULL) {
-  if ($time === NULL)
+  if ($time === NULL) {
     $time = time();
+  }
 
   return mktime(0,0,0, date('m', $time), date('d', $time), date('Y', $time));
 }
 
 function end_of_day($time = NULL) {
-  if ($time === NULL)
+  if ($time === NULL) {
     $time = time();
+  }
 
   return mktime(23,59,59, date('m', $time), date('d', $time), date('Y', $time));
 }
-
-
 
 function sanitize($str) {
   global $db_link;
@@ -138,15 +136,13 @@ function h($str, $flags = ENT_COMPAT) {
   return htmlentities($str ?? '', $flags, 'UTF-8');
 }
 
-
-
 // file helpers
 
-function validateFile($file_var, $label = "Datei", $allow_empty = false) {
+function validateFile($file_var, $label = 'Datei', $allow_empty = false) {
   if (!isset($_FILES[$file_var]) || $_FILES[$file_var]['error'] != UPLOAD_ERR_OK) {
-    if (!isset($_FILES[$file_var]))
+    if (!isset($_FILES[$file_var])) {
       set_error("$label darf nicht leer sein.");
-    else {
+    } else {
       switch ($_FILES[$file_var]['error']) {
         case UPLOAD_ERR_INI_SIZE:
           set_error("$label: Dateigrï¿½ï¿½e ist zu groï¿½.");
@@ -155,8 +151,9 @@ function validateFile($file_var, $label = "Datei", $allow_empty = false) {
           set_error("$label wurde nur teilweise hochgeladen.");
           break;
         case UPLOAD_ERR_NO_FILE:
-          if (!$allow_empty)
+          if (!$allow_empty) {
             set_error("$label darf nicht leer sein.");
+          }
           break;
         default:
           set_error("$label: Unbekannter Fehler beim Upload. Bitte versuchen Sie es erneut.");
@@ -165,14 +162,40 @@ function validateFile($file_var, $label = "Datei", $allow_empty = false) {
   }
 }
 
+function deduplicateFilename($filepath) {
+  if (file_exists($filepath)) {
+    $path_parts = pathinfo($filepath);
+    if (preg_match('/_\d+$/', $path_parts['filename'], $matches)) {
+      $number = intval(str_replace('_', '', $matches[0]));
+      $path_parts['filename'] = str_replace($matches[0], '', $path_parts['filename']);
+      $number++;
+    } else {
+      $number = 1;
+    }
+    $path_parts['filename'] .= "_$number";
+    $newfilepath = $path_parts['dirname'].'/'.$path_parts['filename'].'.'.$path_parts['extension'];
+    return deduplicateFilename($newfilepath);
+  }
+  return $filepath;
+}
 
 function saveFile($file_var, $upload_dir) {
   $filename = basename($_FILES[$file_var]['name']);
-  $filename = preg_replace("/[^a-zA-Z0-9\._-]*/", '', $filename);
+  if (!file_exists($upload_dir) && !is_dir($upload_dir)) {
+    mkdir($upload_dir, 0777, true);
+  } elseif (file_exists($upload_dir) && !is_dir($upload_dir)) {
+    return false;
+  }
 
-  if (!move_uploaded_file($_FILES[$file_var]['tmp_name'], $upload_dir.'/'.$filename))
-    die ("Die hochgeladene Datei konnte intern nicht verschoben werden. Bitte benachrichtigen Sie den Administrator.");
-  return $filename;
+  $filename = preg_replace("/[^a-zA-Z0-9\._-]*/", '', $filename);
+  $full_file_path = deduplicateFilename($upload_dir.'/'.$filename);
+
+  if (!move_uploaded_file($_FILES[$file_var]['tmp_name'], $full_file_path)) {
+    return false;
+  }
+
+  $path_parts = pathinfo($full_file_path);
+  return $path_parts['basename'];
 }
 
 // routes helpers
@@ -188,19 +211,21 @@ function redirect_to($target) {
 function forward_to($controller, $action = NULL, $layout = NULL, $status_code = NULL) {
   global $_FRAMEWORK;
   $_FRAMEWORK['controller'] = $controller;
-  if ($layout)
+  if ($layout) {
     $_FRAMEWORK['layout'] = $layout;
+  }
   $_FRAMEWORK['view'] = $action ? $action.'.php' : $controller; // Default view name is action name or controllers name
 
-  if ($action)
+  if ($action) {
     $_GET['action'] = $action;
+  }
 
-  if ($status_code)
+  if ($status_code) {
     $_FRAMEWORK['status_code'] = $status_code;
+  }
 
   $_FRAMEWORK['forward'] = true;
 }
-
 
 function render($obj, $status_code = null) {
   global $_FRAMEWORK, $log, $site_config;
@@ -209,16 +234,16 @@ function render($obj, $status_code = null) {
 
   // parse paramter $obj, prepare variables
   if (is_array($obj)) {
-
-    if (present($obj['action'])) {
+    if (!empty($obj['action'])) {
       $view = $obj['action'];
-      if ($obj['controller'] ?? null)
+      if (!empty($obj['controller'])) {
         $view = $obj['controller'].'/'.$view;
-    } elseif (present($obj['partial'])) {
+      }
+    } elseif (!empty($obj['partial'])) {
       $view = mb_substr($obj['partial'], 0, 1) != '_' ? '_'.$obj['partial'] : $obj['partial'];
       $log->debug("Partial view ist $view");
 
-      if (present($obj['controller'])) {
+      if (!empty($obj['controller'])) {
         $view = $obj['controller'].'/'.$view;
       }
       $render_type = 'partial';
@@ -228,18 +253,20 @@ function render($obj, $status_code = null) {
       $render_type = 'json';
     }
 
-
-    if (present($obj['locals'])) {
+    if (!empty($obj['locals'])) {
       $locals = $obj['locals'];
     }
 
-    if (present($obj['addJS'])) {
+    if (!empty($obj['addJS'])) {
       $addJS = $obj['addJS'];
     }
   } elseif ($obj === null) {
     $render_type = 'text';
   } else {
     $view = $obj;
+    if (isset($_FRAMEWORK['locals']) && is_array($_FRAMEWORK['locals'])) {
+      $locals = $_FRAMEWORK['locals'];
+    }
     $addJS = $_FRAMEWORK['addJS'] ?? null;
   }
 
@@ -265,10 +292,10 @@ function render($obj, $status_code = null) {
       unset($obj['text']);
       $_FRAMEWORK['render_options'] = $obj;
     }
+    $_FRAMEWORK['locals'] = $locals;
     $_FRAMEWORK['addJS'] = $addJS ?? null;
     return;
   }
-
 
   // Actually rendering
 
@@ -281,15 +308,14 @@ function render($obj, $status_code = null) {
     echo $obj['text'];
     return;
   } elseif ($render_type == 'json') {
-    if (present($obj['only'])) {
+    if (!empty($obj['only'])) {
       $_FRAMEWORK['render_options']['only'] = $obj['only'];
     }
-    if (present($obj['inlcude'])) {
+    if (!empty($obj['inlcude'])) {
       $_FRAMEWORK['render_options']['inlcude'] = $obj['inlcude'];
     }
     return json_encode($obj['json']);
   }
-
 
   //  adapt according to format
   if (mb_strpos($view, '.') === false || !file_exists('views/'.$view)) {
@@ -307,14 +333,13 @@ function render($obj, $status_code = null) {
   if (mb_strpos($view, '/') === false) {
     // add controller path if not specified
 
-    if (present($_FRAMEWORK['is_layouting'])) {
+    if (!empty($_FRAMEWORK['is_layouting'])) {
       $view_folder = 'layout';
     } else {
       $view_folder = mb_substr($_FRAMEWORK['controller'], 0, mb_strrpos($_FRAMEWORK['controller'], '.'));
     }
     $view = "$view_folder/$view";
   }
-
 
   // security check: is it allowed and possible to render this file?
   $view = str_replace('../', '', $view);
@@ -335,7 +360,6 @@ function render($obj, $status_code = null) {
     throw new ErrorException("View $view does not exist!");
   }
 
-
   foreach ($locals as $key => $value) {
     $$key = $value;
   }
@@ -354,73 +378,70 @@ function render($obj, $status_code = null) {
     $buffer = ob_get_clean();
     return $buffer;
   }
-
 }
 
-
 /**
- *
- * @param string $view the name of the partial to be rendered. If the name does not start with an underscore it will be added automatically. You may also specify the folder for different
- * @param array|integer|bool $obj1 Can be array of arguments to export as variables inside the partial, a HTTP-Status-Code to set (if used in a controller) or a flag if the output should be returned instead of echoed.
- * @param array|integer|bool $obj2 like $obj1
- * @param array|integer|bool $obj3 like $obj1
+ * @param  string             $view the name of the partial to be rendered. If the name does not start with an underscore it will be added automatically. You may also specify the folder for different
+ * @param  array|integer|bool $obj1 Can be array of arguments to export as variables inside the partial, a HTTP-Status-Code to set (if used in a controller) or a flag if the output should be returned instead of echoed.
+ * @param  array|integer|bool $obj2 like $obj1
+ * @param  array|integer|bool $obj3 like $obj1
  * @return void|string
  */
 function render_partial($view, $obj1 = NULL, $obj2 = NULL, $obj3 = NULL) {
   global $_FRAMEWORK, $log;
 
-  $locals = array();
+  $locals = [];
   $status_code = NULL;
   $return_output = false;
 
-  if (is_array($obj1))
+  if (is_array($obj1)) {
     $locals = $obj1;
-  elseif (is_integer($obj1))
+  } elseif (is_integer($obj1)) {
     $status_code = $obj1;
-  elseif (is_bool($obj1))
+  } elseif (is_bool($obj1)) {
     $return_output = $obj1;
+  }
 
-  if (is_array($obj2))
+  if (is_array($obj2)) {
     $locals = $obj2;
-  elseif (is_integer($obj2))
+  } elseif (is_integer($obj2)) {
     $status_code = $obj2;
-  elseif (is_bool($obj2))
+  } elseif (is_bool($obj2)) {
     $return_output = $obj2;
+  }
 
-  if (is_array($obj3))
+  if (is_array($obj3)) {
     $locals = $obj3;
-  elseif (is_integer($obj3))
+  } elseif (is_integer($obj3)) {
     $status_code = $obj3;
-  elseif (is_bool($obj3))
+  } elseif (is_bool($obj3)) {
     $return_output = $obj3;
-
+  }
 
   $last_slash = mb_strrpos($view, '/');
-  if ($last_slash === false)
+  if ($last_slash === false) {
     $controller = '';
-  else {
+  } else {
     $controller = mb_substr($view, 0, $last_slash);
     $view = mb_substr($view, $last_slash + 1);
   }
 
-  return render(array('partial' => $view, 'controller' => $controller, 'locals' => $locals, 'return_output' => $return_output), $status_code);
+  return render(['partial' => $view, 'controller' => $controller, 'locals' => $locals, 'return_output' => $return_output], $status_code);
 }
 
 function render_text($text, $status_code = 200, $return_output = false) {
-  return render(array('text' => $text, 'status_code' => $status_code, 'return_output' => $return_output));
+  return render(['text' => $text, 'status_code' => $status_code, 'return_output' => $return_output]);
 }
 
-
 /**
- *
- * @param AbstractModel|array $data one or more models to output in json-format
- * @param integer $status_code
- * @param string $return_output
- * @param array $options
- * @return the json-object
+ * @param  AbstractModel|array $data          one or more models to output in json-format
+ * @param  integer             $status_code
+ * @param  string              $return_output
+ * @param  array               $options
+ * @return the                 json-object
  */
-function render_json($data, $status_code = 200, array $options = array()) {
-	return render(array_merge($options, array('json' => $data, 'status_code' => $status_code)));
+function render_json($data, $status_code = 200, array $options = []) {
+  return render(array_merge($options, ['json' => $data, 'status_code' => $status_code]));
 }
 
 function yieldit() {
@@ -449,10 +470,9 @@ function set_error($message) {
   set_flash($message, 'error');
 }
 
-/*
 function is_error() {
-  return isset($_SESSION['errors']) && !empty($_SESSION['errors']);
-}*/
+  return is_flash('error');
+}
 
 /*
 function set_errors($msgArray) {
@@ -466,7 +486,7 @@ function set_errors($msgArray) {
     //if (is_string($key))
     //  set_flash(ucfirst($key).' '.$message, 'error');
     //else
-      set_flash($message, 'error');
+    set_flash($message, 'error');
   }
 }
 /*
@@ -494,17 +514,22 @@ function set_flash($message, $type = 'notice', $duration = NULL) {
   $_SESSION['flash'][$type][] = $message;
 }
 
-function is_flash() {
-  return isset($_SESSION['flash']) && $_SESSION['flash'];
+function is_flash($type = NULL) {
+  if ($type != NULL) {
+    return isset($_SESSION['flash'][$type]) && $_SESSION['flash'][$type];
+  } else {
+    return isset($_SESSION['flash']) && $_SESSION['flash'];
+  }
 }
 
 function show_flash($obj = NULL) {
-  $type = NULL; $in = '';
+  $type = NULL;
+  $in = '';
   if (is_array($obj)) {
     extract($obj, EXTR_OVERWRITE);
-  }
-  else
+  } else {
     $type = $obj;
+  }
 
   $flash_message_temp_id = 'ft'.(time() % 1000).rand(0,1000);
 
@@ -512,10 +537,11 @@ function show_flash($obj = NULL) {
     echo '<div id="'.$flash_message_temp_id.'" class="alertbox">';
     if ($type) {
       if (isset($_SESSION['flash'][$type])) {
-        foreach($_SESSION['flash'][$type] as $m){
+        foreach ($_SESSION['flash'][$type] as $m) {
           $csstype = 'primary';
           switch ($type) {
-            case 'error': $csstype = 'danger'; break;
+            case 'error': $csstype = 'danger';
+              break;
             case 'warning':
             case 'secondary':
             case 'success':
@@ -523,17 +549,17 @@ function show_flash($obj = NULL) {
             case 'light':
             case 'dark': $csstype = $type;
           }
-      		echo "<div class=\"alert alert-$csstype\">".$m."</div>\r\n";
+          echo "<div class=\"alert alert-$csstype\">".$m."</div>\r\n";
         }
-      	unset($_SESSION['flash'][$type]);
+        unset($_SESSION['flash'][$type]);
       }
-    }
-    else {
+    } else {
       foreach ($_SESSION['flash'] as $type => $messages) {
-        foreach($_SESSION['flash'][$type] as $m){
+        foreach ($_SESSION['flash'][$type] as $m) {
           $csstype = 'primary';
           switch ($type) {
-            case 'error': $csstype = 'danger'; break;
+            case 'error': $csstype = 'danger';
+              break;
             case 'warning':
             case 'secondary':
             case 'success':
@@ -546,11 +572,11 @@ function show_flash($obj = NULL) {
       }
       unset($_SESSION['flash']);
     }
-    echo "</div>";
-    echo "
+    echo '</div>';
+    echo '
     <script>
-    ".(is_xhr() && $in ? "$('#$flash_message_temp_id').appendTo($('$in'));" : '')."
-    </script>";
+    '.(is_xhr() && $in ? "$('#$flash_message_temp_id').appendTo($('$in'));" : '').'
+    </script>';
   }
 }
 
@@ -558,28 +584,75 @@ function show_errors() {
   return show_flash('error');
 }
 
+function getExceptionTraceAsString($exception) {
+  global $environment;
+  $rtn = '';
+  $count = 0;
+  foreach ($exception->getTrace() as $frame) {
+    $args = '';
+    if (isset($frame['args'])) {
+      $args = [];
+      foreach ($frame['args'] as $arg) {
+        if (is_string($arg)) {
+          if ($environment == 'development') {
+            $args[] = "'".$arg."'";
+          } else {
+            $args[] = 'String';
+          }
+        } elseif (is_array($arg)) {
+          $args[] = 'Array';
+        } elseif (is_null($arg)) {
+          $args[] = 'NULL';
+        } elseif (is_bool($arg)) {
+          $args[] = ($arg) ? 'true' : 'false';
+        } elseif (is_object($arg)) {
+          $args[] = get_class($arg);
+        } elseif (is_resource($arg)) {
+          $args[] = get_resource_type($arg);
+        } elseif (is_int($arg)) {
+          if ($environment == 'development') {
+            $args[] = $arg;
+          } else {
+            $args[] = 'Integer';
+          }
+        } else {
+          $args[] = $arg;
+        }
+      }
+      $args = join(', ', $args);
+    }
+    $rtn .= sprintf( "#%s %s(%s): %s(%s)\n",
+      $count,
+      $frame['file'],
+      $frame['line'],
+      $frame['function'],
+      $args );
+    $count++;
+  }
+  return $rtn;
+}
 
 function pop_flash($obj = NULL) {
-  $type = NULL; $in = '';
+  $type = NULL;
+  $in = '';
   if (is_array($obj)) {
     extract($obj, EXTR_OVERWRITE);
-  }
-  else
+  } else {
     $type = $obj;
+  }
 
   $r = null;
 
   if (is_flash()) {
-	  if ($type) {
-	  	if (isset($_SESSION['flash'][$type])) {
-	  		$r = $_SESSION['flash'][$type];
-	  		unset($_SESSION['flash'][$type]);
-	  	}
-	  }
-	  else {
-	  	$r = $_SESSION['flash'];
-	  	unset($_SESSION['flash']);
-	  }
+    if ($type) {
+      if (isset($_SESSION['flash'][$type])) {
+        $r = $_SESSION['flash'][$type];
+        unset($_SESSION['flash'][$type]);
+      }
+    } else {
+      $r = $_SESSION['flash'];
+      unset($_SESSION['flash']);
+    }
   }
 
   return $r;
@@ -597,102 +670,104 @@ function show_debug_msg() {
 }
 
 function date_to_db_format($d) {
-  if (!is_string($d))
+  if (!is_string($d)) {
     return null;
+  }
 
   $d_ary = explode('.', $d);
-  if (count($d_ary) !== 3)
+  if (count($d_ary) !== 3) {
     return $d;
+  }
 
   return $d_ary[2].'-'.$d_ary[1].'-'.$d_ary[0];
 }
 
 function date_to_readable($d) {
-  if (!is_string($d))
+  if (!is_string($d)) {
     return null;
+  }
 
   $d_ary = explode('-', $d);
-  if (count($d_ary) !== 3)
+  if (count($d_ary) !== 3) {
     return $d;
+  }
 
   return $d_ary[2].'.'.$d_ary[1].'.'.$d_ary[0];
 }
 
-
-
-
 function is_plural($str) {
   $str = mb_strtolower($str);
   $irregular = irregular_words_ary();
-  if (in_array($str, $irregular))
+  if (in_array($str, $irregular)) {
     return true;
-  elseif (array_key_exists($str, $irregular))
+  } elseif (array_key_exists($str, $irregular)) {
     return false;
+  }
   return mb_substr($str, -1) == 's';
 }
 
 function is_singular($str) {
   $str = mb_strtolower($str);
   $irregular = irregular_words_ary();
-  if (array_key_exists($str, $irregular))
+  if (array_key_exists($str, $irregular)) {
     return true;
-  elseif (in_array($str, $irregular))
+  } elseif (in_array($str, $irregular)) {
     return false;
+  }
   return mb_substr($str, -1) != 's';
 }
 
 function pluralize($str) {
   $irregular = irregular_words_ary();
-  if (array_key_exists(mb_strtolower($str), $irregular))
+  if (array_key_exists(mb_strtolower($str), $irregular)) {
     return $irregular[mb_strtolower($str)];
+  }
   return $str.'s';
 }
 
 function singularize($str) {
   $irregular = array_flip(irregular_words_ary());
-  if (array_key_exists(mb_strtolower($str), $irregular))
+  if (array_key_exists(mb_strtolower($str), $irregular)) {
     return $irregular[mb_strtolower($str)];
+  }
   return mb_substr($str, 0, mb_strlen($str) - 1);
 }
 
-
 function irregular_words_ary() {
-  return array(
+  return [
     'person' => 'people',
     'fish' => 'fish'
-  );
+  ];
 }
-
 
 // code snippet from a comment from http://php.net/manual/de/ini.core.php
-function let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
-    $l = mb_substr($v, -1);
-    $ret = mb_substr($v, 0, -1);
-    switch(mb_strtoupper($l)){
+function let_to_num($v) { //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
+  $l = mb_substr($v, -1);
+  $ret = mb_substr($v, 0, -1);
+  switch(mb_strtoupper($l)) {
     case 'P':
-        $ret *= 1024;
+      $ret *= 1024;
     case 'T':
-        $ret *= 1024;
+      $ret *= 1024;
     case 'G':
-        $ret *= 1024;
+      $ret *= 1024;
     case 'M':
-        $ret *= 1024;
+      $ret *= 1024;
     case 'K':
-        $ret *= 1024;
-        break;
-    }
-    return $ret;
+      $ret *= 1024;
+      break;
+  }
+  return $ret;
 }
 
-
 function var_inspect($var) {
-  if ($var === NULL)
+  if ($var === NULL) {
     return 'null';
-  elseif (is_string($var))
+  } elseif (is_string($var)) {
     return "\"$var\"";
-  elseif (is_int($var))
+  } elseif (is_int($var)) {
     return $var;
-  elseif (is_array($var)) {
+  } elseif (is_array($var)) {
     $output = '';
     $cnt = 0;
     foreach ($var as $key => $value) {
@@ -700,18 +775,19 @@ function var_inspect($var) {
       $cnt++;
     }
     return "[$output]";
-  }
-  elseif (is_object($var) && method_exists($var, '__toString'))
-    return $var->__toString($var);
-  else
+  } elseif (is_object($var) && method_exists($var, '__toString')) {
+    return $var->__toString();
+  } else {
     return var_export($var, true);
+  }
 }
 
 function array_model_extract(array $ary, $field) {
-  $values = array();
+  $values = [];
   foreach ($ary as $model) {
-    if ($model instanceof AbstractModel)
-      $values []= $model->get($field);
+    if ($model instanceof AbstractModel) {
+      $values[]= $model->get($field);
+    }
   }
   return $values;
 }
@@ -720,158 +796,159 @@ function array_model_extract_ids(array $ary) {
   return array_model_extract($ary, 'id');
 }
 
-
-
 /**
- *
- * @param string $mutex_name unique mutex name
- * @param integer $unlock_timeout Timout to automatically release the lock (in minutes)
+ * @param  string    $mutex_name     unique mutex name
+ * @param  integer   $unlock_timeout Timout to automatically release the lock (in minutes)
  * @throws Exception
  */
 function cron_mutex_trylock($mutex_name, $unlock_timeout = NULL) {
-	$tmpDir = '/tmp';
-	if (!is_writable($tmpDir))
-		throw new Exception("Ordner $tmpDir ist nicht beschreibar, Mutex-Lock kann nicht gesetzt werden.");
+  $tmpDir = '/tmp';
+  if (!is_writable($tmpDir)) {
+    throw new Exception("Ordner $tmpDir ist nicht beschreibar, Mutex-Lock kann nicht gesetzt werden.");
+  }
 
-	$lock_name = "skates_cron_mutex_".preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
+  $lock_name = 'skates_cron_mutex_'.preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
 
   $lockfile = "$tmpDir/$lock_name.lock";
   $prelockfile = "$tmpDir/{$lock_name}_pre.lock";
 
   // ---
 
-
-	$is_free = true;
+  $is_free = true;
 
   $fp = fopen($prelockfile, 'w+');   // Versuche Lock zu reservieren. KRITISCHER ABSCHNITT!! Daher extra Lock dafür
   flock($fp, LOCK_EX);
   if (file_exists($lockfile)) { //
-  	$is_free = false;
+    $is_free = false;
 
-  	if ($unlock_timeout) {  // prüfen, ob automatisch geunlocked werden muss.
-  		$lock_time = intval(file_get_contents($lockfile));
+    if ($unlock_timeout) {  // prüfen, ob automatisch geunlocked werden muss.
+      $lock_time = intval(file_get_contents($lockfile));
 
-  		if ($lock_time > 0 && time() > $lock_time + ($unlock_timeout * 60))
-  			$is_free = true;
-
-  	}
+      if ($lock_time > 0 && time() > $lock_time + ($unlock_timeout * 60)) {
+        $is_free = true;
+      }
+    }
   }
 
-  if ($is_free)
-  	file_put_contents($lockfile, time());  // ist frei. --> locken
+  if ($is_free) {
+    file_put_contents($lockfile, time());
+  }  // ist frei. --> locken
   flock($fp, LOCK_UN);
   fclose($fp);
 
   return $is_free;
 }
 
-
 function cron_mutex_unlock($mutex_name) {
-	$tmpDir = '/tmp';
+  $tmpDir = '/tmp';
 
-	$lock_name = "skates_cron_mutex_".preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
+  $lock_name = 'skates_cron_mutex_'.preg_replace('/[^a-zA-Z\.-]+/', '_', $mutex_name);
 
-	$lockfile = "$tmpDir/$lock_name.lock";
+  $lockfile = "$tmpDir/$lock_name.lock";
 
-	if (file_exists($lockfile))
-		unlink($lockfile);
-
+  if (file_exists($lockfile)) {
+    unlink($lockfile);
+  }
 }
 
-
 function is_json() {
-	global $_FRAMEWORK;
-	return $_FRAMEWORK['format'] == 'json';
+  global $_FRAMEWORK;
+  $format = $_FRAMEWORK['format'] ?? null;
+  return $format == 'json';
 }
 
 function is_routed() {
   return class_exists(SkatesRouter::class, false);
 }
 
-function authenticated(array $actions = array(), $exclude = false) {
-	if (empty($actions))
-		$condition = true;
-	elseif ($exclude == false)
-	  $condition = $_GET['action'] && in_array($_GET['action'], $actions); // only
-	else
-		$condition = !$_GET['action'] || !in_array($_GET['action'], $actions); // except
+function authenticated(array $actions = [], $exclude = false) {
+  if (empty($actions)) {
+    $condition = true;
+  } elseif ($exclude == false) {
+    $condition = $_GET['action'] && in_array($_GET['action'], $actions);
+  } // only
+  else {
+    $condition = !$_GET['action'] || !in_array($_GET['action'], $actions);
+  } // except
 
+  if (!is_logged_in() && $condition) {
+    set_flash('Du wurdest ausgeloggt, weil du '.sitename().' längere Zeit nicht benutzt hast. Bitte logge dich neu ein.');
+    if (is_json()) {
+      render_json_response(null, 400, 'login required');
+    } elseif (is_xhr()) {
+      render_partial('shared/show_flash', 418);
+    } else {
+      redirect_to('index.php');
+    }
 
-	if (!is_logged_in() && $condition){
-		set_flash("Du wurdest ausgeloggt, weil du ".sitename()." längere Zeit nicht benutzt hast. Bitte logge dich neu ein.");
-		if (is_json())
-			render_json_response(null, 400, 'login required');
-		elseif (is_xhr()) {
-			render_partial('shared/show_flash', 418);
-		}
-		else
-			redirect_to('index.php');
-
-		return false;
-	}
-	else return true;
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function authenticated_for(array $actions) {
-	return authenticated($actions);
+  return authenticated($actions);
 }
 function authenticated_except(array $actions) {
-	return authenticated($actions, true);
+  return authenticated($actions, true);
 }
 
-
 /**
- *
  * @param array|string $req_set does the request belong to this set of controllers (and optionally of their actions if specified)?
  */
 function is_request_of($req_set) {
-	global $_FRAMEWORK, $log;
+  global $_FRAMEWORK, $log;
 
-	if (is_string($req_set))
-		$req_set = array($req_set);
+  if (is_string($req_set)) {
+    $req_set = [$req_set];
+  }
 
-	$cur_controller = $_FRAMEWORK['controller'];
-	$cur_action = $_GET['action'];
+  $cur_controller = $_FRAMEWORK['controller'];
+  $cur_action = $_GET['action'];
 
-	$log->debug('cur_action: '.$cur_action);
+  $log->debug('cur_action: '.$cur_action);
 
-	foreach ($req_set as $key => $val) {  // check, if current controller and action is in the set. immediately return true, if yes
-		if (is_int($key)) { // if key is numeric, then $val is the controller and there're no actions specified for this controller. So check only for the controller
-			if ($val == $cur_controller) return true;
-		}
-		elseif ($key == $cur_controller) {
-			if (is_array($val)) {
-				foreach ($val as $action) {
-					if ($action == $cur_action) return true;
-				}
-			}
-			else {
-				if ($val == $cur_action) return true;
-			}
-		}
-	}
+  foreach ($req_set as $key => $val) {  // check, if current controller and action is in the set. immediately return true, if yes
+    if (is_int($key)) { // if key is numeric, then $val is the controller and there're no actions specified for this controller. So check only for the controller
+      if ($val == $cur_controller) {
+        return true;
+      }
+    } elseif ($key == $cur_controller) {
+      if (is_array($val)) {
+        foreach ($val as $action) {
+          if ($action == $cur_action) {
+            return true;
+          }
+        }
+      } else {
+        if ($val == $cur_action) {
+          return true;
+        }
+      }
+    }
+  }
 
-	return false; // not found, so it is not in the set
+  return false; // not found, so it is not in the set
 }
-
 
 function is_site($site) {
   global $site_ident;
   return $site_ident == $site;
 }
 
-
 function sitename($short = 0, $site = NULL) {
   global $site_config, $site_configs;
 
-
   // Wenn $site nicht angegeben wurde, aber $_GET['site'] als Platform angeben ist, dann dies in den E-Mails, die verschickt werden, berücksichtigen, aber nicht beim Admin im Frontend benutzen!
   $bt = debug_backtrace();
-  if (!$site && ($_GET['site'] ?? null) && mb_strpos($bt[0]['file'], '/mailer') !== false) // Name aufrufenden Datei / Ordners durchsuchen, ob zum Mailer gehört.
+  if (!$site && !empty($_GET['site']) && mb_strpos($bt[0]['file'], '/mailer') !== false) { // Name aufrufenden Datei / Ordners durchsuchen, ob zum Mailer gehört.
     $site = $_GET['site'];
+  }
 
-  if($short)
-   	return $site ? $site_configs[$site]['sitename_short'] : $site_config['sitename_short'];
-  else
-  	return $site ? $site_configs[$site]['sitename'] :  $site_config['sitename'];
+  if ($short) {
+    return $site ? $site_configs[$site]['sitename_short'] : $site_config['sitename_short'];
+  } else {
+    return $site ? $site_configs[$site]['sitename'] : $site_config['sitename'];
+  }
 }

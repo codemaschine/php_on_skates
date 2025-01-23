@@ -14,26 +14,22 @@
  * @package    mysql_php_migrations
  * @subpackage Controllers
  */
-abstract class MpmMysqliMigration extends MpmMigrationBase
-{
-	/**
-	 * Migrates the database up.
-	 * 
-	 * @param ExceptionalMysqli $mysqli an ExceptionalMysqli object
-	 *
-	 * @return void
-	 */
-	abstract public function up(ExceptionalMysqli &$mysqli);
-	
-	/** 
-	 * Migrates down (reverses changes made by the up method).
-	 *
-	 * @param ExceptionalMysqli $mysqli an ExceptionalMysqli object
-	 *
-	 * @return void
-	 */
-	abstract public function down(ExceptionalMysqli &$mysqli);
+abstract class MpmMysqliMigration extends MpmMigrationBase {
+  /**
+   * Migrates the database up.
+   * 
+   * @param ExceptionalMysqli $mysqli an ExceptionalMysqli object
+   *
+   * @return void
+   */
+  abstract public function up(ExceptionalMysqli &$mysqli);
+
+  /** 
+   * Migrates down (reverses changes made by the up method).
+   *
+   * @param ExceptionalMysqli $mysqli an ExceptionalMysqli object
+   *
+   * @return void
+   */
+  abstract public function down(ExceptionalMysqli &$mysqli);
 }
-
-
-?>

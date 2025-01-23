@@ -1,18 +1,13 @@
 <?php
 
-class Migration_@@timestamp@@ extends MpmMysqliMigration
-{
+class Migration_@@timestamp@@ extends MpmMysqliMigration {
 
-	public function up(ExceptionalMysqli &$mysqli)
-	{
-		
-	}
+  public function up(ExceptionalMysqli &$mysqli) {
+    
+  }
 
-	public function down(ExceptionalMysqli &$mysqli)
-	{
-		
-	}
+  public function down(ExceptionalMysqli &$mysqli) {
+    
+  }
 
 }
-
-?>

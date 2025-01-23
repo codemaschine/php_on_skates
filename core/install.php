@@ -6,52 +6,50 @@ define('ROOT_DIR', $abs_base_path.'/');
 define('SKATES_DIR', $abs_base_path.'/skates/');
 define('APP_DIR', $abs_base_path.'/app/');
 
-
-
-if (file_exists(APP_DIR))
+if (file_exists(APP_DIR)) {
   die ('An app directory exists. Skates seems to be initialized already!');
+}
 
 $message = '';
 $initialized = false;
 
-
 function copy_recursive($source, $dest) {
-	if (mb_substr($dest,-1) == '/')
-		$dest = mb_substr($dest,0,mb_strlen($dest) - 1);
+  if (mb_substr($dest,-1) == '/') {
+    $dest = mb_substr($dest,0,mb_strlen($dest) - 1);
+  }
 
-	global $message;
-	if (!file_exists($dest) && !mkdir($dest, 0775))
-		return false;
-	else
-		@chmod($dest, 0775);
-	foreach (
-	$iterator = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST) as $item
-	) {
-		/** @var RecursiveDirectoryIterator $iterator */
-		if ($item->isDir()) {
-			if (mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0775)) {
-				$message .= "Created dir: ".$dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName()."<br>\n";
-			    chmod($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0775);
-			}
-
-		} else {
-			if (copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName())) {
-				$message .= "Created file: ".$dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName()."<br>\n";
-				chmod($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0664);
-			}
-		}
-	}
-	return true;
+  global $message;
+  if (!file_exists($dest) && !mkdir($dest, 0775)) {
+    return false;
+  } else {
+    @chmod($dest, 0775);
+  }
+  foreach (
+    $iterator = new \RecursiveIteratorIterator(
+      new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+      \RecursiveIteratorIterator::SELF_FIRST) as $item
+  ) {
+    /** @var RecursiveDirectoryIterator $iterator */
+    if ($item->isDir()) {
+      if (mkdir($dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName(), 0775)) {
+        $message .= 'Created dir: '.$dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName()."<br>\n";
+        chmod($dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName(), 0775);
+      }
+    } else {
+      if (copy($item, $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName())) {
+        $message .= 'Created file: '.$dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName()."<br>\n";
+        chmod($dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName(), 0664);
+      }
+    }
+  }
+  return true;
 }
 
 // Here's a startsWith function
-function startsWith($haystack, $needle){
+function startsWith($haystack, $needle) {
   $length = mb_strlen($needle);
   return (mb_substr($haystack, 0, $length) === $needle);
 }
-
 
 ?>
 
@@ -76,8 +74,6 @@ label { display: inline-block; width: 100px; }
 
 <?php
 
-
-
 while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while verwendet, um mit break herausspringen zu können. Da es nicht als Schleife verwendet werden soll, muss am Ende auf jeden Fall ein break stehen.
   if (!($_POST['dbhost'] && $_POST['dbuser'] && $_POST['database'])) {
     $message = 'Host, user and database are required!';
@@ -86,34 +82,31 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
 
   extract($_POST);
 
-
   // check database connection
   try {
-  	$pdo = new PDO("mysql:host=$dbhost;dbname=$database;charset=utf8mb4", $dbuser, $dbpassword);
+    $pdo = new PDO("mysql:host=$dbhost;dbname=$database;charset=utf8mb4", $dbuser, $dbpassword);
   } catch (PDOException $e) {
-  	echo 'Connection failed: ' . $e->getMessage();
+    echo 'Connection failed: '.$e->getMessage();
   }
-
-
 
   // -- create the app-directory
   if (!copy_recursive(SKATES_DIR.'boilerplates/app', APP_DIR)) {
-  	$message = "Error: Cannot create app directory and it's files: ".APP_DIR;
-  	break;
+    $message = "Error: Cannot create app directory and it's files: ".APP_DIR;
+    break;
   }
 
   // -- create the app-directory
   if (!copy_recursive(SKATES_DIR.'static', ROOT_DIR)) {
-  	$message = "Error: Cannot static files (css and js files) in root dir!";
-  	break;
+    $message = 'Error: Cannot static files (css and js files) in root dir!';
+    break;
   }
 
   if (copy(SKATES_DIR.'boilerplates/.htaccess', ROOT_DIR.'.htaccess')) {
-  	$message .= "Created file: ".ROOT_DIR.'.htaccess';
-  	chmod(ROOT_DIR.'.htaccess', 0664);
+    $message .= 'Created file: '.ROOT_DIR.'.htaccess';
+    chmod(ROOT_DIR.'.htaccess', 0664);
+  } else {
+    $message .= 'Error: Could not create file: '.ROOT_DIR.'.htaccess';
   }
-  else
-  	$message .= "Error: Could not create file: ".ROOT_DIR.'.htaccess';
 
   chdir(ROOT_DIR);
 
@@ -129,22 +122,21 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   */
 
   $config_file = file_get_contents(SKATES_DIR.'boilerplates/config.php');
-  foreach (array('DEV_DB_HOST' => $dbhost, 'DEV_DB_USER' => $dbuser, 'DEV_DB_PASS' => $dbpassword, 'DEV_DB_NAME' => $database) as $name => $value) {
-  	$config_file = str_replace("__{$name}__", $value, $config_file);
+  foreach (['DEV_DB_HOST' => $dbhost, 'DEV_DB_USER' => $dbuser, 'DEV_DB_PASS' => $dbpassword, 'DEV_DB_NAME' => $database] as $name => $value) {
+    $config_file = str_replace("__{$name}__", $value, $config_file);
   }
-  if (@file_put_contents(APP_DIR."config.php", $config_file) === false) {
-  	$message = 'Could not create file "app/config.php". Please check file permissions!';
-  	break;
+  if (@file_put_contents(APP_DIR.'config.php', $config_file) === false) {
+    $message = 'Could not create file "app/config.php". Please check file permissions!';
+    break;
   }
 
-  chmod(APP_DIR."config.php", 0664);
+  chmod(APP_DIR.'config.php', 0664);
 
   copy(SKATES_DIR.'boilerplates/development.txt',APP_DIR.'development.txt');
   chmod(APP_DIR.'development.txt', 0664);
 
   copy(SKATES_DIR.'boilerplates/routes.php',APP_DIR.'routes.php');
   chmod(APP_DIR.'routes.php', 0664);
-
 
   // create bin folder
   mkdir(ROOT_DIR.'bin');
@@ -164,25 +156,20 @@ while (!empty($_POST)) { // eigentlich eine if-Abfrage, aber hier wird while ver
   symlink('skates/skates.php', 'skates.php');
   unlink('install.php');
 
-
-
   //$message .=
 
   $initialized = true;
   break;
 }
 
-if ($message)
+if ($message) {
   echo "<div class=\"notice\">$message</div>";
-
-
+}
 
 if ($initialized) {
   echo "Skates initialized! Now you can start scaffolding on your console with 'php skates.php generate scaffold field1:type field2:type ...'";
-}
-else {
-
-?>
+} else {
+  ?>
 
 
 
@@ -223,8 +210,3 @@ else {
 
 </body>
 </html>
-
-
-
-
-
