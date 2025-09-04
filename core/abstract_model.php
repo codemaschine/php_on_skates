@@ -1067,6 +1067,8 @@ abstract class AbstractModel implements JsonSerializable {
 
       if (is_array($value)) {
         $sql .= 'IN ('.self::sanitize_value($value).')';
+      } elseif (is_null($value)) {
+        $sql .= 'IS NULL';
       } else {
         $sql .= '= '.self::sanitize_value($value);
       }
