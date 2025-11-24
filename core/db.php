@@ -56,7 +56,7 @@ function db_init($env_name = null) {
 
 // TODO: Remove parameter $link?
 function db_query($query_string, $link = false) {
-  global $fwlog, $db_link;
+  global $fwlog, $db_link, $_FRAMEWORK;
 
   if (!$link) {
     $link = $db_link;
@@ -66,8 +66,17 @@ function db_query($query_string, $link = false) {
     throw new Exception('Ung&uuml;ltiger Aufruf: Ein DB-Link muss angegeben werden.');
   }
 
-  $fwlog->info("SQL-Query: $query_string");
+  
+  if (empty($_FRAMEWORK['measure_sql_queries'])) {
+    $fwlog->info("SQL-Query: $query_string");
+  } else {
+    $sql_time_start = microtime(true);
+  }
   $res = mysqli_query($link, $query_string);
+  if (!empty($_FRAMEWORK['measure_sql_queries'])) {
+    $time_elapsed_secs = microtime(true) - $sql_time_start;
+    $fwlog->info("Time: ".number_format($time_elapsed_secs, 8)." seconds, SQL-Query: $query_string");
+  }
 
   if (!$res) {
     throw new Exception('Ung&uuml;ltige Abfrage: '.mysqli_error($link).". SQL-Query: {$query_string}");

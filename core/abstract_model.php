@@ -779,7 +779,7 @@ abstract class AbstractModel implements JsonSerializable {
    * load objects of a relation of all $records
    *
    * @param string $relation_name
-   * @param array  $records
+   * @param static[]  $records
    * @param mixed  $subinclude
    */
   private static function include_relation($relation_name, &$records, $subinclude = NULL) {

@@ -23,6 +23,9 @@ $_FRAMEWORK['automatically_determine_action'] = true;
 // Since php8 undefined array keys trigger warnings, set this to true if you only want a notice of this error
 $_FRAMEWORK['ignore_undefined_array_key_warnings'] = false;
 
+// Measure time for sql queries and write them to fwlog
+$_FRAMEWORK['measure_sql_queries'] = false;
+
 // !!!!!!  Warning !!!!!!!!
 // Do not use $_SERVER to detect an environment here! It will not work for your database migrations!!!
 
